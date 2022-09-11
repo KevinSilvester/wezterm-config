@@ -5,4 +5,3 @@ if get_os_name.get_os_name() == "Windows" then
 else
    return "fish"
 end
-

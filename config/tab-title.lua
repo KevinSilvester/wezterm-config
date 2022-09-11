@@ -1,5 +1,7 @@
 local wezterm = require("wezterm")
 
+-- Inspired by https://github.com/wez/wezterm/discussions/628#discussioncomment-1874614
+
 local GLYPH_SEMI_CIRCLE_LEFT = ""
 -- local GLYPH_SEMI_CIRCLE_LEFT = utf8.char(0xe0b6)
 local GLYPH_SEMI_CIRCLE_RIGHT = ""
@@ -14,7 +16,6 @@ local M = {}
 M.cells = {}
 
 M.colors = {
-   separator = "#0f0f14",
    default = {
       bg = "#45475a",
       fg = "#1c1b19",
@@ -99,10 +100,6 @@ M.setup = function()
          table.insert(M.cells, { Attribute = { Intensity = "Bold" } })
          table.insert(M.cells, { Text = " " .. GLYPH_ADMIN })
       end
-      --
-      -- table.insert(M.cells, { Background = { Color = bg } })
-      -- table.insert(M.cells, { Foreground = { Color = fg } })
-      -- table.insert(M.cells, { Text = " " .. process_name })
 
       table.insert(M.cells, { Background = { Color = bg } })
       table.insert(M.cells, { Foreground = { Color = fg } })

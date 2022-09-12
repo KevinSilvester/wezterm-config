@@ -15,13 +15,12 @@ M.colors = {
 
 M.cells = {} -- wezterm FormatItems (ref: https://wezfurlong.org/wezterm/config/lua/wezterm/format.html)
 
-M.push = function(
-   text, --[[string]]
-   icon, --[[string]]
-   fg, --[[string]]
-   bg, --[[string]]
-   separate --[[boolean]]
-)
+---@param text string
+---@param icon string
+---@param fg string
+---@param bg string
+---@param separate boolean
+M.push = function(text, icon, fg, bg, separate)
    table.insert(M.cells, { Foreground = { Color = fg } })
    table.insert(M.cells, { Background = { Color = bg } })
    table.insert(M.cells, { Attribute = { Intensity = "Bold" } })

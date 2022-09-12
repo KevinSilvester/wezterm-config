@@ -37,14 +37,24 @@ local colorscheme = {
    selection_bg = mocha.surface2,
    selection_fg = mocha.text,
    ansi = {
-      mocha.subtext1,
-      mocha.red,
-      mocha.green,
-      mocha.yellow,
-      mocha.blue,
-      mocha.pink,
-      mocha.teal,
-      mocha.surface1,
+      "#0C0C0C", -- black
+      "#C50F1F", -- red
+      "#13A10E", -- green
+      "#C19C00", -- yellow
+      "#0037DA", -- blue
+      "#881798", -- magenta/purple
+      "#3A96DD", -- cyan
+      "#CCCCCC", -- white
+   },
+   brights = {
+      "#767676",
+      "#E74856",
+      "#16C60C",
+      "#F9F1A5",
+      "#3B78FF",
+      "#B4009E",
+      "#61D6D6",
+      "#F2F2F2",
    },
    tab_bar = {
       background = "#000000",
@@ -56,12 +66,10 @@ local colorscheme = {
          bg_color = mocha.surface0,
          fg_color = mocha.subtext1,
       },
-      -- inactive_tab = items.tab_bar.inactive_tab,
       inactive_tab_hover = {
          bg_color = mocha.surface0,
          fg_color = mocha.text,
       },
-      -- inactive_tab_hover = items.tab_bar.inactive_tab_hover,
       new_tab = {
          bg_color = mocha.base,
          fg_color = mocha.text,
@@ -79,8 +87,7 @@ local colorscheme = {
    },
    scrollbar_thumb = mocha.surface2,
    split = mocha.overlay0,
-   -- nightbuild only
-   compose_cursor = mocha.flamingo,
+   compose_cursor = mocha.flamingo, -- nightbuild only
 }
 
 return colorscheme

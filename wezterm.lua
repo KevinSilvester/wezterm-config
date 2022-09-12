@@ -1,5 +1,5 @@
 local wezterm = require("wezterm")
-local catppuccin = require("colors.catppuccin")
+local custom = require("colors.custom")
 local keybindings = require("config.key-bindings")
 local launch_menu = require("config.launch-menu")
 local ssh_domains = require("config.ssh-domains")
@@ -14,16 +14,13 @@ local function font(name, params)
    return wezterm.font(name, params)
 end
 
-
-
 return {
    -- fonts
    font = font(font_name),
    font_size = 9,
 
    -- colour scheme
-   colors = catppuccin,
-   color_scheme = "kanagawabones",
+   colors = custom,
 
    -- scroll bar
    enable_scroll_bar = true,
@@ -34,7 +31,6 @@ return {
    -- tab bar
    enable_tab_bar = true,
    hide_tab_bar_if_only_one_tab = false,
-   -- use_fancy_tab_bar = true,
    use_fancy_tab_bar = false,
    tab_max_width = 25,
    show_tab_index_in_tab_bar = false,
@@ -72,9 +68,20 @@ return {
    },
 
    -- shells
-   default_prog = { shell },
+   default_prog = shell,
    launch_menu = launch_menu,
 
    -- ssh
    ssh_domains = ssh_domains,
+
+   -- wsl
+   wsl_domains = {
+      {
+         name = "WSL:Ubuntu",
+         distribution = "Ubuntu",
+         username = "kevin",
+         default_cwd = "/home/kevin",
+         default_prog = { "fish" },
+      },
+   },
 }

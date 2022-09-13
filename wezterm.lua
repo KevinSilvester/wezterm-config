@@ -14,6 +14,8 @@ local function font(name, params)
    return wezterm.font(name, params)
 end
 
+-- hello
+
 return {
    -- fonts
    font = font(font_name),

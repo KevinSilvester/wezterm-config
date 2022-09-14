@@ -1,2 +1,0 @@
-https://github.com/bluebird75/lua_get_os_name
-https://github.com/rxi/lume

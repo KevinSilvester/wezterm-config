@@ -61,6 +61,17 @@ M.check_if_admin = function(p)
    return false
 end
 
+---@param fg string
+---@param bg string
+---@param attribute table
+---@param text string
+M.push = function(bg, fg, attribute, text)
+   table.insert(M.cells, { Background = { Color = bg } })
+   table.insert(M.cells, { Foreground = { Color = fg } })
+   table.insert(M.cells, { Attribute = attribute })
+   table.insert(M.cells, { Text = text })
+end
+
 M.setup = function()
    wezterm.on("format-tab-title", function(tab, tabs, panes, config, hover, max_width)
       M.cells = {}
@@ -90,32 +101,24 @@ M.setup = function()
          end
       end
 
-      table.insert(M.cells, { Background = { Color = fg } })
-      table.insert(M.cells, { Foreground = { Color = bg } })
-      table.insert(M.cells, { Text = GLYPH_SEMI_CIRCLE_LEFT })
+      -- Left semi-circle
+      M.push(fg, bg, { Intensity = "Bold" }, GLYPH_SEMI_CIRCLE_LEFT)
 
+      -- Admin Icon
       if is_admin then
-         table.insert(M.cells, { Background = { Color = bg } })
-         table.insert(M.cells, { Foreground = { Color = fg } })
-         table.insert(M.cells, { Attribute = { Intensity = "Bold" } })
-         table.insert(M.cells, { Text = " " .. GLYPH_ADMIN })
+         M.push(bg, fg, { Intensity = "Bold" }, " " .. GLYPH_ADMIN)
       end
 
-      table.insert(M.cells, { Background = { Color = bg } })
-      table.insert(M.cells, { Foreground = { Color = fg } })
-      table.insert(M.cells, { Attribute = { Intensity = "Bold" } })
-      table.insert(M.cells, { Text = " " .. title })
+      -- Title
+      M.push(bg, fg, { Intensity = "Bold" }, " " .. title)
 
+      -- Unseen output alert
       if has_unseen_output then
-         table.insert(M.cells, { Background = { Color = bg } })
-         table.insert(M.cells, { Foreground = { Color = "#FFA066" } })
-         table.insert(M.cells, { Attribute = { Intensity = "Bold" } })
-         table.insert(M.cells, { Text = " " .. GLYPH_CIRCLE .. " " })
+         M.push(bg, "#FFA066", { Intensity = "Bold" }, " " .. GLYPH_CIRCLE .. " ")
       end
 
-      table.insert(M.cells, { Background = { Color = fg } })
-      table.insert(M.cells, { Foreground = { Color = bg } })
-      table.insert(M.cells, { Text = GLYPH_SEMI_CIRCLE_RIGHT })
+      -- Right semi-circle
+      M.push(fg, bg, { Intensity = "Bold" }, GLYPH_SEMI_CIRCLE_RIGHT)
 
       return wezterm.format(M.cells)
    end)

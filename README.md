@@ -1,6 +1,6 @@
 # My WezTerm Config
 
-![screenshot](./screenshots/screenshot-1.png)
+![screenshot](./screenshots/screenshot.png)
 
 ### References/Links
 - <https://github.com/bluebird75/lua_get_os_name>

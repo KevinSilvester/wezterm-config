@@ -22,6 +22,17 @@ return {
    -- colour scheme
    colors = custom,
 
+   -- background
+   -- background = {
+   --    {
+   --       source = { File = wezterm.config_dir .. "/backdrops/astro-jelly.jpg" },
+   --       repeat_x = "NoRepeat",
+   --       hsb = { brightness = 0.5 },
+   --       attachment = { Parallax = 0.1 },
+   --       horizontal_align = "Center",
+   --    },
+   -- },
+
    -- scroll bar
    enable_scroll_bar = true,
 

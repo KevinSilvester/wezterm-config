@@ -1,9 +1,9 @@
 local get_os_name = require("utils.get_os_name")
 
-local M = {}
+local launch_menu = {}
 
 if get_os_name.get_os_name() == "Windows" then
-   M = {
+   launch_menu = {
       -- { label = "Ubuntu", args = { "wsl", "-d", "Ubuntu" }, domain = { DomainName = "ubuntu" } },
       {
          label = "PowerShell Core",
@@ -27,13 +27,10 @@ if get_os_name.get_os_name() == "Windows" then
       },
    }
 else
-   M = {
+   launch_menu = {
       { label = "bash", args = { "/usr/bin/bash" } },
-      {
-         label = "fish",
-         args = { "/usr/bin/fish" },
-      },
+      { label = "fish", args = { "/usr/bin/fish" } },
    }
 end
 
-return M
+return launch_menu

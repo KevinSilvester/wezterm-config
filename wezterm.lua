@@ -8,30 +8,38 @@ require("config.right-status").setup()
 require("config.notify").setup()
 require("config.tab-title").setup()
 
-local font_name = "JetBrainsMono NF"
+local font_primary = "JetBrainsMono NF"
 
 local function font(name, params)
    return wezterm.font(name, params)
 end
 
+-- [[ font with fallback ]]
+-- local function font_with_fallback(name, params)
+--   local names = { name }
+--   return wezterm.font_with_fallback(names, params)
+-- end
+
 return {
    -- fonts
-   font = font(font_name),
+   font = font(font_primary),
    font_size = 9,
 
    -- colour scheme
    colors = custom,
 
    -- background
-   -- background = {
-   --    {
-   --       source = { File = wezterm.config_dir .. "/backdrops/astro-jelly.jpg" },
-   --       repeat_x = "NoRepeat",
-   --       hsb = { brightness = 0.5 },
-   --       attachment = { Parallax = 0.1 },
-   --       horizontal_align = "Center",
-   --    },
-   -- },
+   background = {
+      {
+         source = { File = wezterm.config_dir .. "/backdrops/punk.jpg" },
+      },
+      {
+         source = { Color = custom.background },
+         height = "100%",
+         width = "100%",
+         opacity = 0.95,
+      },
+   },
 
    -- scroll bar
    enable_scroll_bar = true,
@@ -52,17 +60,17 @@ return {
       left = 5,
       right = 10,
       top = 12,
-      bottom = 12,
+      bottom = 7,
    },
-   automatically_reload_config = true,
-   inactive_pane_hsb = { saturation = 1.0, brightness = 1.0 },
-   window_background_opacity = 1.0,
    window_close_confirmation = "NeverPrompt",
    window_frame = {
       active_titlebar_bg = "#090909",
-      font = font(font_name, { bold = true }),
+      font = font(font_primary, { bold = true }),
       font_size = 9,
    },
+   automatically_reload_config = true,
+   inactive_pane_hsb = { saturation = 1.0, brightness = 1.0 },
+   -- window_background_opacity = 0.9,
 
    -- keybindings
    disable_default_key_bindings = true,

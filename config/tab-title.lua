@@ -114,8 +114,11 @@ M.setup = function()
 
       -- Unseen output alert
       if has_unseen_output then
-         M.push(bg, "#FFA066", { Intensity = "Bold" }, " " .. GLYPH_CIRCLE .. " ")
+         M.push(bg, "#FFA066", { Intensity = "Bold" }, " " .. GLYPH_CIRCLE)
       end
+
+      -- Right padding
+      M.push(bg, fg, { Intensity = "Bold" }, " ")
 
       -- Right semi-circle
       M.push(fg, bg, { Intensity = "Bold" }, GLYPH_SEMI_CIRCLE_RIGHT)

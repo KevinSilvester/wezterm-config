@@ -123,7 +123,7 @@ M.setup = function()
       -- Right semi-circle
       M.push(fg, bg, { Intensity = "Bold" }, GLYPH_SEMI_CIRCLE_RIGHT)
 
-      return wezterm.format(M.cells)
+      return M.cells
    end)
 end
 

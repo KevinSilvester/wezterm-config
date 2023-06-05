@@ -36,7 +36,7 @@ return {
    switch_to_last_active_tab_when_closing_tab = true,
 
    -- window
-   widnow_padding = {
+   window_padding = {
       left = 5,
       right = 10,
       top = 12,

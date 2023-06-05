@@ -1,11 +1,11 @@
-local platform = require('utils.platform')
+local platform = require('utils.platform')()
 
 local options = {
    default_prog = {},
    launch_menu = {},
 }
 
-if platform().is_win then
+if platform.is_win then
    options.default_prog = { 'pwsh' }
    options.launch_menu = {
       { label = 'PowerShell Core', args = { 'pwsh' } },
@@ -17,12 +17,12 @@ if platform().is_win then
          args = { 'C:\\Users\\kevin\\scoop\\apps\\git\\current\\bin\\bash.exe' },
       },
    }
-else
-   options.default_prog = { 'fish' }
+elseif platform.is_mac then
+   options.default_prog = { '/opt/homebrew/bin/fish' }
    options.launch_menu = {
       { label = 'Bash', args = { 'bash' } },
-      { label = 'Fish', args = { 'fish' } },
-      { label = 'Nushell', args = { 'nu' } },
+      { label = 'Fish', args = { '/opt/homebrew/bin/fish' } },
+      { label = 'Nushell', args = { '/opt/homebrew/bin/nu' } },
       { label = 'Zsh', args = { 'zsh' } },
    }
 end

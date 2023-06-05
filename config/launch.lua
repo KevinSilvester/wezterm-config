@@ -1,12 +1,12 @@
 local platform = require('utils.platform')
 
 local options = {
-   default_prog = nil,
+   default_prog = {},
    launch_menu = {},
 }
 
 if platform().is_win then
-   options.default_prog = 'pwsh'
+   options.default_prog = { 'pwsh' }
    options.launch_menu = {
       { label = 'PowerShell Core', args = { 'pwsh' } },
       { label = 'PowerShell Desktop', args = { 'powershell' } },
@@ -18,7 +18,7 @@ if platform().is_win then
       },
    }
 else
-   options.default_prog = 'fish'
+   options.default_prog = { 'fish' }
    options.launch_menu = {
       { label = 'Bash', args = { 'bash' } },
       { label = 'Fish', args = { 'fish' } },

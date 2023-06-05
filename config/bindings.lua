@@ -40,7 +40,7 @@ local keys = {
    {
       key = [[\]],
       mods = 'SUPER|CTRL',
-      action = act.SplitHorizonatal({ domain = 'CurrentPaneDomain' }),
+      action = act.SplitHorizontal({ domain = 'CurrentPaneDomain' }),
    },
 
    -- panes: zoom+close pane

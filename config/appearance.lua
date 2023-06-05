@@ -9,7 +9,7 @@ return {
    webgpu_power_preference = 'HighPerformance',
 
    -- color scheme
-   colours = colors,
+   colors = colors,
 
    -- background
    background = {

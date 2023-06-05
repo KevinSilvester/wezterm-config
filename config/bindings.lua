@@ -17,7 +17,7 @@ local keys = {
    -- tabs --
    -- tabs: spawn+close
    { key = 't', mods = 'SUPER', action = act.SpawnTab('DefaultDomain') },
-   { key = 't', mods = 'SUPER', action = act.SpawnTab({ DomainName = 'WSL:Ubuntu' }) },
+   { key = 't', mods = 'SUPER|CTRL', action = act.SpawnTab({ DomainName = 'WSL:Ubuntu' }) },
    { key = 'w', mods = 'SUPER', action = act.CloseCurrentTab({ confirm = false }) },
 
    -- tabs: navigation

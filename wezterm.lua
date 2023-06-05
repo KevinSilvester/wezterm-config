@@ -1,14 +1,6 @@
 local wezterm = require('wezterm')
-
 local platform = require('utils.platform')
-
 local Config = require('config')
-local appearance = require('config.appearance')
-local bindings = require('config.bindings')
-local domain = require('config.appearance')
-local fonts = require('config.appearance')
-local general = require('config.appearance')
-local launch = require('config.launch')
 
 require('events.right-status').setup()
 require('events.tab-title').setup()
@@ -21,9 +13,9 @@ if platform().is_mac then
 end
 
 return Config:init()
-   :append(appearance)
-   :append(bindings)
-   :append(domain)
-   :append(fonts)
-   :append(general)
-   :append(launch).options
+   :append(require('config.appearance'))
+   :append(require('config.bindings'))
+   :append(require('config.domain'))
+   :append(require('config.fonts'))
+   :append(require('config.general'))
+   :append(require('config.launch')).options

@@ -1,5 +1,16 @@
 local wezterm = require('wezterm')
+local platform = require('utils.platform')()
 local act = wezterm.action
+
+local mod = {}
+
+if platform.is_mac then
+   mod.SUPER = 'SUPER'
+   mod.SUPER_REV = 'SUPER|CTRL'
+elseif platform.is_win then
+   mod.SUPER = 'ALT' -- to not conflict with Windows key shortcuts
+   mod.SUPER_REV = 'ALT|CTRL'
+end
 
 local keys = {
    -- misc/useful --
@@ -8,7 +19,7 @@ local keys = {
    { key = 'F3', mods = 'NONE', action = act.ShowLauncher },
    { key = 'F4', mods = 'NONE', action = act.ShowTabNavigator },
    { key = 'F12', mods = 'NONE', action = act.ShowDebugOverlay },
-   { key = 'f', mods = 'SUPER', action = act.Search({ CaseInSensitiveString = '' }) },
+   { key = 'f', mods = mod.SUPER, action = act.Search({ CaseInSensitiveString = '' }) },
 
    -- copy/paste --
    { key = 'c', mods = 'CTRL|SHIFT', action = act.CopyTo('Clipboard') },
@@ -16,48 +27,42 @@ local keys = {
 
    -- tabs --
    -- tabs: spawn+close
-   { key = 't', mods = 'SUPER', action = act.SpawnTab('DefaultDomain') },
-   { key = 't', mods = 'SUPER|CTRL', action = act.SpawnTab({ DomainName = 'WSL:Ubuntu' }) },
-   { key = 'w', mods = 'SUPER', action = act.CloseCurrentTab({ confirm = false }) },
+   { key = 't', mods = mod.SUPER, action = act.SpawnTab('DefaultDomain') },
+   { key = 't', mods = mod.SUPER_REV, action = act.SpawnTab({ DomainName = 'WSL:Ubuntu' }) },
+   { key = 'w', mods = mod.SUPER_REV, action = act.CloseCurrentTab({ confirm = false }) },
 
    -- tabs: navigation
-   { key = '[', mods = 'SUPER', action = act.ActivateTabRelative(-1) },
-   { key = ']', mods = 'SUPER', action = act.ActivateTabRelative(1) },
-   { key = '[', mods = 'SUPER|CTRL', action = act.MoveTabRelative(-1) },
-   { key = ']', mods = 'SUPER|CTRL', action = act.MoveTabRelative(1) },
+   { key = '[', mods = mod.SUPER, action = act.ActivateTabRelative(-1) },
+   { key = ']', mods = mod.SUPER, action = act.ActivateTabRelative(1) },
+   { key = '[', mods = mod.SUPER_REV, action = act.MoveTabRelative(-1) },
+   { key = ']', mods = mod.SUPER_REV, action = act.MoveTabRelative(1) },
 
    -- window --
    -- spawn windows
-   { key = 'n', mods = 'SUPER', action = act.SpawnWindow },
+   { key = 'n', mods = mod.SUPER, action = act.SpawnWindow },
 
    -- panes --
    -- panes: split panes
    {
       key = [[\]],
-      mods = 'SUPER',
+      mods = mod.SUPER,
       action = act.SplitVertical({ domain = 'CurrentPaneDomain' }),
    },
    {
       key = [[\]],
-      mods = 'SUPER|CTRL',
+      mods = mod.SUPER_REV,
       action = act.SplitHorizontal({ domain = 'CurrentPaneDomain' }),
    },
 
    -- panes: zoom+close pane
-   { key = 'z', mods = 'SUPER', action = act.TogglePaneZoomState },
-   { key = 'w', mods = 'SUPER|CTRL', action = act.CloseCurrentPane({ confirm = false }) },
+   { key = 'z', mods = mod.SUPER_REV, action = act.TogglePaneZoomState },
+   { key = 'w', mods = mod.SUPER, action = act.CloseCurrentPane({ confirm = false }) },
 
    -- panes: navigation
-   { key = 'k', mods = 'SUPER', action = act.ActivatePaneDirection('Up') },
-   { key = 'j', mods = 'SUPER', action = act.ActivatePaneDirection('Down') },
-   { key = 'h', mods = 'SUPER', action = act.ActivatePaneDirection('Left') },
-   { key = 'l', mods = 'SUPER', action = act.ActivatePaneDirection('Right') },
-
-   -- panes: resize
-   { key = 'k', mods = 'SUPER|CTRL', action = act.AdjustPaneSize({ 'Up', 1 }) },
-   { key = 'j', mods = 'SUPER|CTRL', action = act.AdjustPaneSize({ 'Down', 1 }) },
-   { key = 'h', mods = 'SUPER|CTRL', action = act.AdjustPaneSize({ 'Left', 1 }) },
-   { key = 'l', mods = 'SUPER|CTRL', action = act.AdjustPaneSize({ 'Right', 1 }) },
+   { key = 'k', mods = mod.SUPER_REV, action = act.ActivatePaneDirection('Up') },
+   { key = 'j', mods = mod.SUPER_REV, action = act.ActivatePaneDirection('Down') },
+   { key = 'h', mods = mod.SUPER_REV, action = act.ActivatePaneDirection('Left') },
+   { key = 'l', mods = mod.SUPER_REV, action = act.ActivatePaneDirection('Right') },
 
    -- key-tables --
    -- resizes fonts
@@ -70,6 +75,16 @@ local keys = {
          timemout_miliseconds = 1000,
       }),
    },
+   -- resize panes
+   {
+      key = 'p',
+      mods = 'LEADER',
+      action = act.ActivateKeyTable({
+         name = 'resize_pane',
+         one_shot = false,
+         timemout_miliseconds = 1000,
+      }),
+   },
 }
 
 local key_tables = {
@@ -78,6 +93,15 @@ local key_tables = {
       { key = 'j', action = act.DecreaseFontSize },
       { key = 'r', action = act.ResetFontSize },
       { key = 'Escape', action = 'PopKeyTable' },
+      { key = 'q', action = 'PopKeyTable' },
+   },
+   resize_pane = {
+      { key = 'k', action = act.AdjustPaneSize({ 'Up', 1 }) },
+      { key = 'j', action = act.AdjustPaneSize({ 'Down', 1 }) },
+      { key = 'h', action = act.AdjustPaneSize({ 'Left', 1 }) },
+      { key = 'l', action = act.AdjustPaneSize({ 'Right', 1 }) },
+      { key = 'Escape', action = 'PopKeyTable' },
+      { key = 'q', action = 'PopKeyTable' },
    },
 }
 

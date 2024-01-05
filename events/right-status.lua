@@ -1,8 +1,34 @@
 local wezterm = require('wezterm')
+local nf = wezterm.nerdfonts
 local math = require('utils.math')
 local M = {}
 
-M.separator_char = ' '
+local SEPARATOR_CHAR = ' '
+
+local discharging_icons = {
+   nf.md_battery_10,
+   nf.md_battery_20,
+   nf.md_battery_30,
+   nf.md_battery_40,
+   nf.md_battery_50,
+   nf.md_battery_60,
+   nf.md_battery_70,
+   nf.md_battery_80,
+   nf.md_battery_90,
+   nf.md_battery,
+}
+local charging_icons = {
+   nf.md_battery_charging_10,
+   nf.md_battery_charging_20,
+   nf.md_battery_charging_30,
+   nf.md_battery_charging_40,
+   nf.md_battery_charging_50,
+   nf.md_battery_charging_60,
+   nf.md_battery_charging_70,
+   nf.md_battery_charging_80,
+   nf.md_battery_charging_90,
+   nf.md_battery_charging,
+}
 
 M.colors = {
    date_fg = '#fab387',
@@ -29,7 +55,7 @@ M.push = function(text, icon, fg, bg, separate)
    if separate then
       table.insert(M.cells, { Foreground = { Color = M.colors.separator_fg } })
       table.insert(M.cells, { Background = { Color = M.colors.separator_bg } })
-      table.insert(M.cells, { Text = M.separator_char })
+      table.insert(M.cells, { Text = SEPARATOR_CHAR })
    end
 
    table.insert(M.cells, 'ResetAttributes')
@@ -37,14 +63,11 @@ end
 
 M.set_date = function()
    local date = wezterm.strftime(' %a %H:%M')
-   M.push(date, '', M.colors.date_fg, M.colors.date_bg, true)
+   M.push(date, nf.fa_calendar, M.colors.date_fg, M.colors.date_bg, true)
 end
 
 M.set_battery = function()
    -- ref: https://wezfurlong.org/wezterm/config/lua/wezterm/battery_info.html
-   local discharging_icons =
-      { '', '', '', '', '', '', '', '', '', '' }
-   local charging_icons = { '', '', '', '', '', '', '', '', '', '' }
 
    local charge = ''
    local icon = ''

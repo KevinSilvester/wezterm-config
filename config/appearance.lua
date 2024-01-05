@@ -1,6 +1,25 @@
 local wezterm = require('wezterm')
 local colors = require('colors.custom')
 -- local fonts = require('config.fonts')
+local backgrounds_dir = wezterm.config_dir .. '/backdrops'
+local backgrounds = {}
+-- stores file values in array pipe
+local pipe = io.popen(string.format('ls "%s"', backgrounds_dir))
+-- creates a table of the backgrounds in the /backdrops directory
+if pipe then
+   local dir_contents = pipe:read('*a')
+   if dir_contents then
+      for file in dir_contents:gmatch('[^%\n]+') do
+         table.insert(backgrounds, file)
+      end
+   end
+   if not pipe:close() then
+      print('Failed to close pipe')
+   end
+end
+-- Selects a random value between min and max of backgrounds and stores the index return as the random_background at load
+local random_index = math.random(#backgrounds)
+local random_background = backgrounds[random_index]
 
 return {
    animation_fps = 60,
@@ -14,7 +33,7 @@ return {
    -- background
    background = {
       {
-         source = { File = wezterm.config_dir .. '/backdrops/space.jpg' },
+         source = { File = backgrounds_dir .. '/' .. random_background },
       },
       {
          source = { Color = colors.background },

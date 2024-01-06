@@ -1,9 +1,9 @@
 local wezterm = require('wezterm')
 local nf = wezterm.nerdfonts
-local math = require('utils.math')
+local umath = require('utils.math')
 local M = {}
 
-local SEPARATOR_CHAR = ' '
+local SEPARATOR_CHAR = nf.oct_dash .. ' '
 
 local discharging_icons = {
    nf.md_battery_10,
@@ -73,7 +73,7 @@ M.set_battery = function()
    local icon = ''
 
    for _, b in ipairs(wezterm.battery_info()) do
-      local idx = math.clamp(math.round(b.state_of_charge * 10), 1, 10)
+      local idx = umath.clamp(umath.round(b.state_of_charge * 10), 1, 10)
       charge = string.format('%.0f%%', b.state_of_charge * 100)
 
       if b.state == 'Charging' then

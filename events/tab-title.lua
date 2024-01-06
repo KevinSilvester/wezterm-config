@@ -73,7 +73,7 @@ M.push = function(bg, fg, attribute, text)
 end
 
 M.setup = function()
-   wezterm.on("format-tab-title", function(tab, tabs, panes, config, hover, max_width)
+   wezterm.on("format-tab-title", function(tab, _tabs, _panes, _config, hover, max_width)
       M.cells = {}
 
       local bg

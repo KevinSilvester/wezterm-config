@@ -1,5 +1,6 @@
 local wezterm = require('wezterm')
 local platform = require('utils.platform')()
+local backdrops = require('utils.backdrops')
 local act = wezterm.action
 
 local mod = {}
@@ -40,6 +41,29 @@ local keys = {
    -- window --
    -- spawn windows
    { key = 'n', mods = mod.SUPER, action = act.SpawnWindow },
+
+   -- background controls --
+   {
+      key = [[/]],
+      mods = mod.SUPER_REV,
+      action = wezterm.action_callback(function(window, _pane)
+         backdrops:random(window)
+      end),
+   },
+   {
+      key = [[,]],
+      mods = mod.SUPER_REV,
+      action = wezterm.action_callback(function(window, _pane)
+         backdrops:cycle_back(window)
+      end),
+   },
+   {
+      key = [[.]],
+      mods = mod.SUPER_REV,
+      action = wezterm.action_callback(function(window, _pane)
+         backdrops:cycle_forward(window)
+      end),
+   },
 
    -- panes --
    -- panes: split panes

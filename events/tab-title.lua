@@ -1,14 +1,14 @@
-local wezterm = require("wezterm")
+local wezterm = require('wezterm')
 
 -- Inspired by https://github.com/wez/wezterm/discussions/628#discussioncomment-1874614
 
-local GLYPH_SEMI_CIRCLE_LEFT = ""
+local GLYPH_SEMI_CIRCLE_LEFT = ''
 -- local GLYPH_SEMI_CIRCLE_LEFT = utf8.char(0xe0b6)
-local GLYPH_SEMI_CIRCLE_RIGHT = ""
+local GLYPH_SEMI_CIRCLE_RIGHT = ''
 -- local GLYPH_SEMI_CIRCLE_RIGHT = utf8.char(0xe0b4)
-local GLYPH_CIRCLE = ""
+local GLYPH_CIRCLE = ''
 -- local GLYPH_CIRCLE = utf8.char(0xf111)
-local GLYPH_ADMIN = "󰞀"
+local GLYPH_ADMIN = '󰞀'
 -- local GLYPH_ADMIN = utf8.char(0xf0780)
 
 local M = {}
@@ -17,23 +17,23 @@ M.cells = {}
 
 M.colors = {
    default = {
-      bg = "#45475a",
-      fg = "#1c1b19",
+      bg = '#45475a',
+      fg = '#1c1b19',
    },
    is_active = {
-      bg = "#7FB4CA",
-      fg = "#11111b",
+      bg = '#7FB4CA',
+      fg = '#11111b',
    },
 
    hover = {
-      bg = "#587d8c",
-      fg = "#1c1b19",
+      bg = '#587d8c',
+      fg = '#1c1b19',
    },
 }
 
 M.set_process_name = function(s)
-   local a = string.gsub(s, "(.*[/\\])(.*)", "%2")
-   return a:gsub("%.exe$", "")
+   local a = string.gsub(s, '(.*[/\\])(.*)', '%2')
+   return a:gsub('%.exe$', '')
 end
 
 M.set_title = function(process_name, base_title, max_width, inset)
@@ -41,7 +41,7 @@ M.set_title = function(process_name, base_title, max_width, inset)
    inset = inset or 6
 
    if process_name:len() > 0 then
-      title = process_name .. " ~ " .. base_title
+      title = process_name .. ' ~ ' .. base_title
    else
       title = base_title
    end
@@ -55,7 +55,7 @@ M.set_title = function(process_name, base_title, max_width, inset)
 end
 
 M.check_if_admin = function(p)
-   if p:match("^Administrator: ") then
+   if p:match('^Administrator: ') then
       return true
    end
    return false
@@ -73,7 +73,7 @@ M.push = function(bg, fg, attribute, text)
 end
 
 M.setup = function()
-   wezterm.on("format-tab-title", function(tab, _tabs, _panes, _config, hover, max_width)
+   wezterm.on('format-tab-title', function(tab, _tabs, _panes, _config, hover, max_width)
       M.cells = {}
 
       local bg
@@ -102,26 +102,26 @@ M.setup = function()
       end
 
       -- Left semi-circle
-      M.push(fg, bg, { Intensity = "Bold" }, GLYPH_SEMI_CIRCLE_LEFT)
+      M.push(fg, bg, { Intensity = 'Bold' }, GLYPH_SEMI_CIRCLE_LEFT)
 
       -- Admin Icon
       if is_admin then
-         M.push(bg, fg, { Intensity = "Bold" }, " " .. GLYPH_ADMIN)
+         M.push(bg, fg, { Intensity = 'Bold' }, ' ' .. GLYPH_ADMIN)
       end
 
       -- Title
-      M.push(bg, fg, { Intensity = "Bold" }, " " .. title)
+      M.push(bg, fg, { Intensity = 'Bold' }, ' ' .. title)
 
       -- Unseen output alert
       if has_unseen_output then
-         M.push(bg, "#FFA066", { Intensity = "Bold" }, " " .. GLYPH_CIRCLE)
+         M.push(bg, '#FFA066', { Intensity = 'Bold' }, ' ' .. GLYPH_CIRCLE)
       end
 
       -- Right padding
-      M.push(bg, fg, { Intensity = "Bold" }, " ")
+      M.push(bg, fg, { Intensity = 'Bold' }, ' ')
 
       -- Right semi-circle
-      M.push(fg, bg, { Intensity = "Bold" }, GLYPH_SEMI_CIRCLE_RIGHT)
+      M.push(fg, bg, { Intensity = 'Bold' }, GLYPH_SEMI_CIRCLE_RIGHT)
 
       return M.cells
    end)

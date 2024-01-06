@@ -1,0 +1,24 @@
+on:
+  push:
+    branches: ["master"]
+  pull_request:
+    branches: ["master"]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Check formatting
+        uses: JohnnyMorganz/stylua-action@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          version: 0.19.1
+          args: -g '!/config/init.lua' --check wezterm.lua colors/ config/ events/ utils/
+
+      - name: Lint
+        uses: lunarmodules/luacheck@v1
+        with:
+          args: wezterm.lua colors/* config/* events/* utils/*

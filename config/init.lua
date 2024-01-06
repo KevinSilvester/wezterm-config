@@ -7,10 +7,9 @@ local Config = {}
 ---Initialize Config
 ---@return Config
 function Config:init()
-   local o = {}
-   self = setmetatable(o, { __index = Config })
-   self.options = {}
-   return o
+   self.__index = self
+   local config = setmetatable({ options = {} }, self)
+   return config
 end
 
 ---Append to `Config.options`

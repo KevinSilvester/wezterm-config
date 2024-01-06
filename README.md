@@ -1,6 +1,6 @@
 # My WezTerm Config
 
-![screenshot](./screenshots/screenshot-2.png)
+![screenshot](./.github/screenshots/wezterm.gif)
 
 ### References/Links
 - <https://github.com/rxi/lume>

@@ -19,7 +19,7 @@ return {
          source = { Color = colors.background },
          height = '100%',
          width = '100%',
-            opacity = 0.90,
+         opacity = 0.90,
       },
    },
 
@@ -47,5 +47,8 @@ return {
       -- font = fonts.font,
       -- font_size = fonts.font_size,
    },
-   inactive_pane_hsb = { saturation = 0.6, brightness = 0.4 },
+   inactive_pane_hsb = {
+      saturation = 0.7,
+      brightness = 0.6,
+   },
 }

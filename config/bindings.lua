@@ -18,9 +18,29 @@ local keys = {
    { key = 'F1', mods = 'NONE', action = 'ActivateCopyMode' },
    { key = 'F2', mods = 'NONE', action = act.ActivateCommandPalette },
    { key = 'F3', mods = 'NONE', action = act.ShowLauncher },
-   { key = 'F4', mods = 'NONE', action = act.ShowTabNavigator },
+   { key = 'F4', mods = 'NONE', action = act.ShowLauncherArgs({ flags = 'FUZZY|TABS' }) },
+   {
+      key = 'F5',
+      mods = 'NONE',
+      action = act.ShowLauncherArgs({ flags = 'FUZZY|WORKSPACES' }),
+   },
    { key = 'F12', mods = 'NONE', action = act.ShowDebugOverlay },
    { key = 'f', mods = mod.SUPER, action = act.Search({ CaseInSensitiveString = '' }) },
+   {
+      key = 'u',
+      mods = mod.SUPER,
+      action = wezterm.action.QuickSelectArgs({
+         label = 'open url',
+         patterns = {
+            'https?://\\S+',
+         },
+         action = wezterm.action_callback(function(window, pane)
+            local url = window:get_selection_text_for_pane(pane)
+            wezterm.log_info('opening: ' .. url)
+            wezterm.open_with(url)
+         end),
+      }),
+   },
 
    -- copy/paste --
    { key = 'c', mods = 'CTRL|SHIFT', action = act.CopyTo('Clipboard') },
@@ -73,6 +93,7 @@ local keys = {
          fuzzy = true,
          fuzzy_description = 'Select Background: ',
          action = wezterm.action_callback(function(window, _pane, idx)
+            ---@diagnostic disable-next-line: param-type-mismatch
             backdrops:set_img(window, tonumber(idx))
          end),
       }),
@@ -100,6 +121,11 @@ local keys = {
    { key = 'j', mods = mod.SUPER_REV, action = act.ActivatePaneDirection('Down') },
    { key = 'h', mods = mod.SUPER_REV, action = act.ActivatePaneDirection('Left') },
    { key = 'l', mods = mod.SUPER_REV, action = act.ActivatePaneDirection('Right') },
+   {
+      key = 'p',
+      mods = mod.SUPER_REV,
+      action = act.PaneSelect({ alphabet = '1234567890', mode = 'SwapWithActiveKeepFocus' }),
+   },
 
    -- key-tables --
    -- resizes fonts
@@ -153,7 +179,7 @@ local mouse_bindings = {
 
 return {
    disable_default_key_bindings = true,
-   leader = { key = 'Space', mods = 'CTRL|SHIFT' },
+   leader = { key = 'Space', mods = mod.SUPER_REV },
    keys = keys,
    key_tables = key_tables,
    mouse_bindings = mouse_bindings,

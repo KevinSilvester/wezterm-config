@@ -1,4 +1,5 @@
 local wezterm = require('wezterm')
+local gpu_adapters = require('utils.gpu_adapter')
 local colors = require('colors.custom')
 
 return {
@@ -6,6 +7,7 @@ return {
    max_fps = 60,
    front_end = 'WebGpu',
    webgpu_power_preference = 'HighPerformance',
+   webgpu_preferred_adapter = gpu_adapters:pick(),
 
    -- color scheme
    colors = colors,
@@ -19,7 +21,7 @@ return {
          source = { Color = colors.background },
          height = '100%',
          width = '100%',
-         opacity = 0.90,
+         opacity = 0.96,
       },
    },
 

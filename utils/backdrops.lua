@@ -16,11 +16,11 @@ local PATH_SEP = platform.is_win and '\\' or '/'
 ---@field current_idx number index of current image
 ---@field files string[] background images
 local BackDrops = {}
+BackDrops.__index = BackDrops
 
 --- Initialise backdrop controller
 ---@private
 function BackDrops:init()
-   self.__index = self
    local inital = {
       current_idx = 1,
       files = {},
@@ -44,7 +44,7 @@ end
 ---Override the current window options for background
 ---@private
 ---@param window any WezTerm Window see: https://wezfurlong.org/wezterm/config/lua/window/index.html
-function BackDrops:set_opt(window)
+function BackDrops:_set_opt(window)
    local opts = {
       background = {
          {
@@ -54,7 +54,7 @@ function BackDrops:set_opt(window)
             source = { Color = colors.background },
             height = '100%',
             width = '100%',
-            opacity = 0.90,
+            opacity = 0.96,
          },
       },
    }
@@ -84,7 +84,7 @@ function BackDrops:random(window)
    wezterm.GLOBAL.background = self.files[self.current_idx]
 
    if window ~= nil then
-      self:set_opt(window)
+      self:_set_opt(window)
    end
 end
 
@@ -97,10 +97,10 @@ function BackDrops:cycle_forward(window)
       self.current_idx = self.current_idx + 1
    end
    wezterm.GLOBAL.background = self.files[self.current_idx]
-   self:set_opt(window)
+   self:_set_opt(window)
 end
 
----Cycle the loaded `files` and select the next background
+---Cycle the loaded `files` and select the previous background
 ---@param window any WezTerm `Window` see: https://wezfurlong.org/wezterm/config/lua/window/index.html
 function BackDrops:cycle_back(window)
    if self.current_idx == 1 then
@@ -109,7 +109,7 @@ function BackDrops:cycle_back(window)
       self.current_idx = self.current_idx - 1
    end
    wezterm.GLOBAL.background = self.files[self.current_idx]
-   self:set_opt(window)
+   self:_set_opt(window)
 end
 
 ---Set a specific background from the `files` array
@@ -123,7 +123,7 @@ function BackDrops:set_img(window, idx)
 
    self.current_idx = idx
    wezterm.GLOBAL.background = self.files[self.current_idx]
-   self:set_opt(window)
+   self:_set_opt(window)
 end
 
 return BackDrops:init()

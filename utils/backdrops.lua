@@ -31,10 +31,13 @@ function BackDrops:init()
 end
 
 ---MUST BE RUN BEFORE ALL OTHER `BackDrops` functions
----Workaround to set the `files` after instantiating `BackDrops`.
----WezTerm's fs utilities `read_dir` and `glob` work by running on a spawned child process.
----This throws a coroutine error if either of these functions are invoked in outside of `wezterm.lua`
----in the initial load of the Terminal config
+---Sets the `files` after instantiating `BackDrops`.
+---
+--- INFO:
+---   During the initial load of the config, this function can only invoked in `wezterm.lua`.
+---   WezTerm's fs utility `read_dir` (used in this function) work by running on a spawned child process.
+---   This throws a coroutine error if the function is invoked in outside of `wezterm.lua` in the -
+---   initial load of the Terminal config.
 function BackDrops:set_files()
    self.files = wezterm.read_dir(wezterm.config_dir .. PATH_SEP .. 'backdrops')
    wezterm.GLOBAL.background = self.files[1]

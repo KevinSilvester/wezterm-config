@@ -24,6 +24,8 @@ local keys = {
       mods = 'NONE',
       action = act.ShowLauncherArgs({ flags = 'FUZZY|WORKSPACES' }),
    },
+   -- toggle fullscreen
+   { key = 'F11', mods = 'NONE', action = act.ToggleFullScreen },
    { key = 'F12', mods = 'NONE', action = act.ShowDebugOverlay },
    { key = 'f', mods = mod.SUPER, action = act.Search({ CaseInSensitiveString = '' }) },
    {
@@ -113,7 +115,7 @@ local keys = {
    },
 
    -- panes: zoom+close pane
-   { key = 'z', mods = mod.SUPER_REV, action = act.TogglePaneZoomState },
+   { key = 'Enter', mods = mod.SUPER, action = act.TogglePaneZoomState },
    { key = 'w', mods = mod.SUPER, action = act.CloseCurrentPane({ confirm = false }) },
 
    -- panes: navigation

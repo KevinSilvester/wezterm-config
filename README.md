@@ -22,7 +22,7 @@
 
   Uses `wezterm.read_dir` to scan the `backdrops` directory for images.
 
-  > See: [key bindings](#background-images)
+  > See: [key bindings](#background-images) for usage
 
 - [**GPU Adapter Selector**](https://github.com/KevinSilvester/wezterm-config/blob/master/utils/gpu_adapter.lua)
 

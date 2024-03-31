@@ -22,11 +22,7 @@
 
   Uses `wezterm.read_dir` to scan the `backdrops` directory for images.
 
-  - Usage:
-    - <kbd>SUPER</kbd>+<kbd>/</kbd>: Select random image
-    - <kbd>SUPER</kbd>+<kbd>,</kbd>: Cycle images forward
-    - <kbd>SUPER</kbd>+<kbd>.</kbd>: Cycle images backwards
-    - <kbd>SUPER_REV</kbd>+<kbd>/</kbd>: Fuzzy select image
+  > See: [key bindings](#background-images)
 
 - [**GPU Adapter Selector**](https://github.com/KevinSilvester/wezterm-config/blob/master/utils/gpu_adapter.lua)
 

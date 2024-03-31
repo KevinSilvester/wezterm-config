@@ -67,9 +67,6 @@ Most of the key bindings revolve around a <kbd>SUPER</kbd> and a <kbd>SUPER_REV<
 
 - On all platforms: <kbd>LEADER</kbd> ⇨ <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Space</kbd>
 
-<details>
-<summary><i>Click to expand:</i></summary>
-        
 #### Miscellaneous/Useful
 
 | Keys                          | Action                                      |
@@ -192,8 +189,6 @@ Most of the key bindings revolve around a <kbd>SUPER</kbd> and a <kbd>SUPER_REV<
 | <kbd>l</kbd>   | `AdjustPaneSize` <sub>(Direction: Right)</sub> |
 | <kbd>q</kbd>   | `PopKeyTable` <sub>(exit)</sub>                |
 | <kbd>Esc</kbd> | `PopKeyTable` <sub>(exit)</sub>                |
-
-</details>
 
 &nbsp;
 

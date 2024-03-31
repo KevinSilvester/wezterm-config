@@ -1,4 +1,4 @@
-# My WezTerm Config
+<h2 align="center">My WezTerm Config</h2>
 
 <p align="center">
   <a href="https://github.com/KevinSilvester/wezterm-config/stargazers">
@@ -8,13 +8,13 @@
     <img alt="Issues" src="https://img.shields.io/github/issues/KevinSilvester/wezterm-config?style=for-the-badge&logo=gitbook&color=B5E8E0&logoColor=D9E0EE&labelColor=302D41">
   </a>
   <a href="https://github.com/KevinSilvester/wezterm-config/actions/workflows/lint.yml">
-    <img alt="Build" src="https://img.shields.io/github/actions/workflow/status/KevinSilvester/wezterm-config/lint.yml?&style=for-the-badge&logo=githubactions&color=A6E3A1&logoColor=D9E0EE&labelColor=302D41">
+    <img alt="Build" src="https://img.shields.io/github/actions/workflow/status/KevinSilvester/wezterm-config/lint.yml?&style=for-the-badge&logo=githubactions&label=CI&color=A6E3A1&logoColor=D9E0EE&labelColor=302D41">
   </a>
 </p>
 
 ![screenshot](./.github/screenshots/wezterm.gif)
 
-&nbsp;
+---
 
 ### Features
 
@@ -49,7 +49,7 @@
 
       </details>
 
-&nbsp;
+---
 
 ### All Key Binbdings
 
@@ -190,7 +190,7 @@ Most of the key bindings revolve around a <kbd>SUPER</kbd> and a <kbd>SUPER_REV<
 | <kbd>q</kbd>   | `PopKeyTable` <sub>(exit)</sub>                |
 | <kbd>Esc</kbd> | `PopKeyTable` <sub>(exit)</sub>                |
 
-&nbsp;
+---
 
 ### References/Inspirations
 

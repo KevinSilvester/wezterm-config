@@ -5,14 +5,15 @@ local act = wezterm.action
 
 local mod = {}
 
-if platform.is_mac or platform.is_linux then
+if platform.is_mac then
    mod.SUPER = 'SUPER'
    mod.SUPER_REV = 'SUPER|CTRL'
-elseif platform.is_win then
+elseif platform.is_win or platform.is_linux then
    mod.SUPER = 'ALT' -- to not conflict with Windows key shortcuts
    mod.SUPER_REV = 'ALT|CTRL'
 end
 
+-- stylua: ignore
 local keys = {
    -- misc/useful --
    { key = 'F1', mods = 'NONE', action = 'ActivateCopyMode' },
@@ -25,9 +26,9 @@ local keys = {
       action = act.ShowLauncherArgs({ flags = 'FUZZY|WORKSPACES' }),
    },
    -- toggle fullscreen
-   { key = 'F11', mods = 'NONE', action = act.ToggleFullScreen },
-   { key = 'F12', mods = 'NONE', action = act.ShowDebugOverlay },
-   { key = 'f', mods = mod.SUPER, action = act.Search({ CaseInSensitiveString = '' }) },
+   { key = 'F11', mods = 'NONE',    action = act.ToggleFullScreen },
+   { key = 'F12', mods = 'NONE',    action = act.ShowDebugOverlay },
+   { key = 'f',   mods = mod.SUPER, action = act.Search({ CaseInSensitiveString = '' }) },
    {
       key = 'u',
       mods = mod.SUPER,
@@ -45,24 +46,24 @@ local keys = {
    },
 
    -- copy/paste --
-   { key = 'c', mods = 'CTRL|SHIFT', action = act.CopyTo('Clipboard') },
-   { key = 'v', mods = 'CTRL|SHIFT', action = act.PasteFrom('Clipboard') },
+   { key = 'c', mods = 'CTRL|SHIFT',  action = act.CopyTo('Clipboard') },
+   { key = 'v', mods = 'CTRL|SHIFT',  action = act.PasteFrom('Clipboard') },
 
    -- tabs --
    -- tabs: spawn+close
-   { key = 't', mods = mod.SUPER, action = act.SpawnTab('DefaultDomain') },
+   { key = 't', mods = mod.SUPER,     action = act.SpawnTab('DefaultDomain') },
    { key = 't', mods = mod.SUPER_REV, action = act.SpawnTab({ DomainName = 'WSL:Ubuntu' }) },
    { key = 'w', mods = mod.SUPER_REV, action = act.CloseCurrentTab({ confirm = false }) },
 
    -- tabs: navigation
-   { key = '[', mods = mod.SUPER, action = act.ActivateTabRelative(-1) },
-   { key = ']', mods = mod.SUPER, action = act.ActivateTabRelative(1) },
+   { key = '[', mods = mod.SUPER,     action = act.ActivateTabRelative(-1) },
+   { key = ']', mods = mod.SUPER,     action = act.ActivateTabRelative(1) },
    { key = '[', mods = mod.SUPER_REV, action = act.MoveTabRelative(-1) },
    { key = ']', mods = mod.SUPER_REV, action = act.MoveTabRelative(1) },
 
    -- window --
    -- spawn windows
-   { key = 'n', mods = mod.SUPER, action = act.SpawnWindow },
+   { key = 'n', mods = mod.SUPER,     action = act.SpawnWindow },
 
    -- background controls --
    {
@@ -115,14 +116,14 @@ local keys = {
    },
 
    -- panes: zoom+close pane
-   { key = 'Enter', mods = mod.SUPER, action = act.TogglePaneZoomState },
-   { key = 'w', mods = mod.SUPER, action = act.CloseCurrentPane({ confirm = false }) },
+   { key = 'Enter', mods = mod.SUPER,     action = act.TogglePaneZoomState },
+   { key = 'w',     mods = mod.SUPER,     action = act.CloseCurrentPane({ confirm = false }) },
 
    -- panes: navigation
-   { key = 'k', mods = mod.SUPER_REV, action = act.ActivatePaneDirection('Up') },
-   { key = 'j', mods = mod.SUPER_REV, action = act.ActivatePaneDirection('Down') },
-   { key = 'h', mods = mod.SUPER_REV, action = act.ActivatePaneDirection('Left') },
-   { key = 'l', mods = mod.SUPER_REV, action = act.ActivatePaneDirection('Right') },
+   { key = 'k',     mods = mod.SUPER_REV, action = act.ActivatePaneDirection('Up') },
+   { key = 'j',     mods = mod.SUPER_REV, action = act.ActivatePaneDirection('Down') },
+   { key = 'h',     mods = mod.SUPER_REV, action = act.ActivatePaneDirection('Left') },
+   { key = 'l',     mods = mod.SUPER_REV, action = act.ActivatePaneDirection('Right') },
    {
       key = 'p',
       mods = mod.SUPER_REV,
@@ -152,21 +153,22 @@ local keys = {
    },
 }
 
+-- stylua: ignore
 local key_tables = {
    resize_font = {
-      { key = 'k', action = act.IncreaseFontSize },
-      { key = 'j', action = act.DecreaseFontSize },
-      { key = 'r', action = act.ResetFontSize },
+      { key = 'k',      action = act.IncreaseFontSize },
+      { key = 'j',      action = act.DecreaseFontSize },
+      { key = 'r',      action = act.ResetFontSize },
       { key = 'Escape', action = 'PopKeyTable' },
-      { key = 'q', action = 'PopKeyTable' },
+      { key = 'q',      action = 'PopKeyTable' },
    },
    resize_pane = {
-      { key = 'k', action = act.AdjustPaneSize({ 'Up', 1 }) },
-      { key = 'j', action = act.AdjustPaneSize({ 'Down', 1 }) },
-      { key = 'h', action = act.AdjustPaneSize({ 'Left', 1 }) },
-      { key = 'l', action = act.AdjustPaneSize({ 'Right', 1 }) },
+      { key = 'k',      action = act.AdjustPaneSize({ 'Up', 1 }) },
+      { key = 'j',      action = act.AdjustPaneSize({ 'Down', 1 }) },
+      { key = 'h',      action = act.AdjustPaneSize({ 'Left', 1 }) },
+      { key = 'l',      action = act.AdjustPaneSize({ 'Right', 1 }) },
       { key = 'Escape', action = 'PopKeyTable' },
-      { key = 'q', action = 'PopKeyTable' },
+      { key = 'q',      action = 'PopKeyTable' },
    },
 }
 

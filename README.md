@@ -28,7 +28,7 @@
 
 - [**GPU Adapter Selector**](https://github.com/KevinSilvester/wezterm-config/blob/master/utils/gpu_adapter.lua)
 
-  > [!NOTE]
+  > [!NOTE]<br>
   > Only works if the [`front_end`](https://github.com/KevinSilvester/wezterm-config/blob/master/config/appearance.lua#L8) option is set to `WebGpu`
 
   A small utility to select the best GPU + Adapter (graphics API) combo for your machine.

@@ -35,7 +35,7 @@ end
 ---
 --- INFO:
 ---   During the initial load of the config, this function can only invoked in `wezterm.lua`.
----   WezTerm's fs utility `read_dir` (used in this function) work by running on a spawned child process.
+---   WezTerm's fs utility `read_dir` (used in this function) works by running on a spawned child process.
 ---   This throws a coroutine error if the function is invoked in outside of `wezterm.lua` in the -
 ---   initial load of the Terminal config.
 function BackDrops:set_files()
@@ -78,9 +78,8 @@ function BackDrops:choices()
    return choices
 end
 
----MUST BE RUN BEFORE APPEARANCE OPTIONS ARE SET
 ---Select a random file and redefine the global `wezterm.GLOBAL.background` variable
----Pass in `Window` object to override the background options to apply change
+---Pass in `Window` object to override the current window options
 ---@param window any? WezTerm `Window` see: https://wezfurlong.org/wezterm/config/lua/window/index.html
 function BackDrops:random(window)
    self.current_idx = math.random(#self.files)

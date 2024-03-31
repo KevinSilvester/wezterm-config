@@ -59,8 +59,8 @@ function GpuAdapters:init()
 end
 
 ---Will pick the best adapter based on the following criteria:
----   1. Best GPU available (Discrete > Integrated > Other (OpenGl on Discrete) > Cpu)
----   2. Best graphics API available (based off my very non-scientic scroll a big log file in neovim test 😁)
+---   1. Best GPU available (Discrete > Integrated > Other (for wgpu's OpenGl implementation on Discrete GPU) > Cpu)
+---   2. Best graphics API available (based off my very scientific scroll a big log file in neovim test 😁)
 ---
 ---Graphics API choices are based on the platform:
 ---   - Windows: Dx12 > Vulkan > OpenGl
@@ -68,7 +68,7 @@ end
 ---   - Mac: Metal
 ---@see GpuAdapters.AVAILABLE_BACKENDS
 ---
----If the best adapter combo is not found, it will return nil and lets Wezterm decide the best adapter.
+---If the best adapter combo is not found, it will return `nil` and lets Wezterm decide the best adapter.
 ---
 ---Please note these are my own personal preferences and may not be the best for your system.
 ---If you want to manually choose the adapter, use `GpuAdapters:pick_manual(backend, device_type)`

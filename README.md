@@ -14,6 +14,8 @@
 
 ![screenshot](./.github/screenshots/wezterm.gif)
 
+&nbsp;
+
 ### Features
 
 - [**Background Image Selector**](https://github.com/KevinSilvester/wezterm-config/blob/master/utils/backdrops.lua)
@@ -29,7 +31,7 @@
 - [**GPU Adapter Selector**](https://github.com/KevinSilvester/wezterm-config/blob/master/utils/gpu_adapter.lua)
 
   > [!NOTE]<br>
-  > Only works if the [`front_end`](https://github.com/KevinSilvester/wezterm-config/blob/master/config/appearance.lua#L8) option is set to `WebGpu`
+  > Only works if the 
 
   A small utility to select the best GPU + Adapter (graphics API) combo for your machine.
 
@@ -51,6 +53,8 @@
       - Mac: `Metal`
 
       </details>
+
+&nbsp;
 
 ### References/Links
 

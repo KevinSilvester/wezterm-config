@@ -21,29 +21,33 @@
   Uses `wezterm.read_dir` to scan the `backdrops` directory for images.
 
   - Usage:
-    - `SUPER /`: Select random image
-    - `SUPER ,`: Cycle images forward
-    - `SUPER .`: Cycle images backwards
-    - `SUPER_REV /`: Fuzzy select image
+    - <kbd>SUPER</kbd>+<kbd>/</kbd>: Select random image
+    - <kbd>SUPER</kbd>+<kbd>,</kbd>: Cycle images forward
+    - <kbd>SUPER</kbd>+<kbd>.</kbd>: Cycle images backwards
+    - <kbd>SUPER_REV</kbd>+<kbd>/</kbd>: Fuzzy select image
 
 - [**GPU Adapter Selector**](https://github.com/KevinSilvester/wezterm-config/blob/master/utils/gpu_adapter.lua)
 
   A small utility to select the best GPU + Adapter (graphics API) combo for your machine.
 
-  Adapter is selected based on the following criteria:
+  GPU + Adapter combo is selected based on the following criteria:
 
-  1.  Best GPU available (`Discrete` > `Integrated` > `Other` (for wgpu's OpenGl implementation on Discrete GPU) > `Cpu`)
-  2.  Best graphics API available (based off my very scientific scroll a big log file in neovim test 😁)
+  1.  <details>
+      <summary>Best GPU available</summary>
 
-  <details>
-    <summary>Graphics API choices are based on the platform:</summary>
+      (`Discrete` > `Integrated` > `Other` (for `wgpu`'s OpenGl implementation on Discrete GPU) > `Cpu`)
+      </details>
+
+  2.  <details>
+      <summary>Best graphics API available (based off my very scientific scroll a big log file in neovim test 😁)</summary>
+
       > see: <https://github.com/gfx-rs/wgpu#supported-platforms> for more info
 
       - Windows: `Dx12` > `Vulkan` > `OpenGl`
       - Linux: `Vulkan` > `OpenGl`
       - Mac: `Metal`
 
-  </details>
+      </details>
 
 ### References/Links
 

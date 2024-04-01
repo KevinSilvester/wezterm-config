@@ -79,7 +79,7 @@ Most of the key bindings revolve around a <kbd>SUPER</kbd> and a <kbd>SUPER_REV<
 | <kbd>F11</kbd>                | `ToggleFullScreen`                          |
 | <kbd>F12</kbd>                | `ShowDebugOverlay`                          |
 | <kbd>SUPER</kbd>+<kbd>f</kbd> | Search Text                                 |
-| <kbd>SUPER</kbd>+<kbd>f</kbd> | Open URL                                    |
+| <kbd>SUPER</kbd>+<kbd>u</kbd> | Open URL                                    |
 
 &nbsp;
 

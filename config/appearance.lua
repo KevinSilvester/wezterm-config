@@ -7,7 +7,7 @@ return {
    max_fps = 60,
    front_end = 'WebGpu',
    webgpu_power_preference = 'HighPerformance',
-   webgpu_preferred_adapter = gpu_adapters:pick(),
+   webgpu_preferred_adapter = gpu_adapters:pick_best(),
 
    -- color scheme
    colors = colors,

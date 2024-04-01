@@ -35,13 +35,17 @@
   1.  <details>
       <summary>Best GPU available</summary>
 
-      (`Discrete` > `Integrated` > `Other` (for `wgpu`'s OpenGl implementation on Discrete GPU) > `Cpu`)
+      `Discrete` > `Integrated` > `Other` (for `wgpu`'s OpenGl implementation on Discrete GPU) > `Cpu`
       </details>
 
   2.  <details>
       <summary>Best graphics API available (based off my very scientific scroll a big log file in Neovim test 😁)</summary>
 
-      > see: <https://github.com/gfx-rs/wgpu#supported-platforms> for more info
+      > :bulb:<br>
+      > The available graphics API choices change based on your OS.<br>
+      > These options correspond to the APIs the `wgpu` crate which (powers WezTerm's gui in `WebGpu` mode)<br>
+      > currenly has support implemented for.<br>
+      > See: <https://github.com/gfx-rs/wgpu#supported-platforms> for more info
 
       - Windows: `Dx12` > `Vulkan` > `OpenGl`
       - Linux: `Vulkan` > `OpenGl`

@@ -77,7 +77,7 @@ end
 ---If you want to manually choose the adapter, use `GpuAdapters:pick_manual(backend, device_type)`
 ---Or feel free to re-arrange `GpuAdapters.AVAILABLE_BACKENDS` to you liking
 ---@return WeztermGPUAdapter|nil
-function GpuAdapters:pick()
+function GpuAdapters:pick_best()
    local adapters_options = self.DiscreteGpu
 
    if not adapters_options then

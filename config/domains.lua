@@ -12,7 +12,7 @@ return {
          distribution = 'Ubuntu',
          username = 'kevin',
          default_cwd = '/home/kevin',
-         default_prog = { 'fish' },
+         default_prog = { 'fish', '-l' },
       },
    },
 }

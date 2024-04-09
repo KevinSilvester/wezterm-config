@@ -1,34 +1,22 @@
 local wezterm = require('wezterm')
 
+-- local nf = wezterm.nerdfonts
+
 -- Inspired by https://github.com/wez/wezterm/discussions/628#discussioncomment-1874614
 
-local GLYPH_SEMI_CIRCLE_LEFT = ''
--- local GLYPH_SEMI_CIRCLE_LEFT = utf8.char(0xe0b6)
-local GLYPH_SEMI_CIRCLE_RIGHT = ''
--- local GLYPH_SEMI_CIRCLE_RIGHT = utf8.char(0xe0b4)
-local GLYPH_CIRCLE = ''
--- local GLYPH_CIRCLE = utf8.char(0xf111)
-local GLYPH_ADMIN = '󰞀'
--- local GLYPH_ADMIN = utf8.char(0xf0780)
+local GLYPH_SEMI_CIRCLE_LEFT = '' -- nf.ple_left_half_circle_thick
+local GLYPH_SEMI_CIRCLE_RIGHT = '' -- nf.ple_right_half_cirlce_thick
+local GLYPH_CIRCLE = '' -- nf.fa_circle
+local GLYPH_ADMIN = '󰞀' -- nf.md_shield_half_full
 
 local M = {}
 
 local __cells__ = {}
 
 local colors = {
-   default = {
-      bg = '#45475a',
-      fg = '#1c1b19',
-   },
-   is_active = {
-      bg = '#7FB4CA',
-      fg = '#11111b',
-   },
-
-   hover = {
-      bg = '#587d8c',
-      fg = '#1c1b19',
-   },
+   default = { bg = '#45475a', fg = '#1c1b19', },
+   is_active = { bg = '#7FB4CA', fg = '#11111b', },
+   hover = { bg = '#587d8c', fg = '#1c1b19', },
 }
 
 local _set_process_name = function(s)

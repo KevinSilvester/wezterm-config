@@ -43,7 +43,7 @@
 
       > :bulb:<br>
       > The available graphics API choices change based on your OS.<br>
-      > These options correspond to the APIs the `wgpu` crate which (powers WezTerm's gui in `WebGpu` mode)<br>
+      > These options correspond to the APIs the `wgpu` crate (which powers WezTerm's gui in `WebGpu` mode)<br>
       > currenly has support implemented for.<br>
       > See: <https://github.com/gfx-rs/wgpu#supported-platforms> for more info
 

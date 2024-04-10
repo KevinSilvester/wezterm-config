@@ -1,7 +1,5 @@
 local wezterm = require('wezterm')
 
--- local nf = wezterm.nerdfonts
-
 -- Inspired by https://github.com/wez/wezterm/discussions/628#discussioncomment-1874614
 
 local GLYPH_SEMI_CIRCLE_LEFT = '' -- nf.ple_left_half_circle_thick

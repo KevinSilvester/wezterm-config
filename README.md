@@ -69,7 +69,7 @@ Most of the key bindings revolve around a <kbd>SUPER</kbd> and a <kbd>SUPER_REV<
 > To avoid confusion when switching between different OS and to avoid conflicting<br>
 > with OS's built-in keyboard shortcuts.
 
-- On all platforms: <kbd>LEADER</kbd> ⇨ <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Space</kbd>
+- On all platforms: <kbd>LEADER</kbd> ⇨ <kbd>SUPER_REV</kbd>+<kbd>Space</kbd>
 
 #### Miscellaneous/Useful
 

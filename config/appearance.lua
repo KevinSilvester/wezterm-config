@@ -16,6 +16,7 @@ return {
    background = {
       {
          source = { File = wezterm.GLOBAL.background },
+         horizontal_align = 'Center',
       },
       {
          source = { Color = colors.background },

@@ -55,9 +55,56 @@
 
 ---
 
+### Getting Started
+
+##### Requirements:
+
+- <details>
+  <summary>JetBrainsMono Nerd Font</summary>
+
+  Install with HomeBrew (Linux)
+
+  ```sh
+  brew tap homebrew/cask-fonts
+  brew install font-jetbrains-mono-nerd-font
+  ```
+
+  Install with Scoop (Windows)
+
+  ```sh
+  scoop bucket add nerd-font
+  scoop install JetBrainsMono-NF
+  ```
+
+  > More Info:
+  >
+  > - <https://www.nerdfonts.com/#home>
+  > - <https://github.com/ryanoasis/nerd-fonts?#font-installation>
+
+  </details/>
+
+&nbps;
+
+##### Steps:
+
+1.  ```sh
+    # On Windows and Unix systems
+    git clone https://github.com/KevinSilvester/wezterm-config.git ~/.config/wezterm
+    ```
+2.  And Done!!! 🎉🎉
+
+&nbps;
+
+##### Things You Might Want to Change:
+
+- [./config/domains.lua](./config/domains.lua) for custom SSH/WSL domains
+- [./config/launch.lua](./config/launch.lua) for preferred shells and its paths
+
+---
+
 ### All Key Binbdings
 
-Most of the key bindings revolve around a <kbd>SUPER</kbd> and a <kbd>SUPER_REV</kbd>(super reversed) keys.<br>
+Most of the key bindings revolve around a <kbd>SUPER</kbd> and <kbd>SUPER_REV</kbd>(super reversed) keys.<br>
 
 - On MacOs:
   - <kbd>SUPER</kbd> ⇨ <kbd>Super</kbd>

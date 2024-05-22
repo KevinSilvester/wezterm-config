@@ -57,48 +57,50 @@
 
 ### Getting Started
 
-##### Requirements:
+- ##### Requirements:
 
-- <details>
-  <summary>JetBrainsMono Nerd Font</summary>
+  - WezTerm `>= 20240127-113634-bbcac864`
 
-  Install with HomeBrew (Linux)
+  - <details>
+    <summary>JetBrainsMono Nerd Font</summary>
 
-  ```sh
-  brew tap homebrew/cask-fonts
-  brew install font-jetbrains-mono-nerd-font
-  ```
+    Install with HomeBrew (Macos)
 
-  Install with Scoop (Windows)
-
-  ```sh
-  scoop bucket add nerd-font
-  scoop install JetBrainsMono-NF
-  ```
-
-  > More Info:
-  >
-  > - <https://www.nerdfonts.com/#home>
-  > - <https://github.com/ryanoasis/nerd-fonts?#font-installation>
-
-  </details/>
-
-&nbps;
-
-##### Steps:
-
-1.  ```sh
-    # On Windows and Unix systems
-    git clone https://github.com/KevinSilvester/wezterm-config.git ~/.config/wezterm
+    ```sh
+    brew tap homebrew/cask-fonts
+    brew install font-jetbrains-mono-nerd-font
     ```
-2.  And Done!!! 🎉🎉
 
-&nbps;
+    Install with Scoop (Windows)
 
-##### Things You Might Want to Change:
+    ```sh
+    scoop bucket add nerd-font
+    scoop install JetBrainsMono-NF
+    ```
 
-- [./config/domains.lua](./config/domains.lua) for custom SSH/WSL domains
-- [./config/launch.lua](./config/launch.lua) for preferred shells and its paths
+    > More Info:
+    >
+    > - <https://www.nerdfonts.com/#home>
+    > - <https://github.com/ryanoasis/nerd-fonts?#font-installation>
+
+    </details/>
+
+&nbsp;
+
+- ##### Steps:
+
+  1.  ```sh
+      # On Windows and Unix systems
+      git clone https://github.com/KevinSilvester/wezterm-config.git ~/.config/wezterm
+      ```
+  2.  And Done!!! 🎉🎉
+
+&nbsp;
+
+- ##### Things You Might Want to Change:
+
+  - [./config/domains.lua](./config/domains.lua) for custom SSH/WSL domains
+  - [./config/launch.lua](./config/launch.lua) for preferred shells and its paths
 
 ---
 

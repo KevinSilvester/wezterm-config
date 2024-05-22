@@ -25,7 +25,6 @@ local keys = {
       mods = 'NONE',
       action = act.ShowLauncherArgs({ flags = 'FUZZY|WORKSPACES' }),
    },
-   -- toggle fullscreen
    { key = 'F11', mods = 'NONE',    action = act.ToggleFullScreen },
    { key = 'F12', mods = 'NONE',    action = act.ShowDebugOverlay },
    { key = 'f',   mods = mod.SUPER, action = act.Search({ CaseInSensitiveString = '' }) },
@@ -35,7 +34,11 @@ local keys = {
       action = wezterm.action.QuickSelectArgs({
          label = 'open url',
          patterns = {
-            'https?://\\S+',
+            '\\((https?://\\S+)\\)',
+            '\\[(https?://\\S+)\\]',
+            '\\{(https?://\\S+)\\}',
+            '<(https?://\\S+)>',
+            '\\bhttps?://\\S+[)/a-zA-Z0-9-]+'
          },
          action = wezterm.action_callback(function(window, pane)
             local url = window:get_selection_text_for_pane(pane)
@@ -45,25 +48,31 @@ local keys = {
       }),
    },
 
+   -- cursor movement --
+   -- move cursor to the line beginning
+   { key = 'LeftArrow',  mods = mod.SUPER,     action = act.SendString '\x1bOH' },
+   -- move cursor to the line end
+   { key = 'RightArrow', mods = mod.SUPER,     action = act.SendString '\x1bOF' },
+
    -- copy/paste --
-   { key = 'c', mods = 'CTRL|SHIFT',  action = act.CopyTo('Clipboard') },
-   { key = 'v', mods = 'CTRL|SHIFT',  action = act.PasteFrom('Clipboard') },
+   { key = 'c',          mods = 'CTRL|SHIFT',  action = act.CopyTo('Clipboard') },
+   { key = 'v',          mods = 'CTRL|SHIFT',  action = act.PasteFrom('Clipboard') },
 
    -- tabs --
    -- tabs: spawn+close
-   { key = 't', mods = mod.SUPER,     action = act.SpawnTab('DefaultDomain') },
-   { key = 't', mods = mod.SUPER_REV, action = act.SpawnTab({ DomainName = 'WSL:Ubuntu' }) },
-   { key = 'w', mods = mod.SUPER_REV, action = act.CloseCurrentTab({ confirm = false }) },
+   { key = 't',          mods = mod.SUPER,     action = act.SpawnTab('DefaultDomain') },
+   { key = 't',          mods = mod.SUPER_REV, action = act.SpawnTab({ DomainName = 'WSL:Ubuntu' }) },
+   { key = 'w',          mods = mod.SUPER_REV, action = act.CloseCurrentTab({ confirm = false }) },
 
    -- tabs: navigation
-   { key = '[', mods = mod.SUPER,     action = act.ActivateTabRelative(-1) },
-   { key = ']', mods = mod.SUPER,     action = act.ActivateTabRelative(1) },
-   { key = '[', mods = mod.SUPER_REV, action = act.MoveTabRelative(-1) },
-   { key = ']', mods = mod.SUPER_REV, action = act.MoveTabRelative(1) },
+   { key = '[',          mods = mod.SUPER,     action = act.ActivateTabRelative(-1) },
+   { key = ']',          mods = mod.SUPER,     action = act.ActivateTabRelative(1) },
+   { key = '[',          mods = mod.SUPER_REV, action = act.MoveTabRelative(-1) },
+   { key = ']',          mods = mod.SUPER_REV, action = act.MoveTabRelative(1) },
 
    -- window --
    -- spawn windows
-   { key = 'n', mods = mod.SUPER,     action = act.SpawnWindow },
+   { key = 'n',          mods = mod.SUPER,     action = act.SpawnWindow },
 
    -- background controls --
    {

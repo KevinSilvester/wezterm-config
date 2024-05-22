@@ -49,10 +49,9 @@ local keys = {
    },
 
    -- cursor movement --
-   -- move cursor to the line beginning
-   { key = 'LeftArrow',  mods = mod.SUPER,     action = act.SendString '\x1bOH' },
-   -- move cursor to the line end
+   { key = 'LeftArrow',  mods = mod.SUPER,     action = act.SendString '\x1b0H' },
    { key = 'RightArrow', mods = mod.SUPER,     action = act.SendString '\x1bOF' },
+   { key = 'Backspace',  mods = mod.SUPER,     action = act.SendString '\x15' },
 
    -- copy/paste --
    { key = 'c',          mods = 'CTRL|SHIFT',  action = act.CopyTo('Clipboard') },

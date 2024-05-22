@@ -145,6 +145,16 @@ Most of the key bindings revolve around a <kbd>SUPER</kbd> and <kbd>SUPER_REV</k
 
 &nbsp;
 
+#### Cursor Movements
+
+| Keys                                   | Action                    |
+| -------------------------------------- | ------------------------- |
+| <kbd>SUPER</kbd>+<kbd>LeftArrow</kbd>  | Move cursor to Line Start |
+| <kbd>SUPER</kbd>+<kbd>RightArrow</kbd> | Move cursor to Line End   |
+| <kbd>SUPER</kbd>+<kbd>Backspace</kbd>  | Clear line                |
+
+&nbsp;
+
 #### Tabs
 
 ##### Tabs: Spawn+Close

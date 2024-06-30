@@ -74,7 +74,7 @@
     Install with Scoop (Windows)
 
     ```sh
-    scoop bucket add nerd-font
+    scoop bucket add nerd-fonts
     scoop install JetBrainsMono-NF
     ```
 

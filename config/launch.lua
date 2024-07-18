@@ -18,15 +18,15 @@ if platform.is_win then
       },
    }
 elseif platform.is_mac then
-   options.default_prog = { '/opt/homebrew/bin/fish', '-l' }
+   options.default_prog = { '/usr/local/bin/zsh', '-l' }
    options.launch_menu = {
       { label = 'Bash', args = { 'bash', '-l' } },
-      { label = 'Fish', args = { '/opt/homebrew/bin/fish', '-l' } },
-      { label = 'Nushell', args = { '/opt/homebrew/bin/nu', '-l' } },
-      { label = 'Zsh', args = { 'zsh', '-l' } },
+      { label = 'Fish', args = { '/usr/local/bin/fish', '-l' } },
+      { label = 'Nushell', args = { '/usr/local/bin/nu', '-l' } },
+      { label = 'Zsh', args = { '/usr/local/bin/zsh', '-l' } },
    }
 elseif platform.is_linux then
-   options.default_prog = { 'fish', '-l' }
+   options.default_prog = { 'zsh', '-l' }
    options.launch_menu = {
       { label = 'Bash', args = { 'bash', '-l' } },
       { label = 'Fish', args = { 'fish', '-l' } },

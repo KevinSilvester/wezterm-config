@@ -24,6 +24,12 @@ elseif platform.is_mac then
       { label = 'Fish', args = { '/usr/local/bin/fish', '-l' } },
       { label = 'Nushell', args = { '/usr/local/bin/nu', '-l' } },
       { label = 'Zsh', args = { '/usr/local/bin/zsh', '-l' } },
+      { label = 'NuShell', args = { '/usr/local/bin/nu', '-l' } },
+      { label = 'Murex', args = { '/usr/local/bin/murex' } },
+      { label = 'Ysh', args = { '/usr/local/bin/ysh', '-l' } },
+      { label = 'Osh', args = { '/usr/local/bin/osh', '-l' } },
+      { label = 'PowerShell', args = { '/usr/local/bin/pwsh-preview', '-l' } },
+      { label = 'Xonsh', args = { '/usr/local/bin/xonsh', '-l' } },
    }
 elseif platform.is_linux then
    options.default_prog = { 'zsh', '-l' }

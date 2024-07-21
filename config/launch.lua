@@ -31,6 +31,8 @@ elseif platform.is_linux then
       { label = 'Bash', args = { 'bash', '-l' } },
       { label = 'Fish', args = { 'fish', '-l' } },
       { label = 'Zsh', args = { 'zsh', '-l' } },
+      { label = 'NuShell', args = { 'nu', '-l' } },
+      { label = 'Murex', args = { 'murex', '' } },
    }
 end
 

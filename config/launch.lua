@@ -20,7 +20,7 @@ if platform.is_win then
 elseif platform.is_mac then
    options.default_prog = { '/usr/local/bin/zsh', '-l' }
    options.launch_menu = {
-      { label = 'Bash', args = { 'bash', '-l' } },
+      { label = 'Bash', args = { '/usr/local/bin/bash', '-l' } },
       { label = 'Fish', args = { '/usr/local/bin/fish', '-l' } },
       { label = 'Nushell', args = { '/usr/local/bin/nu', '-l' } },
       { label = 'Zsh', args = { '/usr/local/bin/zsh', '-l' } },
@@ -36,6 +36,7 @@ elseif platform.is_linux then
       { label = 'Ysh', args = { '/home/linuxbrew/.linuxbrew/bin/ysh', '-l' } },
       { label = 'Osh', args = { '/home/linuxbrew/.linuxbrew/bin/osh', '-l' } },
       { label = 'Elvish', args = { 'elvish' } },
+      { label = 'Xonsh', args = { 'xonsh', '-l' } },
    }
 end
 

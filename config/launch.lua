@@ -14,7 +14,7 @@ if platform.is_win then
       { label = 'Nushell', args = { 'nu' } },
       {
          label = 'Git Bash',
-         args = { 'C:\\Users\\kevin\\scoop\\apps\\git\\current\\bin\\bash.exe' },
+         args = { 'C:\\Users\\Shadow\\scoop\\apps\\git\\current\\bin\\bash.exe' },
       },
    }
 elseif platform.is_mac then
@@ -31,8 +31,11 @@ elseif platform.is_linux then
       { label = 'Bash', args = { 'bash', '-l' } },
       { label = 'Fish', args = { 'fish', '-l' } },
       { label = 'Zsh', args = { 'zsh', '-l' } },
-      { label = 'NuShell', args = { 'nu', '-l' } },
-      { label = 'Murex', args = { 'murex', '' } },
+      { label = 'NuShell', args = { '/home/linuxbrew/.linuxbrew/bin/nu', '-l' } },
+      { label = 'Murex', args = { '/home/linuxbrew/.linuxbrew/bin/murex' } },
+      { label = 'Ysh', args = { '/home/linuxbrew/.linuxbrew/bin/ysh', '-l' } },
+      { label = 'Osh', args = { '/home/linuxbrew/.linuxbrew/bin/osh', '-l' } },
+      { label = 'Elvish', args = { 'elvish' } },
    }
 end
 

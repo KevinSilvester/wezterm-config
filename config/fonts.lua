@@ -5,10 +5,10 @@ local font_size
 local current_platform = platform()
 if current_platform.is_mac then
    font = 'MesloLGS NF'
-   font_size = 13
+   font_size = 14
 elseif current_platform.is_linux then
    font = 'MesloLGS Nerd Font'
-   font_size = 15
+   font_size = 17
 end
 
 return {

@@ -9,6 +9,9 @@ if current_platform.is_mac then
 elseif current_platform.is_linux then
    font = 'MesloLGS Nerd Font'
    font_size = 17
+elseif current_platform.is_win then
+   font = 'CaskaydiaCove NF'
+   font_size = 17
 end
 
 return {

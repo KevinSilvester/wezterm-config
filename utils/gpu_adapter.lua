@@ -79,6 +79,7 @@ end
 ---@return WeztermGPUAdapter|nil
 function GpuAdapters:pick_best()
    local adapters_options = self.DiscreteGpu
+   local preferred_backend = self.__preferred_backend
 
    if not adapters_options then
       adapters_options = self.IntegratedGpu
@@ -86,6 +87,7 @@ function GpuAdapters:pick_best()
 
    if not adapters_options then
       adapters_options = self.Other
+      preferred_backend = 'Gl'
    end
 
    if not adapters_options then
@@ -97,7 +99,7 @@ function GpuAdapters:pick_best()
       return nil
    end
 
-   local adapter_choice = adapters_options[self.__preferred_backend]
+   local adapter_choice = adapters_options[preferred_backend]
 
    if not adapter_choice then
       wezterm.log_error('Preferred backend not available. Using Default Adapter.')

@@ -4,7 +4,10 @@ local font
 local font_size
 local current_platform = platform()
 if current_platform.is_mac then
-   font = 'MesloLGS NF'
+   font = {
+      'MesloLGS NF',
+      'Apple Color Emoji',
+   }
    font_size = 14
 elseif current_platform.is_linux then
    font = 'MesloLGS Nerd Font'
@@ -15,7 +18,7 @@ elseif current_platform.is_win then
 end
 
 return {
-   font = wezterm.font(font),
+   font = wezterm.font_with_fallback(font),
    font_size = font_size,
 
    --ref: https://wezfurlong.org/wezterm/config/lua/config/freetype_pcf_long_family_names.html#why-doesnt-wezterm-use-the-distro-freetype-or-match-its-configuration

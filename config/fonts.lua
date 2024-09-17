@@ -10,10 +10,18 @@ if current_platform.is_mac then
    }
    font_size = 14
 elseif current_platform.is_linux then
-   font = 'MesloLGS Nerd Font'
+   font = {
+      'OpenDyslexic Nerd Font',
+      'MesloLGS Nerd Font',
+      'CaskaydiaCove NF',
+      'NotoColorEmoji',
+   }
    font_size = 17
 elseif current_platform.is_win then
-   font = 'CaskaydiaCove NF'
+   font = {
+      'CaskaydiaCove NF',
+      'MesloLGS Nerd Font',
+   }
    font_size = 17
 end
 

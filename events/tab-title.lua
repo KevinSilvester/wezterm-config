@@ -8,6 +8,7 @@ local GLYPH_SEMI_CIRCLE_LEFT = nf.ple_left_half_circle_thick --[[ '' ]]
 local GLYPH_SEMI_CIRCLE_RIGHT = nf.ple_right_half_circle_thick --[[ '' ]]
 local GLYPH_CIRCLE = nf.fa_circle --[[ '' ]]
 local GLYPH_ADMIN = nf.md_shield_half_full --[[ '󰞀' ]]
+local GLYPH_UBUNTU = nf.cod_terminal_linux
 
 local M = {}
 
@@ -44,7 +45,14 @@ local _set_title = function(process_name, base_title, max_width, inset)
 end
 
 local _check_if_admin = function(p)
-   if p:match('^Administrator: ') then
+   if p:match('^Administrator: ') or p:match('(Admin)') then
+      return true
+   end
+   return false
+end
+
+local _check_if_wsl = function(title)
+   if title:match('^wsl') then
       return true
    end
    return false
@@ -69,7 +77,9 @@ M.setup = function()
       local fg
       local process_name = _set_process_name(tab.active_pane.foreground_process_name)
       local is_admin = _check_if_admin(tab.active_pane.title)
-      local title = _set_title(process_name, tab.active_pane.title, max_width, (is_admin and 8))
+      local is_wsl = _check_if_wsl(process_name)
+      local title =
+         _set_title(process_name, tab.active_pane.title, max_width, ((is_admin or is_wsl) and 8))
 
       if tab.is_active then
          bg = colors.is_active.bg
@@ -96,6 +106,11 @@ M.setup = function()
       -- Admin Icon
       if is_admin then
          _push(bg, fg, { Intensity = 'Bold' }, ' ' .. GLYPH_ADMIN)
+      end
+
+      -- WSL Icon
+      if is_wsl then
+         _push(bg, fg, { Intensity = 'Bold' }, ' ' .. GLYPH_UBUNTU)
       end
 
       -- Title

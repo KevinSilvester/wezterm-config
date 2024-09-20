@@ -44,7 +44,7 @@
       > :bulb:<br>
       > The available graphics API choices change based on your OS.<br>
       > These options correspond to the APIs the `wgpu` crate (which powers WezTerm's gui in `WebGpu` mode)<br>
-      > currenly has support implemented for.<br>
+      > currently has support implemented for.<br>
       > See: <https://github.com/gfx-rs/wgpu#supported-platforms> for more info
 
       - Windows: `Dx12` > `Vulkan` > `OpenGl`
@@ -104,7 +104,7 @@
 
 ---
 
-### All Key Binbdings
+### All Key Bindings
 
 Most of the key bindings revolve around a <kbd>SUPER</kbd> and <kbd>SUPER_REV</kbd>(super reversed) keys.<br>
 
@@ -140,8 +140,8 @@ Most of the key bindings revolve around a <kbd>SUPER</kbd> and <kbd>SUPER_REV</k
 
 | Keys                                          | Action               |
 | --------------------------------------------- | -------------------- |
-| <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>c</kbd> | Copy to Clipborad    |
-| <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>v</kbd> | Paste from Clipborad |
+| <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>c</kbd> | Copy to Clipboard    |
+| <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>v</kbd> | Paste from Clipboard |
 
 &nbsp;
 

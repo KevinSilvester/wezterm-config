@@ -11,7 +11,8 @@ if current_platform.is_mac then
    font_size = 14
 elseif current_platform.is_linux then
    font = {
-      'OpenDyslexic Nerd Font',
+      'Firacode Nerd Font',
+      'IosevkaTerm NF',
       'MesloLGS Nerd Font',
       'CaskaydiaCove NF',
       'NotoColorEmoji',

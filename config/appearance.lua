@@ -45,6 +45,7 @@ return {
       bottom = 7,
    },
    window_close_confirmation = 'NeverPrompt',
+   window_decorations = "RESIZE",
    window_frame = {
       active_titlebar_bg = '#090909',
       -- font = fonts.font,
@@ -54,4 +55,6 @@ return {
       saturation = 0.9,
       brightness = 0.65,
    },
+   initial_cols = 120,
+   initial_rows = 30,
 }

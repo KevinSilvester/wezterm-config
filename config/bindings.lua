@@ -64,8 +64,8 @@ local keys = {
    { key = 'w',          mods = mod.SUPER_REV, action = act.CloseCurrentTab({ confirm = false }) },
 
    -- tabs: navigation
-   { key = '[',          mods = mod.SUPER,     action = act.ActivateTabRelative(-1) },
-   { key = ']',          mods = mod.SUPER,     action = act.ActivateTabRelative(1) },
+   { key = '[',          mods = 'LEADER',     action = act.ActivateTabRelative(-1) },
+   { key = ']',          mods = 'LEADER',     action = act.ActivateTabRelative(1) },
    { key = '[',          mods = mod.SUPER_REV, action = act.MoveTabRelative(-1) },
    { key = ']',          mods = mod.SUPER_REV, action = act.MoveTabRelative(1) },
 
@@ -113,25 +113,25 @@ local keys = {
    -- panes --
    -- panes: split panes
    {
-      key = [[\]],
-      mods = mod.SUPER,
+      key = '-',
+      mods = 'LEADER',
       action = act.SplitVertical({ domain = 'CurrentPaneDomain' }),
    },
    {
-      key = [[\]],
-      mods = mod.SUPER_REV,
+      key = '|',
+      mods = 'LEADER',
       action = act.SplitHorizontal({ domain = 'CurrentPaneDomain' }),
    },
 
    -- panes: zoom+close pane
    { key = 'Enter', mods = mod.SUPER,     action = act.TogglePaneZoomState },
-   { key = 'w',     mods = mod.SUPER,     action = act.CloseCurrentPane({ confirm = false }) },
+   { key = 'd',     mods = 'LEADER',     action = act.CloseCurrentPane({ confirm = false }) },
 
    -- panes: navigation
-   { key = 'k',     mods = mod.SUPER_REV, action = act.ActivatePaneDirection('Up') },
-   { key = 'j',     mods = mod.SUPER_REV, action = act.ActivatePaneDirection('Down') },
-   { key = 'h',     mods = mod.SUPER_REV, action = act.ActivatePaneDirection('Left') },
-   { key = 'l',     mods = mod.SUPER_REV, action = act.ActivatePaneDirection('Right') },
+   { key = 'UpArrow',     mods = 'LEADER', action = act.ActivatePaneDirection('Up') },
+   { key = 'DownArrow',     mods = 'LEADER', action = act.ActivatePaneDirection('Down') },
+   { key = 'LeftArrow',     mods = 'LEADER', action = act.ActivatePaneDirection('Left') },
+   { key = 'RightArrow',     mods = 'LEADER', action = act.ActivatePaneDirection('Right') },
    {
       key = 'p',
       mods = mod.SUPER_REV,
@@ -191,7 +191,7 @@ local mouse_bindings = {
 
 return {
    disable_default_key_bindings = true,
-   leader = { key = 'Space', mods = mod.SUPER_REV },
+   leader = { key = 'w', mods = 'CTRL' },
    keys = keys,
    key_tables = key_tables,
    mouse_bindings = mouse_bindings,

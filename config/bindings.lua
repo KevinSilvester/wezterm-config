@@ -109,6 +109,13 @@ local keys = {
          end),
       }),
    },
+   {
+      key = 'b',
+      mods = mod.SUPER,
+      action = wezterm.action_callback(function(window, _pane)
+         backdrops:toggle_focus(window)
+      end)
+   },
 
    -- panes --
    -- panes: split panes

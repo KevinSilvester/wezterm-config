@@ -15,6 +15,8 @@ local PATH_SEP = platform.is_win and '\\' or '/'
 ---@class BackDrops
 ---@field current_idx number index of current image
 ---@field files string[] background images
+---@field focus_color string background color when in focus mode
+---@field focus_on boolean focus mode on or off
 local BackDrops = {}
 BackDrops.__index = BackDrops
 
@@ -24,6 +26,8 @@ function BackDrops:init()
    local inital = {
       current_idx = 1,
       files = {},
+      focus_color = colors.background,
+      focus_on = false
    }
    local backdrops = setmetatable(inital, self)
    wezterm.GLOBAL.background = nil
@@ -44,6 +48,13 @@ function BackDrops:set_files()
    return self
 end
 
+---Set the focus color for the background
+---@param focus_color string background color when in focus mode
+function BackDrops:set_focus(focus_color)
+   self.focus_color = focus_color
+   return self
+end
+
 ---Override the current window options for background
 ---@private
 ---@param window any WezTerm Window see: https://wezfurlong.org/wezterm/config/lua/window/index.html
@@ -59,6 +70,23 @@ function BackDrops:_set_opt(window)
             height = '100%',
             width = '100%',
             opacity = 0.96,
+         },
+      },
+   }
+   window:set_config_overrides(opts)
+end
+
+---Override the current window options for background with focus color
+---@private
+---@param window any WezTerm Window see: https://wezfurlong.org/wezterm/config/lua/window/index.html
+function BackDrops:_set_focus_opt(window)
+   local opts = {
+      background = {
+         {
+            source = { Color = self.focus_color },
+            height = '100%',
+            width = '100%',
+            opacity = 1,
          },
       },
    }
@@ -128,5 +156,18 @@ function BackDrops:set_img(window, idx)
    wezterm.GLOBAL.background = self.files[self.current_idx]
    self:_set_opt(window)
 end
+
+---Toggle the focus mode
+---@param window any WezTerm `Window` see: https://wezfurlong.org/wezterm/config/lua/window/index.html
+function BackDrops:toggle_focus(window)
+   if self.focus_on then
+      self:_set_opt(window)
+      self.focus_on = false
+   else
+      self:_set_focus_opt(window)
+      self.focus_on = true
+   end
+end
+
 
 return BackDrops:init()

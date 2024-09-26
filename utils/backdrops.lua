@@ -15,7 +15,7 @@ local PATH_SEP = platform.is_win and '\\' or '/'
 ---@class BackDrops
 ---@field current_idx number index of current image
 ---@field files string[] background images
----@field focus_color string background color when in focus mode
+---@field focus_color string background color when in focus mode. Default is `colors.custom.background`
 ---@field focus_on boolean focus mode on or off
 local BackDrops = {}
 BackDrops.__index = BackDrops
@@ -48,7 +48,8 @@ function BackDrops:set_files()
    return self
 end
 
----Set the focus color for the background
+---Override the default `focus_color`
+---Default `focus_color` is `colors.custom.background`
 ---@param focus_color string background color when in focus mode
 function BackDrops:set_focus(focus_color)
    self.focus_color = focus_color
@@ -161,7 +162,7 @@ end
 ---@param window any WezTerm `Window` see: https://wezfurlong.org/wezterm/config/lua/window/index.html
 function BackDrops:toggle_focus(window)
    if self.focus_on then
-      self:_set_opt(window)
+      self:set_img(window, self.current_idx)
       self.focus_on = false
    else
       self:_set_focus_opt(window)

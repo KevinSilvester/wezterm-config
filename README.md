@@ -20,7 +20,9 @@
 
 - [**Background Image Selector**](https://github.com/KevinSilvester/wezterm-config/blob/master/utils/backdrops.lua)
 
-  Uses `wezterm.read_dir` to scan the `backdrops` directory for images.
+  - Cycle images
+  - Fuzzy search for image
+  - Toggle background image
 
   > See: [key bindings](#background-images) for usage
 
@@ -214,12 +216,13 @@ Most of the key bindings revolve around a <kbd>SUPER</kbd> and <kbd>SUPER_REV</k
 
 #### Background Images
 
-| Keys                              | Action                  |
-| --------------------------------- | ----------------------- |
-| <kbd>SUPER</kbd>+<kbd>/</kbd>     | Select Random Image     |
-| <kbd>SUPER</kbd>+<kbd>,</kbd>     | Cycle to next Image     |
-| <kbd>SUPER</kbd>+<kbd>.</kbd>     | Cycle to previous Image |
-| <kbd>SUPER_REV</kbd>+<kbd>/</kbd> | Fuzzy select Image      |
+| Keys                              | Action                       |
+| --------------------------------- | ---------------------------- |
+| <kbd>SUPER</kbd>+<kbd>/</kbd>     | Select Random Image          |
+| <kbd>SUPER</kbd>+<kbd>,</kbd>     | Cycle to next Image          |
+| <kbd>SUPER</kbd>+<kbd>.</kbd>     | Cycle to previous Image      |
+| <kbd>SUPER_REV</kbd>+<kbd>/</kbd> | Fuzzy select Image           |
+| <kbd>SUPER</kbd>+<kbd>b</kbd>     | Toggle background focus mode |
 
 &nbsp;
 

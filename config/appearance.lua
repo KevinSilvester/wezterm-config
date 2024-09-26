@@ -39,10 +39,10 @@ return {
 
    -- window
    window_padding = {
-      left = 5,
-      right = 10,
-      top = 12,
-      bottom = 7,
+      left = 0,
+      right = 0,
+      top = 10,
+      bottom = 7.5,
    },
    window_close_confirmation = 'NeverPrompt',
    window_frame = {

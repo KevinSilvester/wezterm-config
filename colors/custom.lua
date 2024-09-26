@@ -87,7 +87,7 @@ local colorscheme = {
    },
    scrollbar_thumb = mocha.surface2,
    split = mocha.overlay0,
-   compose_cursor = mocha.flamingo, -- nightbuild only
+   compose_cursor = mocha.flamingo,
 }
 
 return colorscheme

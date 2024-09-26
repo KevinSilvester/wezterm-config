@@ -45,27 +45,20 @@ local _set_title = function(process_name, base_title, max_width, inset)
 end
 
 local _check_if_admin = function(p)
-   if p:match('^Administrator: ') or p:match('(Admin)') then
-      return true
-   end
-   return false
+   return (p:match('^Administrator: ') or p:match('(Admin)')) ~= nil
 end
 
 local _check_if_wsl = function(title)
-   if title:match('^wsl') then
-      return true
-   end
-   return false
+   return title:match('^wsl') ~= nil
 end
 
 ---@param fg string
 ---@param bg string
----@param attribute table
 ---@param text string
-local _push = function(bg, fg, attribute, text)
+local _push = function(bg, fg, text)
    table.insert(__cells__, { Background = { Color = bg } })
    table.insert(__cells__, { Foreground = { Color = fg } })
-   table.insert(__cells__, { Attribute = attribute })
+   table.insert(__cells__, { Attribute = { Intensity = 'Bold' } })
    table.insert(__cells__, { Text = text })
 end
 
@@ -101,31 +94,31 @@ M.setup = function()
       end
 
       -- Left semi-circle
-      _push('rgba(0, 0, 0, 0.4)', bg, { Intensity = 'Bold' }, GLYPH_SEMI_CIRCLE_LEFT)
+      _push('rgba(0, 0, 0, 0.4)', bg, GLYPH_SEMI_CIRCLE_LEFT)
 
       -- Admin Icon
       if is_admin then
-         _push(bg, fg, { Intensity = 'Bold' }, ' ' .. GLYPH_ADMIN)
+         _push(bg, fg, ' ' .. GLYPH_ADMIN)
       end
 
       -- WSL Icon
       if is_wsl then
-         _push(bg, fg, { Intensity = 'Bold' }, ' ' .. GLYPH_UBUNTU)
+         _push(bg, fg, ' ' .. GLYPH_UBUNTU)
       end
 
       -- Title
-      _push(bg, fg, { Intensity = 'Bold' }, ' ' .. title)
+      _push(bg, fg, ' ' .. title)
 
       -- Unseen output alert
       if has_unseen_output then
-         _push(bg, '#FFA066', { Intensity = 'Bold' }, ' ' .. GLYPH_CIRCLE)
+         _push(bg, '#FFA066', ' ' .. GLYPH_CIRCLE)
       end
 
       -- Right padding
-      _push(bg, fg, { Intensity = 'Bold' }, ' ')
+      _push(bg, fg, ' ')
 
       -- Right semi-circle
-      _push('rgba(0, 0, 0, 0.4)', bg, { Intensity = 'Bold' }, GLYPH_SEMI_CIRCLE_RIGHT)
+      _push('rgba(0, 0, 0, 0.4)', bg, GLYPH_SEMI_CIRCLE_RIGHT)
 
       return __cells__
    end)

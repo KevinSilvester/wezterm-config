@@ -27,7 +27,7 @@ function BackDrops:init()
       current_idx = 1,
       files = {},
       focus_color = colors.background,
-      focus_on = false
+      focus_on = false,
    }
    local backdrops = setmetatable(inital, self)
    wezterm.GLOBAL.background = nil
@@ -68,8 +68,10 @@ function BackDrops:_set_opt(window)
          },
          {
             source = { Color = colors.background },
-            height = '100%',
-            width = '100%',
+            height = '120%',
+            width = '120%',
+            vertical_offset = '-10%',
+            horizontal_offset = '-10%',
             opacity = 0.96,
          },
       },
@@ -169,6 +171,5 @@ function BackDrops:toggle_focus(window)
       self.focus_on = true
    end
 end
-
 
 return BackDrops:init()

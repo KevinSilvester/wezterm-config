@@ -176,7 +176,7 @@ Most of the key bindings revolve around a <kbd>SUPER</kbd> and <kbd>SUPER_REV</k
 | <kbd>SUPER_REV</kbd>+<kbd>[</kbd> | Move Tab Left  |
 | <kbd>SUPER_REV</kbd>+<kbd>]</kbd> | Move Tab Right |
 
-##### Tabs: Name
+##### Tabs: Title
 
 | Keys                              | Action             |
 | --------------------------------- | ------------------ |

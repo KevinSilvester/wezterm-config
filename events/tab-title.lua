@@ -44,20 +44,13 @@ local COLORS = {
 }
 
 -- stylua: ignore
-local TAB_CELLS = {
-   scircle       = { attr = nil, colors = { default = 'scircle', hover = 'scircle_hover', active = 'scircle_active', }, },
-   admin         = { attr = nil, colors = { default = 'default', hover = 'default_hover', active = 'default_active', }, },
-   wsl           = { attr = nil, colors = { default = 'default', hover = 'default_hover', active = 'default_active', }, },
-   title         = { attr = attr(attr.intensity('Bold')), colors = { default = 'default', hover = 'default_hover', active = 'default_active', }, },
-   padding       = { attr = nil, colors = { default = 'default', hover = 'default_hover', active = 'default_active', } },
-   unseen_output = {
-      attr = nil,
-      colors = {
-         default = 'unseen_output',
-         hover = 'unseen_output_hover',
-         active = 'unseen_output_active',
-      },
-   },
+local SEGMENT_COLORS = {
+   scircle       = { default = 'scircle', hover = 'scircle_hover', active = 'scircle_active', },
+   admin         = { default = 'default', hover = 'default_hover', active = 'default_active', },
+   wsl           = { default = 'default', hover = 'default_hover', active = 'default_active', },
+   title         = { default = 'default', hover = 'default_hover', active = 'default_active', },
+   padding       = { default = 'default', hover = 'default_hover', active = 'default_active', },
+   unseen_output = { default = 'unseen_output', hover = 'unseen_output_hover', active = 'unseen_output_active', },
 }
 
 ---@param proc string
@@ -136,38 +129,13 @@ function Tab:set_cells(is_active, hover)
    end
 
    self.cells
-      :push(
-         'scircle_left',
-         GLYPH_SCIRCLE_LEFT,
-         TAB_CELLS['scircle'].colors[color_variant],
-         TAB_CELLS['scircle'].attr
-      )
-      :push(
-         'admin',
-         ' ' .. GLYPH_ADMIN,
-         TAB_CELLS['admin'].colors[color_variant],
-         TAB_CELLS['admin'].attr
-      )
-      :push(
-         'wsl',
-         ' ' .. GLYPH_UBUNTU,
-         TAB_CELLS['wsl'].colors[color_variant],
-         TAB_CELLS['wsl'].attr
-      )
-      :push('title', ' ', TAB_CELLS['title'].colors[color_variant], TAB_CELLS['title'].attr)
-      :push(
-         'unseen_output',
-         ' ' .. GLYPH_CIRCLE,
-         TAB_CELLS['unseen_output'].colors[color_variant],
-         TAB_CELLS['unseen_output'].attr
-      )
-      :push('padding', ' ', TAB_CELLS['padding'].colors[color_variant], TAB_CELLS['padding'].attr)
-      :push(
-         'scircle_right',
-         GLYPH_SCIRCLE_RIGHT,
-         TAB_CELLS['scircle'].colors[color_variant],
-         TAB_CELLS['scircle'].attr
-      )
+      :push('scircle_left', GLYPH_SCIRCLE_LEFT, SEGMENT_COLORS['scircle'][color_variant])
+      :push('admin', ' ' .. GLYPH_ADMIN, SEGMENT_COLORS['admin'][color_variant])
+      :push('wsl', ' ' .. GLYPH_UBUNTU, SEGMENT_COLORS['wsl'][color_variant])
+      :push('title', ' ', SEGMENT_COLORS['title'][color_variant], attr(attr.intensity('Bold')))
+      :push('unseen_output', ' ' .. GLYPH_CIRCLE, SEGMENT_COLORS['unseen_output'][color_variant])
+      :push('padding', ' ', SEGMENT_COLORS['padding'][color_variant])
+      :push('scircle_right', GLYPH_SCIRCLE_RIGHT, SEGMENT_COLORS['scircle'][color_variant])
 end
 
 ---@param title string
@@ -189,13 +157,13 @@ function Tab:update_cells(is_active, hover)
 
    self.cells:update_segment_text('title', ' ' .. self.title)
    self.cells
-      :update_segment_colors('scircle_left', TAB_CELLS['scircle'].colors[color_variant])
-      :update_segment_colors('admin', TAB_CELLS['admin'].colors[color_variant])
-      :update_segment_colors('wsl', TAB_CELLS['wsl'].colors[color_variant])
-      :update_segment_colors('title', TAB_CELLS['title'].colors[color_variant])
-      :update_segment_colors('unseen_output', TAB_CELLS['unseen_output'].colors[color_variant])
-      :update_segment_colors('padding', TAB_CELLS['padding'].colors[color_variant])
-      :update_segment_colors('scircle_right', TAB_CELLS['scircle'].colors[color_variant])
+      :update_segment_colors('scircle_left', SEGMENT_COLORS['scircle'][color_variant])
+      :update_segment_colors('admin', SEGMENT_COLORS['admin'][color_variant])
+      :update_segment_colors('wsl', SEGMENT_COLORS['wsl'][color_variant])
+      :update_segment_colors('title', SEGMENT_COLORS['title'][color_variant])
+      :update_segment_colors('unseen_output', SEGMENT_COLORS['unseen_output'][color_variant])
+      :update_segment_colors('padding', SEGMENT_COLORS['padding'][color_variant])
+      :update_segment_colors('scircle_right', SEGMENT_COLORS['scircle'][color_variant])
 end
 
 ---@return FormatItem[] (ref: https://wezfurlong.org/wezterm/config/lua/wezterm/format.html)

@@ -5,7 +5,6 @@
 local wezterm = require('wezterm')
 local Cells = require('utils.cells')
 
-
 local nf = wezterm.nerdfonts
 local attr = Cells.attr
 
@@ -46,13 +45,13 @@ local COLORS = {
 
 -- stylua: ignore
 local TAB_CELLS = {
-   scircle       = { attr = attr(attr.intensity('Bold')), colors = { default = 'scircle', hover = 'scircle_hover', active = 'scircle_active', }, },
-   admin         = { attr = attr(attr.intensity('Bold')), colors = { default = 'default', hover = 'default_hover', active = 'default_active', }, },
-   wsl           = { attr = attr(attr.intensity('Bold')), colors = { default = 'default', hover = 'default_hover', active = 'default_active', }, },
+   scircle       = { attr = nil, colors = { default = 'scircle', hover = 'scircle_hover', active = 'scircle_active', }, },
+   admin         = { attr = nil, colors = { default = 'default', hover = 'default_hover', active = 'default_active', }, },
+   wsl           = { attr = nil, colors = { default = 'default', hover = 'default_hover', active = 'default_active', }, },
    title         = { attr = attr(attr.intensity('Bold')), colors = { default = 'default', hover = 'default_hover', active = 'default_active', }, },
    padding       = { attr = nil, colors = { default = 'default', hover = 'default_hover', active = 'default_active', } },
    unseen_output = {
-      attr = attr(attr.intensity('Bold')),
+      attr = nil,
       colors = {
          default = 'unseen_output',
          hover = 'unseen_output_hover',

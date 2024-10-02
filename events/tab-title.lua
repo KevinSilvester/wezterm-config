@@ -8,11 +8,12 @@ local Cells = require('utils.cells')
 local nf = wezterm.nerdfonts
 local attr = Cells.attr
 
-local GLYPH_SCIRCLE_LEFT = nf.ple_left_half_circle_thick --[[ '' ]]
-local GLYPH_SCIRCLE_RIGHT = nf.ple_right_half_circle_thick --[[ '' ]]
-local GLYPH_CIRCLE = nf.fa_circle --[[ '' ]]
-local GLYPH_ADMIN = nf.md_shield_half_full --[[ '󰞀' ]]
-local GLYPH_UBUNTU = nf.cod_terminal_linux
+local GLYPH_SCIRCLE_LEFT = nf.ple_left_half_circle_thick --[[  ]]
+local GLYPH_SCIRCLE_RIGHT = nf.ple_right_half_circle_thick --[[  ]]
+local GLYPH_CIRCLE = nf.fa_circle --[[  ]]
+local GLYPH_ADMIN = nf.md_shield_half_full --[[ 󰞀 ]]
+local GLYPH_UBUNTU = nf.cod_terminal_linux --[[  ]]
+local GLYPH_DEBUG = nf.fa_bug --[[  ]]
 
 local TITLE_INSET = {
    DEFAULT = 6,
@@ -46,10 +47,7 @@ local COLORS = {
 -- stylua: ignore
 local SEGMENT_COLORS = {
    scircle       = { default = 'scircle', hover = 'scircle_hover', active = 'scircle_active', },
-   admin         = { default = 'default', hover = 'default_hover', active = 'default_active', },
-   wsl           = { default = 'default', hover = 'default_hover', active = 'default_active', },
-   title         = { default = 'default', hover = 'default_hover', active = 'default_active', },
-   padding       = { default = 'default', hover = 'default_hover', active = 'default_active', },
+   text          = { default = 'default', hover = 'default_hover', active = 'default_active', },
    unseen_output = { default = 'unseen_output', hover = 'unseen_output_hover', active = 'unseen_output_active', },
 }
 
@@ -72,9 +70,20 @@ local function create_title(process_name, base_title, max_width, inset)
       title = base_title
    end
 
+   if base_title == 'Debug' then
+      title = GLYPH_DEBUG .. ' DEBUG'
+      inset = inset - 2
+   end
+
    if title:len() > max_width - inset then
       local diff = title:len() - max_width + inset
-      title = wezterm.truncate_right(title, title:len() - diff)
+      local max = title:len() - diff
+      if #title > max then
+         title = title:sub(1, max)
+      end
+   else
+      local padding = max_width - title:len() - inset
+      title = title .. string.rep(' ', padding)
    end
 
    return title
@@ -114,6 +123,9 @@ function Tab:set_info(pane, max_width)
       return
    end
    local inset = (self.is_admin or self.is_wsl) and TITLE_INSET.ICON or TITLE_INSET.DEFAULT
+   if self.unseen_output then
+      inset = inset + 2
+   end
    self.title = create_title(process_name, pane.title, max_width, inset)
 end
 
@@ -130,11 +142,11 @@ function Tab:set_cells(is_active, hover)
 
    self.cells
       :push('scircle_left', GLYPH_SCIRCLE_LEFT, SEGMENT_COLORS['scircle'][color_variant])
-      :push('admin', ' ' .. GLYPH_ADMIN, SEGMENT_COLORS['admin'][color_variant])
-      :push('wsl', ' ' .. GLYPH_UBUNTU, SEGMENT_COLORS['wsl'][color_variant])
-      :push('title', ' ', SEGMENT_COLORS['title'][color_variant], attr(attr.intensity('Bold')))
+      :push('admin', ' ' .. GLYPH_ADMIN, SEGMENT_COLORS['text'][color_variant])
+      :push('wsl', ' ' .. GLYPH_UBUNTU, SEGMENT_COLORS['text'][color_variant])
+      :push('title', ' ', SEGMENT_COLORS['text'][color_variant], attr(attr.intensity('Bold')))
       :push('unseen_output', ' ' .. GLYPH_CIRCLE, SEGMENT_COLORS['unseen_output'][color_variant])
-      :push('padding', ' ', SEGMENT_COLORS['padding'][color_variant])
+      :push('padding', ' ', SEGMENT_COLORS['text'][color_variant])
       :push('scircle_right', GLYPH_SCIRCLE_RIGHT, SEGMENT_COLORS['scircle'][color_variant])
 end
 
@@ -158,11 +170,11 @@ function Tab:update_cells(is_active, hover)
    self.cells:update_segment_text('title', ' ' .. self.title)
    self.cells
       :update_segment_colors('scircle_left', SEGMENT_COLORS['scircle'][color_variant])
-      :update_segment_colors('admin', SEGMENT_COLORS['admin'][color_variant])
-      :update_segment_colors('wsl', SEGMENT_COLORS['wsl'][color_variant])
-      :update_segment_colors('title', SEGMENT_COLORS['title'][color_variant])
+      :update_segment_colors('admin', SEGMENT_COLORS['text'][color_variant])
+      :update_segment_colors('wsl', SEGMENT_COLORS['text'][color_variant])
+      :update_segment_colors('title', SEGMENT_COLORS['text'][color_variant])
       :update_segment_colors('unseen_output', SEGMENT_COLORS['unseen_output'][color_variant])
-      :update_segment_colors('padding', SEGMENT_COLORS['padding'][color_variant])
+      :update_segment_colors('padding', SEGMENT_COLORS['text'][color_variant])
       :update_segment_colors('scircle_right', SEGMENT_COLORS['scircle'][color_variant])
 end
 

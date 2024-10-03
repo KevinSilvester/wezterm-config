@@ -77,10 +77,7 @@ local function create_title(process_name, base_title, max_width, inset)
 
    if title:len() > max_width - inset then
       local diff = title:len() - max_width + inset
-      local max = title:len() - diff
-      if #title > max then
-         title = title:sub(1, max)
-      end
+      title = title:sub(1, title:len() - diff)
    else
       local padding = max_width - title:len() - inset
       title = title .. string.rep(' ', padding)
@@ -132,7 +129,6 @@ end
 ---@param is_active boolean
 ---@param hover boolean
 function Tab:set_cells(is_active, hover)
-   ---@type 'default'|'active'|'hover'
    local color_variant = 'default'
    if is_active then
       color_variant = 'active'
@@ -159,7 +155,6 @@ end
 ---@param is_active boolean
 ---@param hover boolean
 function Tab:update_cells(is_active, hover)
-   ---@type 'default'|'active'|'hover'
    local color_variant = 'default'
    if is_active then
       color_variant = 'active'

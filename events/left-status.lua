@@ -1,6 +1,9 @@
 local wezterm = require('wezterm')
+local Cells = require('utils.cells')
 
 local nf = wezterm.nerdfonts
+local attr = Cells.attr
+
 local M = {}
 
 local GLYPH_SEMI_CIRCLE_LEFT = nf.ple_left_half_circle_thick --[[ '' ]]
@@ -9,42 +12,35 @@ local GLYPH_KEY_TABLE = nf.md_table_key --[[ '󱏅' ]]
 local GLYPH_KEY = nf.md_key --[[ '󰌆' ]]
 
 local colors = {
-   glyph_semi_circle = { bg = 'rgba(0, 0, 0, 0.4)', fg = '#fab387' },
-   text = { bg = '#fab387', fg = '#1c1b19' },
+   default = { bg = '#fab387', fg = '#1c1b19' },
+   scircle = { bg = 'rgba(0, 0, 0, 0.4)', fg = '#fab387' },
 }
 
-local __cells__ = {}
+local cells = Cells:new(colors)
 
----@param text string
----@param fg string
----@param bg string
-local _push = function(text, fg, bg)
-   table.insert(__cells__, { Foreground = { Color = fg } })
-   table.insert(__cells__, { Background = { Color = bg } })
-   table.insert(__cells__, { Attribute = { Intensity = 'Bold' } })
-   table.insert(__cells__, { Text = text })
-end
+cells
+   :push(1, GLYPH_SEMI_CIRCLE_LEFT, 'scircle', attr(attr.intensity('Bold')))
+   :push(2, ' ', 'default', attr(attr.intensity('Bold')))
+   :push(3, ' ', 'default', attr(attr.intensity('Bold')))
+   :push(4, GLYPH_SEMI_CIRCLE_RIGHT, 'scircle', attr(attr.intensity('Bold')))
 
 M.setup = function()
    wezterm.on('update-right-status', function(window, _pane)
-      __cells__ = {}
-
       local name = window:active_key_table()
+      local res = {}
+
       if name then
-         _push(GLYPH_SEMI_CIRCLE_LEFT, colors.glyph_semi_circle.fg, colors.glyph_semi_circle.bg)
-         _push(GLYPH_KEY_TABLE, colors.text.fg, colors.text.bg)
-         _push(' ' .. string.upper(name), colors.text.fg, colors.text.bg)
-         _push(GLYPH_SEMI_CIRCLE_RIGHT, colors.glyph_semi_circle.fg, colors.glyph_semi_circle.bg)
+         cells
+            :update_segment_text(2, GLYPH_KEY_TABLE)
+            :update_segment_text(3, ' ' .. string.upper(name))
+         res = cells:render_all()
       end
 
       if window:leader_is_active() then
-         _push(GLYPH_SEMI_CIRCLE_LEFT, colors.glyph_semi_circle.fg, colors.glyph_semi_circle.bg)
-         _push(GLYPH_KEY, colors.text.fg, colors.text.bg)
-         _push(' ', colors.text.fg, colors.text.bg)
-         _push(GLYPH_SEMI_CIRCLE_RIGHT, colors.glyph_semi_circle.fg, colors.glyph_semi_circle.bg)
+         cells:update_segment_text(2, GLYPH_KEY):update_segment_text(3, ' ')
+         res = cells:render_all()
       end
-
-      window:set_left_status(wezterm.format(__cells__))
+      window:set_left_status(wezterm.format(res))
    end)
 end
 

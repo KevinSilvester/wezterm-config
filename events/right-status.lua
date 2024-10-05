@@ -1,11 +1,16 @@
 local wezterm = require('wezterm')
 local umath = require('utils.math')
+local Cells = require('utils.cells')
 
 local nf = wezterm.nerdfonts
+local attr = Cells.attr
+
 local M = {}
 
-local SEPARATOR_CHAR = nf.oct_dash .. ' '
+local ICON_SEPARATOR = nf.oct_dash
+local ICON_DATE = nf.fa_calendar
 
+---@type string[]
 local discharging_icons = {
    nf.md_battery_10,
    nf.md_battery_20,
@@ -18,6 +23,7 @@ local discharging_icons = {
    nf.md_battery_90,
    nf.md_battery,
 }
+---@type string[]
 local charging_icons = {
    nf.md_battery_charging_10,
    nf.md_battery_charging_20,
@@ -31,41 +37,24 @@ local charging_icons = {
    nf.md_battery_charging,
 }
 
+-- stylua: ignore
 local colors = {
-   date_fg = '#fab387',
-   date_bg = 'rgba(0, 0, 0, 0.4)',
-   battery_fg = '#f9e2af',
-   battery_bg = 'rgba(0, 0, 0, 0.4)',
-   separator_fg = '#74c7ec',
-   separator_bg = 'rgba(0, 0, 0, 0.4)',
+   date      = { fg = '#fab387', bg = 'rgba(0, 0, 0, 0.4)' },
+   battery   = { fg = '#f9e2af', bg = 'rgba(0, 0, 0, 0.4)' },
+   separator = { fg = '#74c7ec', bg = 'rgba(0, 0, 0, 0.4)' }
 }
 
-local __cells__ = {} -- wezterm FormatItems (ref: https://wezfurlong.org/wezterm/config/lua/wezterm/format.html)
+local cells = Cells:new(colors)
 
----@param text string
----@param icon string
----@param fg string
----@param bg string
----@param separate boolean
-local _push = function(text, icon, fg, bg, separate)
-   table.insert(__cells__, { Foreground = { Color = fg } })
-   table.insert(__cells__, { Background = { Color = bg } })
-   table.insert(__cells__, { Attribute = { Intensity = 'Bold' } })
-   table.insert(__cells__, { Text = icon .. ' ' .. text .. ' ' })
+cells
+   :push('date_icon', ICON_DATE .. '  ', 'date', attr(attr.intensity('Bold')))
+   :push('date_text', '', 'date', attr(attr.intensity('Bold')))
+   :push('separator', ' ' .. ICON_SEPARATOR .. '  ', 'separator')
+   :push('battery_icon', '', 'battery')
+   :push('battery_text', '', 'battery', attr(attr.intensity('Bold')))
 
-   if separate then
-      table.insert(__cells__, { Foreground = { Color = colors.separator_fg } })
-      table.insert(__cells__, { Background = { Color = colors.separator_bg } })
-      table.insert(__cells__, { Text = SEPARATOR_CHAR })
-   end
-end
-
-local _set_date = function()
-   local date = wezterm.strftime(' %a %H:%M:%S')
-   _push(date, nf.fa_calendar, colors.date_fg, colors.date_bg, true)
-end
-
-local _set_battery = function()
+---@return string, string
+local function battery_info()
    -- ref: https://wezfurlong.org/wezterm/config/lua/wezterm/battery_info.html
 
    local charge = ''
@@ -82,16 +71,23 @@ local _set_battery = function()
       end
    end
 
-   _push(charge, icon, colors.battery_fg, colors.battery_bg, false)
+   return charge, icon .. ' '
 end
 
 M.setup = function()
    wezterm.on('update-right-status', function(window, _pane)
-      __cells__ = {}
-      _set_date()
-      _set_battery()
+      local battery_text, battery_icon = battery_info()
 
-      window:set_right_status(wezterm.format(__cells__))
+      cells
+         :update_segment_text('date_text', wezterm.strftime('%a %H:%M:%S'))
+         :update_segment_text('battery_icon', battery_icon)
+         :update_segment_text('battery_text', battery_text)
+
+      window:set_right_status(
+         wezterm.format(
+            cells:render({ 'date_icon', 'date_text', 'separator', 'battery_icon', 'battery_text' })
+         )
+      )
    end)
 end
 

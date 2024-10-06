@@ -11,6 +11,7 @@ math.random()
 math.random()
 
 local PATH_SEP = platform.is_win and '\\' or '/'
+local GLOB_PATTERN = '*.{jpg,jpeg,png,gif,bmp,ico,tiff,pnm,dds,tga}'
 
 ---@class BackDrops
 ---@field current_idx number index of current image
@@ -43,7 +44,10 @@ end
 ---   This throws a coroutine error if the function is invoked in outside of `wezterm.lua` in the -
 ---   initial load of the Terminal config.
 function BackDrops:set_files()
-   self.files = wezterm.read_dir(wezterm.config_dir .. PATH_SEP .. 'backdrops')
+   self.files = wezterm.glob(GLOB_PATTERN, wezterm.config_dir .. PATH_SEP .. 'backdrops')
+   for idx, file in ipairs(self.files) do
+      self.files[idx] = wezterm.config_dir .. PATH_SEP .. 'backdrops' .. PATH_SEP .. file
+   end
    wezterm.GLOBAL.background = self.files[1]
    return self
 end
@@ -87,8 +91,10 @@ function BackDrops:_set_focus_opt(window)
       background = {
          {
             source = { Color = self.focus_color },
-            height = '100%',
-            width = '100%',
+            height = '120%',
+            width = '120%',
+            vertical_offset = '-10%',
+            horizontal_offset = '-10%',
             opacity = 1,
          },
       },

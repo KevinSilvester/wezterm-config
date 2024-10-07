@@ -27,7 +27,6 @@
 --[[ FormatItems: End ]]
 
 local attr = {}
-local attr_mt = {}
 
 ---@param type 'Bold'|'Half'|'Normal'
 ---@return {Attribute: FormatItem.Attribute.Intensity}
@@ -46,12 +45,6 @@ attr.underline = function(type)
    return { Attribute = { Underline = type } }
 end
 
----@vararg FormatItem.Attribute
----@return FormatItem.Attribute[]
-attr_mt.__call = function(_, ...)
-   return { ... }
-end
-
 ---@class Cells.Colors
 ---@field default {bg: string, fg: string}
 ---@field [string] {bg: string, fg: string}
@@ -67,7 +60,16 @@ end
 local Cells = {}
 Cells.__index = Cells
 
-Cells.attr = setmetatable(attr, attr_mt)
+---@class Cells.Attributes
+---@field intensity fun(type: 'Bold'|'Half'|'Normal'): {Attribute: FormatItem.Attribute.Intensity}
+---@field underline fun(type: 'None'|'Single'|'Double'|'Curly'): {Attribute: FormatItem.Attribute.Underline}
+---@field italic fun(): {Attribute: FormatItem.Attribute.Italic}
+---@overload fun(...: FormatItem.Attribute): FormatItem.Attribute[]
+Cells.attr = setmetatable(attr, {
+   __call = function(_, ...)
+      return { ... }
+   end,
+})
 
 ---@param colors Cells.Colors
 function Cells:new(colors)
@@ -81,7 +83,7 @@ end
 ---@param text string the text to push
 ---@param color string|'default' the color variant to use (default is 'default')
 ---@param attributes FormatItem.Attribute[]|nil use bold text
-function Cells:push(segment_id, text, color, attributes)
+function Cells:add_segment(segment_id, text, color, attributes)
    color = color or 'default'
    local colors = self.colors[color]
    if not colors then

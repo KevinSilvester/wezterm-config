@@ -137,13 +137,13 @@ function Tab:set_cells(is_active, hover)
    end
 
    self.cells
-      :push('scircle_left', GLYPH_SCIRCLE_LEFT, SEGMENT_COLORS['scircle'][color_variant])
-      :push('admin', ' ' .. GLYPH_ADMIN, SEGMENT_COLORS['text'][color_variant])
-      :push('wsl', ' ' .. GLYPH_UBUNTU, SEGMENT_COLORS['text'][color_variant])
-      :push('title', ' ', SEGMENT_COLORS['text'][color_variant], attr(attr.intensity('Bold')))
-      :push('unseen_output', ' ' .. GLYPH_CIRCLE, SEGMENT_COLORS['unseen_output'][color_variant])
-      :push('padding', ' ', SEGMENT_COLORS['text'][color_variant])
-      :push('scircle_right', GLYPH_SCIRCLE_RIGHT, SEGMENT_COLORS['scircle'][color_variant])
+      :add_segment('scircle_left', GLYPH_SCIRCLE_LEFT, SEGMENT_COLORS['scircle'][color_variant])
+      :add_segment('admin', ' ' .. GLYPH_ADMIN, SEGMENT_COLORS['text'][color_variant])
+      :add_segment('wsl', ' ' .. GLYPH_UBUNTU, SEGMENT_COLORS['text'][color_variant])
+      :add_segment('title', ' ', SEGMENT_COLORS['text'][color_variant], attr(attr.intensity('Bold')))
+      :add_segment('unseen_output', ' ' .. GLYPH_CIRCLE, SEGMENT_COLORS['unseen_output'][color_variant])
+      :add_segment('padding', ' ', SEGMENT_COLORS['text'][color_variant])
+      :add_segment('scircle_right', GLYPH_SCIRCLE_RIGHT, SEGMENT_COLORS['scircle'][color_variant])
 end
 
 ---@param title string

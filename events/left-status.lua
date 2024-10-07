@@ -19,10 +19,10 @@ local colors = {
 local cells = Cells:new(colors)
 
 cells
-   :push(1, GLYPH_SEMI_CIRCLE_LEFT, 'scircle', attr(attr.intensity('Bold')))
-   :push(2, ' ', 'default', attr(attr.intensity('Bold')))
-   :push(3, ' ', 'default', attr(attr.intensity('Bold')))
-   :push(4, GLYPH_SEMI_CIRCLE_RIGHT, 'scircle', attr(attr.intensity('Bold')))
+   :add_segment(1, GLYPH_SEMI_CIRCLE_LEFT, 'scircle', attr(attr.intensity('Bold')))
+   :add_segment(2, ' ', 'default', attr(attr.intensity('Bold')))
+   :add_segment(3, ' ', 'default', attr(attr.intensity('Bold')))
+   :add_segment(4, GLYPH_SEMI_CIRCLE_RIGHT, 'scircle', attr(attr.intensity('Bold')))
 
 M.setup = function()
    wezterm.on('update-right-status', function(window, _pane)

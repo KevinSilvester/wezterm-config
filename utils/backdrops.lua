@@ -1,5 +1,5 @@
 local wezterm = require('wezterm')
-local platform = require('utils.platform')()
+local platform = require('utils.platform')
 local colors = require('colors.custom')
 
 -- Seeding random numbers before generating for use
@@ -44,7 +44,8 @@ end
 ---   This throws a coroutine error if the function is invoked in outside of `wezterm.lua` in the -
 ---   initial load of the Terminal config.
 function BackDrops:set_files()
-   self.files = wezterm.glob(wezterm.config_dir .. PATH_SEP .. 'backdrops' .. PATH_SEP .. GLOB_PATTERN)
+   self.files =
+      wezterm.glob(wezterm.config_dir .. PATH_SEP .. 'backdrops' .. PATH_SEP .. GLOB_PATTERN)
    wezterm.GLOBAL.background = self.files[1]
    return self
 end

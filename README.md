@@ -63,18 +63,17 @@
 
   - WezTerm
 
-    Minimum Version: `20240127-113634-bbcac864`
+    Minimum Version: `20240127-113634-bbcac864`<br>
     Recommended Version: [`Nightly`](https://github.com/wez/wezterm/releases/nightly)
 
     - <details>
-        <summary>**Install Stable (Windows)**</summary>
+      <summary><b>Install Stable (Windows)<b></summary>
 
       [Official Download Page](https://wezfurlong.org/wezterm/install/windows.html)
 
       > :bulb:<br>
       > WezTerm has 2 types of releases for windows, the portable (setup.exe) and non-portable (app package in simple zip).<br>
-      > Currently, toast notifications do not work with the non-portable release.<br>
-      > Presumably because a registry key or GPO must be set for Windows to recognize WezTerm as an application and given notification privileges.<br>
+      > Currently, toast notifications do not work with the non-portable release presumably because a registry key or GPO must be set for Windows to recognize WezTerm as an application and given notification privileges.<br>
       >
       > See issue <https://github.com/wez/wezterm/issues/5166> for more details
 

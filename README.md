@@ -71,13 +71,13 @@
 
       - Windows
     
-        [Download Page](https://wezfurlong.org/wezterm/install/windows.html)
+        [Official Download Page](https://wezfurlong.org/wezterm/install/windows.html)
 
-        > [!NOTE]
-        > WezTerm has 2 types of releases for windows, the portable (setup.exe) and non-portable (app package in simple zip).
-        > Currently, the `window.toast_notification()` does not work with the non-portable release.
-        > Presumably because a registry key or GPO must be set for Windows to recognize WezTerm as an application and given notification privileges.
-        > See <https://github.com/wez/wezterm/issues/5166> for more details
+        > :bulb:<br>
+        > WezTerm has 2 types of releases for windows, the portable (setup.exe) and non-portable (app package in simple zip).<br>
+        > Currently, the `window.toast_notification()` does not work with the non-portable release.<br>
+        > Presumably because a registry key or GPO must be set for Windows to recognize WezTerm as an application and given notification privileges.<br>
+        > See issue <https://github.com/wez/wezterm/issues/5166> for more details
 
         _Install with Scoop (non-portable)_
 

@@ -62,7 +62,7 @@
 - ##### Requirements:
 
   - <details>
-      <summary><b>WezTerm<b></summary>
+      <summary><b>WezTerm</b></summary>
 
     Minimum Version: `20240127-113634-bbcac864`<br>
     Recommended Version: [`Nightly`](https://github.com/wez/wezterm/releases/nightly)

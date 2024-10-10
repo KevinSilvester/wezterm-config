@@ -105,10 +105,9 @@ end
 function BackDrops:choices()
    local choices = {}
    for idx, file in ipairs(self.files) do
-      local name = file:match('([^' .. PATH_SEP .. ']+)$')
       table.insert(choices, {
          id = tostring(idx),
-         label = name,
+         label = file:match('([^/]+)$'),
       })
    end
    return choices

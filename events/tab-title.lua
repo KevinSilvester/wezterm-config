@@ -12,8 +12,10 @@ local GLYPH_SCIRCLE_LEFT = nf.ple_left_half_circle_thick --[[  ]]
 local GLYPH_SCIRCLE_RIGHT = nf.ple_right_half_circle_thick --[[  ]]
 local GLYPH_CIRCLE = nf.fa_circle --[[  ]]
 local GLYPH_ADMIN = nf.md_shield_half_full --[[ 󰞀 ]]
-local GLYPH_UBUNTU = nf.cod_terminal_linux --[[  ]]
+local GLYPH_LINUX = nf.cod_terminal_linux --[[  ]]
 local GLYPH_DEBUG = nf.fa_bug --[[  ]]
+-- local GLYPH_SEARCH = nf.fa_search --[[  ]]
+local GLYPH_SEARCH = '🔭'
 
 local TITLE_INSET = {
    DEFAULT = 6,
@@ -72,6 +74,11 @@ local function create_title(process_name, base_title, max_width, inset)
 
    if base_title == 'Debug' then
       title = GLYPH_DEBUG .. ' DEBUG'
+      inset = inset - 2
+   end
+
+   if base_title:match('^InputSelector:') ~= nil then
+      title = base_title:gsub('InputSelector:', GLYPH_SEARCH)
       inset = inset - 2
    end
 
@@ -139,7 +146,7 @@ function Tab:set_cells(is_active, hover)
    self.cells
       :add_segment('scircle_left', GLYPH_SCIRCLE_LEFT, SEGMENT_COLORS['scircle'][color_variant])
       :add_segment('admin', ' ' .. GLYPH_ADMIN, SEGMENT_COLORS['text'][color_variant])
-      :add_segment('wsl', ' ' .. GLYPH_UBUNTU, SEGMENT_COLORS['text'][color_variant])
+      :add_segment('wsl', ' ' .. GLYPH_LINUX, SEGMENT_COLORS['text'][color_variant])
       :add_segment('title', ' ', SEGMENT_COLORS['text'][color_variant], attr(attr.intensity('Bold')))
       :add_segment('unseen_output', ' ' .. GLYPH_CIRCLE, SEGMENT_COLORS['unseen_output'][color_variant])
       :add_segment('padding', ' ', SEGMENT_COLORS['text'][color_variant])

@@ -61,21 +61,22 @@
 
 - ##### Requirements:
 
-  - WezTerm
+  - <details>
+      <summary><b>WezTerm<b></summary>
 
     Minimum Version: `20240127-113634-bbcac864`<br>
     Recommended Version: [`Nightly`](https://github.com/wez/wezterm/releases/nightly)
 
     [Official Installation Page](https://wezfurlong.org/wezterm/installation.html)
 
-    - <details>
-      <summary><b>Install Stable (Windows)<b></summary>
+    **Windows**
 
-      > :bulb:<br>
-      > WezTerm has 2 types of releases for windows, the portable (setup.exe) and non-portable (app package in simple zip).<br>
-      > Currently, toast notifications do not work with the non-portable release presumably because a registry key or GPO must be set for Windows to recognize WezTerm as an application and given notification privileges.<br>
-      >
-      > See issue <https://github.com/wez/wezterm/issues/5166> for more details
+    > :bulb:<br>
+    > Toast notifications don't work in non-portable installations.
+    > See issue <https://github.com/wez/wezterm/issues/5166> for more details
+
+    - <details>
+      <summary>Install Stable</summary>
 
       - Install with Scoop (non-portable)
 
@@ -102,11 +103,10 @@
         ```sh
         choco install wezterm -y
         ```
-
       </details>
 
     - <details>
-      <summary><b>Install Nightly (Windows)<b></summary>
+      <summary>Install Nightly</summary>
 
       - Install with Scoop (non-portable)
 
@@ -121,44 +121,53 @@
         scoop bucket add k https://github.com/KevinSilvester/scoop-bucket
         scoop install k/wezterm-nightly
         ```
-
       </details>
 
-      &nbsp;
+    ---
 
-    <details>
-    <summary><b>Install Stable (Macos)<b></summary>
+    **MacOS**
 
-    - Install with Homebrew
+    - <details>
+      <summary>Install Stable</summary>
 
-      ```sh
-      brew install --cask wezterm
-      ```
+      - Install with Homebrew
 
-    - Install with MacPort
+        ```sh
+        brew install --cask wezterm
+        ```
 
-      ```sh
-      sudo port selfupdate
-      sudo port install wezterm
-      ```
+      - Install with MacPort
 
+        ```sh
+        sudo port selfupdate
+        sudo port install wezterm
+        ```
       </details>
 
-      <details>
-      <summary><b>Install Nighlty (Macos)<b></summary>
+    - <details>
+      <summary>Install Nighlty</summary>
 
       - Install with Homebrew
 
         ```sh
         brew install --cask wezterm@nightly
         ```
+
       - Upgrade with Homebrew
 
         ```sh
         brew install --cask wezterm@nightly --no-quarantine --greedy-latest
         ```
-
       </details>
+
+    ---
+
+    **Linux**
+
+    Refer to the Linux installation page.<br>
+    <https://wezfurlong.org/wezterm/install/linux.html>
+
+    </details>
 
   - <details>
     <summary>JetBrainsMono Nerd Font</summary>
@@ -181,7 +190,6 @@
     >
     > - <https://www.nerdfonts.com/#home>
     > - <https://github.com/ryanoasis/nerd-fonts?#font-installation>
-
     </details/>
 
 &nbsp;

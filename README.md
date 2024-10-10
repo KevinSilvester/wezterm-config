@@ -126,39 +126,39 @@
 
       &nbsp;
 
-    - <details>
-      <summary><b>Install Stable (Macos)<b></summary>
+    <details>
+    <summary><b>Install Stable (Macos)<b></summary>
+
+    - Install with Homebrew
+
+      ```sh
+      brew install --cask wezterm
+      ```
+
+    - Install with MacPort
+
+      ```sh
+      sudo port selfupdate
+      sudo port install wezterm
+      ```
+
+      </details>
+
+      <details>
+      <summary><b>Install Nighlty (Macos)<b></summary>
 
       - Install with Homebrew
 
         ```sh
-        brew install --cask wezterm
+        brew install --cask wezterm@nightly
         ```
-
-      - Install with MacPort
+      - Upgrade with Homebrew
 
         ```sh
-        sudo port selfupdate
-        sudo port install wezterm
+        brew install --cask wezterm@nightly --no-quarantine --greedy-latest
         ```
 
-        </details>
-
-      - <details>
-        <summary><b>Install Nighlty (Macos)<b></summary>
-
-        - Install with Homebrew
-
-          ```sh
-          brew install --cask wezterm@nightly
-          ```
-        - Upgrade with Homebrew
-
-          ```sh
-          brew install --cask wezterm@nightly --no-quarantine --greedy-latest
-          ```
-
-        </details>
+      </details>
 
   - <details>
     <summary>JetBrainsMono Nerd Font</summary>

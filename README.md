@@ -71,12 +71,6 @@
 
     **Windows**
 
-    <sub>
-    > :bulb:<br>
-    > Toast notifications don't work in non-portable installations.<br>
-    > See issue <https://github.com/wez/wezterm/issues/5166> for more details
-    </sub>
-
     - <details>
       <summary>Install Stable</summary>
 
@@ -125,6 +119,10 @@
         ```
       </details>
 
+    > :bulb:<br>
+    > Toast notifications don't work in non-portable installations.<br>
+    > See issue <https://github.com/wez/wezterm/issues/5166> for more details
+  
     ---
 
     **MacOS**

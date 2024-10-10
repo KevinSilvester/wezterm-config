@@ -66,10 +66,10 @@
     Minimum Version: `20240127-113634-bbcac864`<br>
     Recommended Version: [`Nightly`](https://github.com/wez/wezterm/releases/nightly)
 
+    [Official Installation Page](https://wezfurlong.org/wezterm/installation.html)
+
     - <details>
       <summary><b>Install Stable (Windows)<b></summary>
-
-      [Official Download Page](https://wezfurlong.org/wezterm/install/windows.html)
 
       > :bulb:<br>
       > WezTerm has 2 types of releases for windows, the portable (setup.exe) and non-portable (app package in simple zip).<br>
@@ -77,25 +77,93 @@
       >
       > See issue <https://github.com/wez/wezterm/issues/5166> for more details
 
-      _Install with Scoop (non-portable)_
+      - Install with Scoop (non-portable)
 
-      ```sh
-      scoop bucket add extras
-      scoop install wezterm
-      ```
+        ```sh
+        scoop bucket add extras
+        scoop install wezterm
+        ```
 
-      _Install with winget_
+      - Install with Scoop (portable)
 
-      ```sh
-      winget install wez.wezterm
-      ```
+        ```sh
+        scoop bucket add k https://github.com/KevinSilvester/scoop-bucket
+        scoop install k/wezterm
+        ```
 
-    </details>
+      - Install with winget
+
+        ```sh
+        winget install wez.wezterm
+        ```
+
+      - Install with choco
+
+        ```sh
+        choco install wezterm -y
+        ```
+
+      </details>
+
+    - <details>
+      <summary><b>Install Nightly (Windows)<b></summary>
+
+      - Install with Scoop (non-portable)
+
+        ```sh
+        scoop bucket add versions
+        scoop install wezterm-nightly
+        ```
+
+      - Install with Scoop (portable)
+
+        ```sh
+        scoop bucket add k https://github.com/KevinSilvester/scoop-bucket
+        scoop install k/wezterm-nightly
+        ```
+
+      </details>
+
+      &nbsp;
+
+    - <details>
+      <summary><b>Install Stable (Macos)<b></summary>
+
+      - Install with Homebrew
+
+        ```sh
+        brew install --cask wezterm
+        ```
+
+      - Install with MacPort
+
+        ```sh
+        sudo port selfupdate
+        sudo port install wezterm
+        ```
+
+        </details>
+
+      - <details>
+        <summary><b>Install Nighlty (Macos)<b></summary>
+
+        - Install with Homebrew
+
+          ```sh
+          brew install --cask wezterm@nightly
+          ```
+        - Upgrade with Homebrew
+
+          ```sh
+          brew install --cask wezterm@nightly --no-quarantine --greedy-latest
+          ```
+
+        </details>
 
   - <details>
     <summary>JetBrainsMono Nerd Font</summary>
 
-    Install with HomeBrew (Macos)
+    Install with Homebrew (Macos)
 
     ```sh
     brew tap homebrew/cask-fonts

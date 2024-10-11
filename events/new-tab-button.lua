@@ -9,21 +9,22 @@ local attr = Cells.attr
 
 local M = {}
 
+---@type table<string, Cells.SegmentColors>
 -- stylua: ignore
 local colors = {
-   label_text   = { bg = 'rgba(0, 0, 0, 0)', fg = '#CDD6F4' },
-   icon_default = { bg = 'rgba(0, 0, 0, 0)', fg = '#89B4FA' },
-   icon_wsl     = { bg = 'rgba(0, 0, 0, 0)', fg = '#FAB387' },
-   icon_ssh     = { bg = 'rgba(0, 0, 0, 0)', fg = '#F38BA8' },
-   icon_unix    = { bg = 'rgba(0, 0, 0, 0)', fg = '#CBA6F7' },
+   label_text   = { fg = '#CDD6F4' },
+   icon_default = { fg = '#89B4FA' },
+   icon_wsl     = { fg = '#FAB387' },
+   icon_ssh     = { fg = '#F38BA8' },
+   icon_unix    = { fg = '#CBA6F7' },
 }
 
-local cells = Cells:new(colors)
-    :add_segment('icon_default', ' ' .. nf.md_domain .. ' ', 'icon_default')
-    :add_segment('icon_wsl', ' ' .. nf.cod_terminal_linux .. ' ', 'icon_wsl')
-    :add_segment('icon_ssh', ' ' .. nf.md_ssh .. ' ', 'icon_ssh')
-    :add_segment('icon_unix', ' ' .. nf.dev_gnu .. ' ', 'icon_unix')
-    :add_segment('label_text', '', 'label_text', attr(attr.intensity('Bold')))
+local cells = Cells:new()
+   :add_segment('icon_default', ' ' .. nf.md_domain .. ' ', colors.icon_default)
+   :add_segment('icon_wsl', ' ' .. nf.cod_terminal_linux .. ' ', colors.icon_wsl)
+   :add_segment('icon_ssh', ' ' .. nf.md_ssh .. ' ', colors.icon_ssh)
+   :add_segment('icon_unix', ' ' .. nf.dev_gnu .. ' ', colors.icon_unix)
+   :add_segment('label_text', '', colors.label_text, attr(attr.intensity('Bold')))
 
 local function build_choices()
    local choices = {}

@@ -33,24 +33,20 @@ local RENDER_VARIANTS = {
    { 'scircle_left', 'wsl', 'title', 'unseen_output', 'padding', 'scircle_right' },
 }
 
+---@type table<string, Cells.SegmentColors>
 -- stylua: ignore
-local COLORS = {
-   default              = { bg = '#45475A', fg = '#1C1B19' },
-   default_hover        = { bg = '#587D8C', fg = '#1C1B19' },
-   default_active       = { bg = '#7FB4CA', fg = '#11111B' },
-   unseen_output        = { bg = '#45475A', fg = '#FFA066' },
-   unseen_output_hover  = { bg = '#587D8C', fg = '#FFA066' },
-   unseen_output_active = { bg = '#7FB4CA', fg = '#FFA066' },
-   scircle              = { bg = 'rgba(0, 0, 0, 0.4)', fg = '#45475A' },
-   scircle_hover        = { bg = 'rgba(0, 0, 0, 0.4)', fg = '#587D8C' },
-   scircle_active       = { bg = 'rgba(0, 0, 0, 0.4)', fg = '#7FB4CA' },
-}
+local colors = {
+   text_default          = { bg = '#45475A', fg = '#1C1B19' },
+   text_hover            = { bg = '#587D8C', fg = '#1C1B19' },
+   text_active           = { bg = '#7FB4CA', fg = '#11111B' },
 
--- stylua: ignore
-local SEGMENT_COLORS = {
-   scircle       = { default = 'scircle', hover = 'scircle_hover', active = 'scircle_active', },
-   text          = { default = 'default', hover = 'default_hover', active = 'default_active', },
-   unseen_output = { default = 'unseen_output', hover = 'unseen_output_hover', active = 'unseen_output_active', },
+   unseen_output_default = { bg = '#45475A', fg = '#FFA066' },
+   unseen_output_hover   = { bg = '#587D8C', fg = '#FFA066' },
+   unseen_output_active  = { bg = '#7FB4CA', fg = '#FFA066' },
+
+   scircle_default       = { bg = 'rgba(0, 0, 0, 0.4)', fg = '#45475A' },
+   scircle_hover         = { bg = 'rgba(0, 0, 0, 0.4)', fg = '#587D8C' },
+   scircle_active        = { bg = 'rgba(0, 0, 0, 0.4)', fg = '#7FB4CA' },
 }
 
 ---@param proc string
@@ -107,7 +103,7 @@ Tab.__index = Tab
 function Tab:new()
    local tab = {
       title = '',
-      cells = Cells:new(COLORS),
+      cells = Cells:new(),
       title_locked = false,
       is_wsl = false,
       is_admin = false,
@@ -133,24 +129,15 @@ function Tab:set_info(pane, max_width)
    self.title = create_title(process_name, pane.title, max_width, inset)
 end
 
----@param is_active boolean
----@param hover boolean
-function Tab:set_cells(is_active, hover)
-   local color_variant = 'default'
-   if is_active then
-      color_variant = 'active'
-   elseif hover then
-      color_variant = 'hover'
-   end
-
+function Tab:set_cells()
    self.cells
-      :add_segment('scircle_left', GLYPH_SCIRCLE_LEFT, SEGMENT_COLORS['scircle'][color_variant])
-      :add_segment('admin', ' ' .. GLYPH_ADMIN, SEGMENT_COLORS['text'][color_variant])
-      :add_segment('wsl', ' ' .. GLYPH_LINUX, SEGMENT_COLORS['text'][color_variant])
-      :add_segment('title', ' ', SEGMENT_COLORS['text'][color_variant], attr(attr.intensity('Bold')))
-      :add_segment('unseen_output', ' ' .. GLYPH_CIRCLE, SEGMENT_COLORS['unseen_output'][color_variant])
-      :add_segment('padding', ' ', SEGMENT_COLORS['text'][color_variant])
-      :add_segment('scircle_right', GLYPH_SCIRCLE_RIGHT, SEGMENT_COLORS['scircle'][color_variant])
+      :add_segment('scircle_left', GLYPH_SCIRCLE_LEFT)
+      :add_segment('admin', ' ' .. GLYPH_ADMIN)
+      :add_segment('wsl', ' ' .. GLYPH_LINUX)
+      :add_segment('title', ' ', nil, attr(attr.intensity('Bold')))
+      :add_segment('unseen_output', ' ' .. GLYPH_CIRCLE)
+      :add_segment('padding', ' ')
+      :add_segment('scircle_right', GLYPH_SCIRCLE_RIGHT)
 end
 
 ---@param title string
@@ -162,22 +149,22 @@ end
 ---@param is_active boolean
 ---@param hover boolean
 function Tab:update_cells(is_active, hover)
-   local color_variant = 'default'
+   local tab_state = 'default'
    if is_active then
-      color_variant = 'active'
+      tab_state = 'active'
    elseif hover then
-      color_variant = 'hover'
+      tab_state = 'hover'
    end
 
    self.cells:update_segment_text('title', ' ' .. self.title)
    self.cells
-      :update_segment_colors('scircle_left', SEGMENT_COLORS['scircle'][color_variant])
-      :update_segment_colors('admin', SEGMENT_COLORS['text'][color_variant])
-      :update_segment_colors('wsl', SEGMENT_COLORS['text'][color_variant])
-      :update_segment_colors('title', SEGMENT_COLORS['text'][color_variant])
-      :update_segment_colors('unseen_output', SEGMENT_COLORS['unseen_output'][color_variant])
-      :update_segment_colors('padding', SEGMENT_COLORS['text'][color_variant])
-      :update_segment_colors('scircle_right', SEGMENT_COLORS['scircle'][color_variant])
+      :update_segment_colors('scircle_left', colors['scircle_' .. tab_state])
+      :update_segment_colors('admin', colors['text_' .. tab_state])
+      :update_segment_colors('wsl', colors['text_' .. tab_state])
+      :update_segment_colors('title', colors['text_' .. tab_state])
+      :update_segment_colors('unseen_output', colors['unseen_output_' .. tab_state])
+      :update_segment_colors('padding', colors['text_' .. tab_state])
+      :update_segment_colors('scircle_right', colors['scircle_' .. tab_state])
 end
 
 ---@return FormatItem[] (ref: https://wezfurlong.org/wezterm/config/lua/wezterm/format.html)
@@ -230,10 +217,11 @@ M.setup = function()
 
    -- BUILTIN EVENT
    wezterm.on('format-tab-title', function(tab, _tabs, _panes, _config, hover, max_width)
+   print(tab_list)
       if not tab_list[tab.tab_id] then
          tab_list[tab.tab_id] = Tab:new()
          tab_list[tab.tab_id]:set_info(tab.active_pane, max_width)
-         tab_list[tab.tab_id]:set_cells(tab.is_active, hover)
+         tab_list[tab.tab_id]:set_cells()
          return tab_list[tab.tab_id]:render()
       end
 

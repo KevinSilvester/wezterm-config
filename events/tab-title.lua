@@ -184,10 +184,12 @@ end
 local tab_list = {}
 
 M.setup = function()
+   wezterm.GLOBAL.enable_tab_bar = true
+
    -- CUSTOM EVENT
    -- Event listener to manually update the tab name
    -- Tab name will remain locked until the `reset-tab-title` is triggered
-   wezterm.on('manual-update-tab-title', function(window, pane)
+   wezterm.on('tabs.manual-update-tab-title', function(window, pane)
       window:perform_action(
          wezterm.action.PromptInputLine({
             description = wezterm.format({
@@ -209,15 +211,21 @@ M.setup = function()
 
    -- CUSTOM EVENT
    -- Event listener to unlock manually set tab name
-   wezterm.on('reset-tab-title', function(window, _pane)
+   wezterm.on('tabs.reset-tab-title', function(window, _pane)
       local tab = window:active_tab()
       local id = tab:tab_id()
       tab_list[id].title_locked = false
    end)
 
+   -- CUSTOM EVENT
+   -- Event listener to manually update the tab name
+   wezterm.on('tabs.toggle-tab-bar', function(window, _pane)
+      wezterm.GLOBAL.enable_tab_bar = not wezterm.GLOBAL.enable_tab_bar
+      window:set_config_overrides({ enable_tab_bar = wezterm.GLOBAL.enable_tab_bar })
+   end)
+
    -- BUILTIN EVENT
    wezterm.on('format-tab-title', function(tab, _tabs, _panes, _config, hover, max_width)
-   print(tab_list)
       if not tab_list[tab.tab_id] then
          tab_list[tab.tab_id] = Tab:new()
          tab_list[tab.tab_id]:set_info(tab.active_pane, max_width)

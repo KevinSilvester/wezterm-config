@@ -70,8 +70,11 @@ local keys = {
    { key = ']',          mods = mod.SUPER_REV, action = act.MoveTabRelative(1) },
 
    -- tab: title
-   { key = '0',          mods = mod.SUPER,     action = act.EmitEvent('manual-update-tab-title') },
-   { key = '0',          mods = mod.SUPER_REV, action = act.EmitEvent('reset-tab-title') },
+   { key = '0',          mods = mod.SUPER,     action = act.EmitEvent('tabs.manual-update-tab-title') },
+   { key = '0',          mods = mod.SUPER_REV, action = act.EmitEvent('tabs.reset-tab-title') },
+
+   -- tab: hide tab-bar
+   { key = '9',          mods = mod.SUPER,     action = act.EmitEvent('tabs.toggle-tab-bar'), },
 
    -- window --
    -- spawn windows

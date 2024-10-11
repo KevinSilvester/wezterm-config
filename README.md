@@ -283,6 +283,12 @@ Most of the key bindings revolve around a <kbd>SUPER</kbd> and <kbd>SUPER_REV</k
 
 ##### Tabs: Title
 
+| Keys                          | Action         |
+| ------------------------------| -------------- |
+| <kbd>SUPER</kbd>+<kbd>9</kbd> | Toggle tab bar |
+
+##### Tabs: Toggle Tab-bar
+
 | Keys                              | Action             |
 | --------------------------------- | ------------------ |
 | <kbd>SUPER</kbd>+<kbd>0</kbd>     | Rename Current Tab |

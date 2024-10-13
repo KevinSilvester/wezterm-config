@@ -184,7 +184,7 @@ end
 local tab_list = {}
 
 M.setup = function()
-   wezterm.GLOBAL.enable_tab_bar = true
+   local enable_tab_bar = true
 
    -- CUSTOM EVENT
    -- Event listener to manually update the tab name
@@ -220,8 +220,8 @@ M.setup = function()
    -- CUSTOM EVENT
    -- Event listener to manually update the tab name
    wezterm.on('tabs.toggle-tab-bar', function(window, _pane)
-      wezterm.GLOBAL.enable_tab_bar = not wezterm.GLOBAL.enable_tab_bar
-      window:set_config_overrides({ enable_tab_bar = wezterm.GLOBAL.enable_tab_bar })
+      enable_tab_bar = not enable_tab_bar
+      window:set_config_overrides({ enable_tab_bar = enable_tab_bar })
    end)
 
    -- BUILTIN EVENT

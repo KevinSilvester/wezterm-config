@@ -1,32 +1,20 @@
-local wezterm = require('wezterm')
 local gpu_adapters = require('utils.gpu_adapter')
+local backdrops = require('utils.backdrops')
 local colors = require('colors.custom')
 
 return {
-   animation_fps = 60,
-   max_fps = 60,
+   animation_fps = 165,
+   max_fps = 165,
    front_end = 'WebGpu',
    webgpu_power_preference = 'HighPerformance',
    webgpu_preferred_adapter = gpu_adapters:pick_best(),
+   -- webgpu_preferred_adapter = gpu_adapters:pick_manual('Dx12', 'IntegratedGpu'),
 
    -- color scheme
    colors = colors,
 
    -- background
-   background = {
-      {
-         source = { File = wezterm.GLOBAL.background },
-         horizontal_align = 'Center',
-      },
-      {
-         source = { Color = colors.background },
-         height = '120%',
-         width = '120%',
-         vertical_offset = '-10%',
-         horizontal_offset = '-10%',
-         opacity = 0.96,
-      },
-   },
+   background = backdrops:create_opts(),
 
    -- scrollbar
    enable_scroll_bar = true,
@@ -46,6 +34,7 @@ return {
       top = 10,
       bottom = 7.5,
    },
+   adjust_window_size_when_changing_font_size = false,
    window_close_confirmation = 'NeverPrompt',
    window_frame = {
       active_titlebar_bg = '#090909',

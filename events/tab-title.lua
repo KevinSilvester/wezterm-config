@@ -93,6 +93,7 @@ end
 ---@field title string
 ---@field cells Cells
 ---@field title_locked boolean
+---@field locked_title string
 ---@field is_wsl boolean
 ---@field is_admin boolean
 ---@field unseen_output boolean
@@ -105,6 +106,7 @@ function Tab:new()
       title = '',
       cells = Cells:new(),
       title_locked = false,
+      locked_title = '',
       is_wsl = false,
       is_admin = false,
       unseen_output = false,
@@ -119,12 +121,14 @@ function Tab:set_info(pane, max_width)
    self.is_admin = (pane.title:match('^Administrator: ') or pane.title:match('(Admin)')) ~= nil
    self.unseen_output = pane.has_unseen_output
 
-   if self.title_locked then
-      return
-   end
    local inset = (self.is_admin or self.is_wsl) and TITLE_INSET.ICON or TITLE_INSET.DEFAULT
    if self.unseen_output then
       inset = inset + 2
+   end
+
+   if self.title_locked then
+      self.title = create_title('', self.locked_title, max_width, inset)
+      return
    end
    self.title = create_title(process_name, pane.title, max_width, inset)
 end
@@ -142,7 +146,7 @@ end
 
 ---@param title string
 function Tab:update_and_lock_title(title)
-   self.title = title
+   self.locked_title = title
    self.title_locked = true
 end
 
@@ -221,7 +225,11 @@ M.setup = function()
    -- Event listener to manually update the tab name
    wezterm.on('tabs.toggle-tab-bar', function(window, _pane)
       enable_tab_bar = not enable_tab_bar
-      window:set_config_overrides({ enable_tab_bar = enable_tab_bar })
+      local background = window:effective_config().background
+      window:set_config_overrides({
+         enable_tab_bar = enable_tab_bar,
+         background = background,
+      })
    end)
 
    -- BUILTIN EVENT

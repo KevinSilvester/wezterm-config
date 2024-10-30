@@ -30,7 +30,7 @@ local keys = {
    { key = 'f',   mods = mod.SUPER, action = act.Search({ CaseInSensitiveString = '' }) },
    {
       key = 'u',
-      mods = mod.SUPER,
+      mods = mod.SUPER_REV,
       action = wezterm.action.QuickSelectArgs({
          label = 'open url',
          patterns = {
@@ -77,8 +77,36 @@ local keys = {
    { key = '9',          mods = mod.SUPER,     action = act.EmitEvent('tabs.toggle-tab-bar'), },
 
    -- window --
-   -- spawn windows
+   -- window: spawn windows
    { key = 'n',          mods = mod.SUPER,     action = act.SpawnWindow },
+
+   -- window: zoom window
+   {
+      key = '-',
+      mods = mod.SUPER,
+      action = wezterm.action_callback(function(window, _pane)
+         local dimensions = window:get_dimensions()
+         if dimensions.is_full_screen then
+            return
+         end
+         local new_width = dimensions.pixel_width - 50
+         local new_height = dimensions.pixel_height - 50
+         window:set_inner_size(new_width, new_height)
+      end)
+   },
+   {
+      key = '=',
+      mods = mod.SUPER,
+      action = wezterm.action_callback(function(window, _pane)
+         local dimensions = window:get_dimensions()
+         if dimensions.is_full_screen then
+            return
+         end
+         local new_width = dimensions.pixel_width + 50
+         local new_height = dimensions.pixel_height + 50
+         window:set_inner_size(new_width, new_height)
+      end)
+   },
 
    -- background controls --
    {
@@ -155,6 +183,12 @@ local keys = {
       action = act.PaneSelect({ alphabet = '1234567890', mode = 'SwapWithActiveKeepFocus' }),
    },
 
+   -- panes: scroll pane
+   { key = 'u',        mods = mod.SUPER, action = act.ScrollByLine(-5) },
+   { key = 'd',        mods = mod.SUPER, action = act.ScrollByLine(5) },
+   { key = 'PageUp',   mods = 'NONE',    action = act.ScrollByPage(-0.75) },
+   { key = 'PageDown', mods = 'NONE',    action = act.ScrollByPage(0.75) },
+
    -- key-tables --
    -- resizes fonts
    {
@@ -208,6 +242,7 @@ local mouse_bindings = {
 
 return {
    disable_default_key_bindings = true,
+   -- disable_default_mouse_bindings = true,
    leader = { key = 'Space', mods = mod.SUPER_REV },
    keys = keys,
    key_tables = key_tables,

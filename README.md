@@ -99,8 +99,7 @@
         ```sh
         choco install wezterm -y
         ```
-
-        </details>
+      </details>
 
     - <details>
       <summary>Install Nightly</summary>
@@ -118,13 +117,12 @@
         scoop bucket add k https://github.com/KevinSilvester/scoop-bucket
         scoop install k/wezterm-nightly
         ```
-
-        </details>
+      </details>
 
     > :bulb:<br>
     > Toast notifications don't work in non-portable installations.<br>
     > See issue <https://github.com/wez/wezterm/issues/5166> for more details
-
+  
     ---
 
     **MacOS**
@@ -144,8 +142,7 @@
         sudo port selfupdate
         sudo port install wezterm
         ```
-
-        </details>
+      </details>
 
     - <details>
       <summary>Install Nighlty</summary>
@@ -161,8 +158,7 @@
         ```sh
         brew install --cask wezterm@nightly --no-quarantine --greedy-latest
         ```
-
-        </details>
+      </details>
 
     ---
 
@@ -194,7 +190,6 @@
     >
     > - <https://www.nerdfonts.com/#home>
     > - <https://github.com/ryanoasis/nerd-fonts?#font-installation>
-
     </details/>
 
 &nbsp;
@@ -306,8 +301,8 @@ Most of the key bindings revolve around a <kbd>SUPER</kbd> and <kbd>SUPER_REV</k
 | Keys                          | Action               |
 | ----------------------------- | -------------------- |
 | <kbd>SUPER</kbd>+<kbd>n</kbd> | `SpawnWindow`        |
-| <kbd>SUPER</kbd>+<kbd>=</kbd> | Decrease Window Size |
-| <kbd>SUPER</kbd>+<kbd>-</kbd> | Increase Window Size |
+| <kbd>SUPER</kbd>+<kbd>=</kbd> | Increase Window Size |
+| <kbd>SUPER</kbd>+<kbd>-</kbd> | Decrease Window Size |
 
 &nbsp;
 

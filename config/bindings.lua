@@ -59,9 +59,9 @@ local keys = {
 
    -- tabs --
    -- tabs: spawn+close
-   { key = 't',          mods = mod.SUPER,     action = act.SpawnTab('DefaultDomain') },
+   { key = 't',          mods = 'LEADER',     action = act.SpawnTab('DefaultDomain') },
    { key = 't',          mods = mod.SUPER_REV, action = act.SpawnTab({ DomainName = 'WSL:Ubuntu' }) },
-   { key = 'w',          mods = mod.SUPER_REV, action = act.CloseCurrentTab({ confirm = false }) },
+   { key = 'w',          mods = 'LEADER', action = act.CloseCurrentTab({ confirm = false }) },
 
    -- tabs: navigation
    { key = '[',          mods = 'LEADER',     action = act.ActivateTabRelative(-1) },
@@ -71,7 +71,7 @@ local keys = {
 
    -- window --
    -- spawn windows
-   { key = 'n',          mods = mod.SUPER,     action = act.SpawnWindow },
+   { key = 'n',          mods = 'LEADER',     action = act.SpawnWindow },
 
    -- background controls --
    {

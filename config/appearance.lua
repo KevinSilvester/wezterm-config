@@ -45,7 +45,7 @@ return {
       bottom = 7,
    },
    window_close_confirmation = 'NeverPrompt',
-   window_decorations = "RESIZE",
+   window_decorations = 'RESIZE | INTEGRATED_BUTTONS',
    window_frame = {
       active_titlebar_bg = '#090909',
       -- font = fonts.font,

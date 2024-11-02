@@ -37,6 +37,7 @@ local charging_icons = {
    nf.md_battery_charging,
 }
 
+   ---@type table<string, Cells.SegmentColors>
 -- stylua: ignore
 local colors = {
    date      = { fg = '#fab387', bg = 'rgba(0, 0, 0, 0.4)' },
@@ -44,14 +45,14 @@ local colors = {
    separator = { fg = '#74c7ec', bg = 'rgba(0, 0, 0, 0.4)' }
 }
 
-local cells = Cells:new(colors)
+local cells = Cells:new()
 
 cells
-   :push('date_icon', ICON_DATE .. '  ', 'date', attr(attr.intensity('Bold')))
-   :push('date_text', '', 'date', attr(attr.intensity('Bold')))
-   :push('separator', ' ' .. ICON_SEPARATOR .. '  ', 'separator')
-   :push('battery_icon', '', 'battery')
-   :push('battery_text', '', 'battery', attr(attr.intensity('Bold')))
+   :add_segment('date_icon', ICON_DATE .. '  ', colors.date, attr(attr.intensity('Bold')))
+   :add_segment('date_text', '', colors.date, attr(attr.intensity('Bold')))
+   :add_segment('separator', ' ' .. ICON_SEPARATOR .. '  ', colors.separator)
+   :add_segment('battery_icon', '', colors.battery)
+   :add_segment('battery_text', '', colors.battery, attr(attr.intensity('Bold')))
 
 ---@return string, string
 local function battery_info()

@@ -27,7 +27,6 @@
 --[[ FormatItems: End ]]
 
 local attr = {}
-local attr_mt = {}
 
 ---@param type 'Bold'|'Half'|'Normal'
 ---@return {Attribute: FormatItem.Attribute.Intensity}
@@ -46,53 +45,54 @@ attr.underline = function(type)
    return { Attribute = { Underline = type } }
 end
 
----@vararg FormatItem.Attribute
----@return FormatItem.Attribute[]
-attr_mt.__call = function(_, ...)
-   return { ... }
-end
-
----@class Cells.Colors
----@field default {bg: string, fg: string}
----@field [string] {bg: string, fg: string}
+---@alias Cells.SegmentColors {bg?: string|'UNSET', fg?: string|'UNSET'}
 
 ---@class Cells.Segment
----@field color string
 ---@field items FormatItem[]
+---@field has_bg boolean
+---@field has_fg boolean
 
 ---Format item generator for `wezterm.format` (ref: <https://wezfurlong.org/wezterm/config/lua/wezterm/format.html>)
 ---@class Cells
 ---@field segments table<string|number, Cells.Segment>
----@field colors Cells.Colors
 local Cells = {}
 Cells.__index = Cells
 
-Cells.attr = setmetatable(attr, attr_mt)
+---@class Cells.Attributes
+---@field intensity fun(type: 'Bold'|'Half'|'Normal'): {Attribute: FormatItem.Attribute.Intensity}
+---@field underline fun(type: 'None'|'Single'|'Double'|'Curly'): {Attribute: FormatItem.Attribute.Underline}
+---@field italic fun(): {Attribute: FormatItem.Attribute.Italic}
+---@overload fun(...: FormatItem.Attribute): FormatItem.Attribute[]
+Cells.attr = setmetatable(attr, {
+   __call = function(_, ...)
+      return { ... }
+   end,
+})
 
----@param colors Cells.Colors
-function Cells:new(colors)
+function Cells:new()
    return setmetatable({
       segments = {},
-      colors = colors,
    }, self)
 end
 
 ---@param segment_id string|number the segment id
 ---@param text string the text to push
----@param color string|'default' the color variant to use (default is 'default')
----@param attributes FormatItem.Attribute[]|nil use bold text
-function Cells:push(segment_id, text, color, attributes)
-   color = color or 'default'
-   local colors = self.colors[color]
-   if not colors then
-      error('Color variant "' .. color .. '" not found')
-   end
+---@param color? Cells.SegmentColors the bg and fg colors for text
+---@param attributes? FormatItem.Attribute[] use bold text
+function Cells:add_segment(segment_id, text, color, attributes)
+   color = color or {}
 
    ---@type FormatItem[]
    local items = {}
 
-   table.insert(items, { Background = { Color = colors.bg } })
-   table.insert(items, { Foreground = { Color = colors.fg } })
+   if color.bg then
+      assert(color.bg ~= 'UNSET', 'Cannot use UNSET when adding new segment')
+      table.insert(items, { Background = { Color = color.bg } })
+   end
+   if color.fg then
+      assert(color.bg ~= 'UNSET', 'Cannot use UNSET when adding new segment')
+      table.insert(items, { Foreground = { Color = color.fg } })
+   end
    if attributes and #attributes > 0 then
       for _, attr_ in ipairs(attributes) do
          table.insert(items, attr_)
@@ -103,8 +103,9 @@ function Cells:push(segment_id, text, color, attributes)
 
    ---@type Cells.Segment
    self.segments[segment_id] = {
-      color = color,
       items = items,
+      has_bg = color.bg ~= nil,
+      has_fg = color.fg ~= nil,
    }
 
    return self
@@ -118,14 +119,6 @@ function Cells:_check_segment(segment_id)
    end
 end
 
----@private
----@param color string
-function Cells:_check_color(color)
-   if not self.colors[color] then
-      error('Color variant "' .. color .. '" not found')
-   end
-end
-
 ---@param segment_id string|number the segment id
 ---@param text string the text to push
 function Cells:update_segment_text(segment_id, text)
@@ -136,14 +129,54 @@ function Cells:update_segment_text(segment_id, text)
 end
 
 ---@param segment_id string|number the segment id
----@param color string|'default' the color variant to use (default is 'default')
+---@param color Cells.SegmentColors the bg and fg colors for text
 function Cells:update_segment_colors(segment_id, color)
-   color = color or 'default'
-   self:_check_segment(segment_id)
-   self:_check_color(color)
+   assert(type(color) == 'table', 'Color must be a table')
 
-   self.segments[segment_id].items[1] = { Background = { Color = self.colors[color].bg } }
-   self.segments[segment_id].items[2] = { Foreground = { Color = self.colors[color].fg } }
+   self:_check_segment(segment_id)
+
+   local has_bg = self.segments[segment_id].has_bg
+   local has_fg = self.segments[segment_id].has_fg
+
+   if color.bg then
+      if has_bg and color.bg == 'UNSET' then
+         table.remove(self.segments[segment_id].items, 1)
+         has_bg = false
+         goto bg_end
+      end
+
+      if has_bg then
+         self.segments[segment_id].items[1] = { Background = { Color = color.bg } }
+      else
+         table.insert(self.segments[segment_id].items, 1, { Background = { Color = color.bg } })
+         has_bg = true
+      end
+   end
+   ::bg_end::
+
+   if color.fg then
+      local fg_idx = has_bg and 2 or 1
+      if has_fg and color.fg == 'UNSET' then
+         table.remove(self.segments[segment_id].items, fg_idx)
+         has_fg = false
+         goto fg_end
+      end
+
+      if has_fg then
+         self.segments[segment_id].items[fg_idx] = { Foreground = { Color = color.fg } }
+      else
+         table.insert(
+            self.segments[segment_id].items,
+            fg_idx,
+            { Foreground = { Color = color.fg } }
+         )
+         has_fg = true
+      end
+   end
+   ::fg_end::
+
+   self.segments[segment_id].has_bg = has_bg
+   self.segments[segment_id].has_fg = has_fg
    return self
 end
 

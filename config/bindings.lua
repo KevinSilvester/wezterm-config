@@ -1,5 +1,5 @@
 local wezterm = require('wezterm')
-local platform = require('utils.platform')()
+local platform = require('utils.platform')
 local backdrops = require('utils.backdrops')
 local act = wezterm.action
 
@@ -30,7 +30,7 @@ local keys = {
    { key = 'f',   mods = mod.SUPER, action = act.Search({ CaseInSensitiveString = '' }) },
    {
       key = 'u',
-      mods = mod.SUPER,
+      mods = mod.SUPER_REV,
       action = wezterm.action.QuickSelectArgs({
          label = 'open url',
          patterns = {
@@ -70,12 +70,43 @@ local keys = {
    { key = ']',          mods = mod.SUPER_REV, action = act.MoveTabRelative(1) },
 
    -- tab: title
-   { key = '0',          mods = mod.SUPER,     action = act.EmitEvent('manual-update-tab-title') },
-   { key = '0',          mods = mod.SUPER_REV, action = act.EmitEvent('reset-tab-title') },
+   { key = '0',          mods = mod.SUPER,     action = act.EmitEvent('tabs.manual-update-tab-title') },
+   { key = '0',          mods = mod.SUPER_REV, action = act.EmitEvent('tabs.reset-tab-title') },
+
+   -- tab: hide tab-bar
+   { key = '9',          mods = mod.SUPER,     action = act.EmitEvent('tabs.toggle-tab-bar'), },
 
    -- window --
    -- spawn windows
    { key = 'n',          mods = 'LEADER',     action = act.SpawnWindow },
+
+   -- window: zoom window
+   {
+      key = '-',
+      mods = mod.SUPER,
+      action = wezterm.action_callback(function(window, _pane)
+         local dimensions = window:get_dimensions()
+         if dimensions.is_full_screen then
+            return
+         end
+         local new_width = dimensions.pixel_width - 50
+         local new_height = dimensions.pixel_height - 50
+         window:set_inner_size(new_width, new_height)
+      end)
+   },
+   {
+      key = '=',
+      mods = mod.SUPER,
+      action = wezterm.action_callback(function(window, _pane)
+         local dimensions = window:get_dimensions()
+         if dimensions.is_full_screen then
+            return
+         end
+         local new_width = dimensions.pixel_width + 50
+         local new_height = dimensions.pixel_height + 50
+         window:set_inner_size(new_width, new_height)
+      end)
+   },
 
    -- background controls --
    {
@@ -103,11 +134,14 @@ local keys = {
       key = [[/]],
       mods = mod.SUPER_REV,
       action = act.InputSelector({
-         title = 'Select Background',
+         title = 'InputSelector: Select Background',
          choices = backdrops:choices(),
          fuzzy = true,
          fuzzy_description = 'Select Background: ',
          action = wezterm.action_callback(function(window, _pane, idx)
+            if not idx then
+               return
+            end
             ---@diagnostic disable-next-line: param-type-mismatch
             backdrops:set_img(window, tonumber(idx))
          end),
@@ -148,6 +182,12 @@ local keys = {
       mods = mod.SUPER_REV,
       action = act.PaneSelect({ alphabet = '1234567890', mode = 'SwapWithActiveKeepFocus' }),
    },
+
+   -- panes: scroll pane
+   { key = 'u',        mods = mod.SUPER, action = act.ScrollByLine(-5) },
+   { key = 'd',        mods = mod.SUPER, action = act.ScrollByLine(5) },
+   { key = 'PageUp',   mods = 'NONE',    action = act.ScrollByPage(-0.75) },
+   { key = 'PageDown', mods = 'NONE',    action = act.ScrollByPage(0.75) },
 
    -- key-tables --
    -- resizes fonts

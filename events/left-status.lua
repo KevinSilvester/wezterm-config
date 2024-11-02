@@ -11,18 +11,19 @@ local GLYPH_SEMI_CIRCLE_RIGHT = nf.ple_right_half_circle_thick --[[ '' ]]
 local GLYPH_KEY_TABLE = nf.md_table_key --[[ '󱏅' ]]
 local GLYPH_KEY = nf.md_key --[[ '󰌆' ]]
 
+---@type table<string, Cells.SegmentColors>
 local colors = {
    default = { bg = '#fab387', fg = '#1c1b19' },
    scircle = { bg = 'rgba(0, 0, 0, 0.4)', fg = '#fab387' },
 }
 
-local cells = Cells:new(colors)
+local cells = Cells:new()
 
 cells
-   :push(1, GLYPH_SEMI_CIRCLE_LEFT, 'scircle', attr(attr.intensity('Bold')))
-   :push(2, ' ', 'default', attr(attr.intensity('Bold')))
-   :push(3, ' ', 'default', attr(attr.intensity('Bold')))
-   :push(4, GLYPH_SEMI_CIRCLE_RIGHT, 'scircle', attr(attr.intensity('Bold')))
+   :add_segment(1, GLYPH_SEMI_CIRCLE_LEFT, colors.scircle, attr(attr.intensity('Bold')))
+   :add_segment(2, ' ', colors.default, attr(attr.intensity('Bold')))
+   :add_segment(3, ' ', colors.default, attr(attr.intensity('Bold')))
+   :add_segment(4, GLYPH_SEMI_CIRCLE_RIGHT, colors.scircle, attr(attr.intensity('Bold')))
 
 M.setup = function()
    wezterm.on('update-right-status', function(window, _pane)

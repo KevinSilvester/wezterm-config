@@ -1,5 +1,4 @@
 local wezterm = require('wezterm')
-local platform = require('utils.platform')()
 local colors = require('colors.custom')
 
 -- Seeding random numbers before generating for use
@@ -10,7 +9,7 @@ math.random()
 math.random()
 math.random()
 
-local PATH_SEP = platform.is_win and '\\' or '/'
+local GLOB_PATTERN = '*.{jpg,jpeg,png,gif,bmp,ico,tiff,pnm,dds,tga}'
 
 ---@class BackDrops
 ---@field current_idx number index of current image
@@ -30,7 +29,6 @@ function BackDrops:init()
       focus_on = false,
    }
    local backdrops = setmetatable(inital, self)
-   wezterm.GLOBAL.background = nil
    return backdrops
 end
 
@@ -39,12 +37,11 @@ end
 ---
 --- INFO:
 ---   During the initial load of the config, this function can only invoked in `wezterm.lua`.
----   WezTerm's fs utility `read_dir` (used in this function) works by running on a spawned child process.
+---   WezTerm's fs utility `glob` (used in this function) works by running on a spawned child process.
 ---   This throws a coroutine error if the function is invoked in outside of `wezterm.lua` in the -
 ---   initial load of the Terminal config.
 function BackDrops:set_files()
-   self.files = wezterm.read_dir(wezterm.config_dir .. PATH_SEP .. 'backdrops')
-   wezterm.GLOBAL.background = self.files[1]
+   self.files = wezterm.glob(wezterm.config_dir .. '/backdrops/' .. GLOB_PATTERN)
    return self
 end
 
@@ -56,27 +53,33 @@ function BackDrops:set_focus(focus_color)
    return self
 end
 
+---Create the `background` options with the current image
+---@return table
+function BackDrops:create_opts()
+   return {
+      {
+         source = { File = self.files[self.current_idx] },
+         horizontal_align = 'Center',
+      },
+      {
+         source = { Color = colors.background },
+         height = '120%',
+         width = '120%',
+         vertical_offset = '-10%',
+         horizontal_offset = '-10%',
+         opacity = 0.96,
+      },
+   }
+end
+
 ---Override the current window options for background
 ---@private
 ---@param window any WezTerm Window see: https://wezfurlong.org/wezterm/config/lua/window/index.html
 function BackDrops:_set_opt(window)
-   local opts = {
-      background = {
-         {
-            source = { File = wezterm.GLOBAL.background },
-            horizontal_align = 'Center',
-         },
-         {
-            source = { Color = colors.background },
-            height = '120%',
-            width = '120%',
-            vertical_offset = '-10%',
-            horizontal_offset = '-10%',
-            opacity = 0.96,
-         },
-      },
-   }
-   window:set_config_overrides(opts)
+   window:set_config_overrides({
+      background = self:create_opts(),
+      enable_tab_bar = window:effective_config().enable_tab_bar,
+   })
 end
 
 ---Override the current window options for background with focus color
@@ -87,11 +90,14 @@ function BackDrops:_set_focus_opt(window)
       background = {
          {
             source = { Color = self.focus_color },
-            height = '100%',
-            width = '100%',
+            height = '120%',
+            width = '120%',
+            vertical_offset = '-10%',
+            horizontal_offset = '-10%',
             opacity = 1,
          },
       },
+      enable_tab_bar = window:effective_config().enable_tab_bar,
    }
    window:set_config_overrides(opts)
 end
@@ -101,21 +107,19 @@ end
 function BackDrops:choices()
    local choices = {}
    for idx, file in ipairs(self.files) do
-      local name = file:match('([^' .. PATH_SEP .. ']+)$')
       table.insert(choices, {
          id = tostring(idx),
-         label = name,
+         label = file:match('([^/]+)$'),
       })
    end
    return choices
 end
 
----Select a random file and redefine the global `wezterm.GLOBAL.background` variable
+---Select a random background from the loaded `files`
 ---Pass in `Window` object to override the current window options
 ---@param window any? WezTerm `Window` see: https://wezfurlong.org/wezterm/config/lua/window/index.html
 function BackDrops:random(window)
    self.current_idx = math.random(#self.files)
-   wezterm.GLOBAL.background = self.files[self.current_idx]
 
    if window ~= nil then
       self:_set_opt(window)
@@ -130,7 +134,6 @@ function BackDrops:cycle_forward(window)
    else
       self.current_idx = self.current_idx + 1
    end
-   wezterm.GLOBAL.background = self.files[self.current_idx]
    self:_set_opt(window)
 end
 
@@ -142,7 +145,6 @@ function BackDrops:cycle_back(window)
    else
       self.current_idx = self.current_idx - 1
    end
-   wezterm.GLOBAL.background = self.files[self.current_idx]
    self:_set_opt(window)
 end
 
@@ -156,7 +158,6 @@ function BackDrops:set_img(window, idx)
    end
 
    self.current_idx = idx
-   wezterm.GLOBAL.background = self.files[self.current_idx]
    self:_set_opt(window)
 end
 

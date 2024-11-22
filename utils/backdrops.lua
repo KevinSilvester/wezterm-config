@@ -54,8 +54,9 @@ function BackDrops:set_focus(focus_color)
 end
 
 ---Create the `background` options with the current image
+---@private
 ---@return table
-function BackDrops:create_opts()
+function BackDrops:_create_opts()
    return {
       {
          source = { File = self.files[self.current_idx] },
@@ -72,12 +73,43 @@ function BackDrops:create_opts()
    }
 end
 
+---Create the `background` options for focus mode
+---@private
+---@return table
+function BackDrops:_create_focus_opts()
+   return {
+      {
+         source = { Color = self.focus_color },
+         height = '120%',
+         width = '120%',
+         vertical_offset = '-10%',
+         horizontal_offset = '-10%',
+         opacity = 1,
+      },
+   }
+end
+
+---Set the initial options for `background`
+---@param focus_on boolean? focus mode on or off
+function BackDrops:initial_options(focus_on)
+   focus_on = focus_on or false
+   assert(type(focus_on) == 'boolean', 'BackDrops:initial_options - Expected a boolean')
+
+   self.focus_on = focus_on
+   if focus_on then
+      return self:_create_focus_opts()
+   end
+
+   return self:_create_opts()
+end
+
 ---Override the current window options for background
 ---@private
 ---@param window any WezTerm Window see: https://wezfurlong.org/wezterm/config/lua/window/index.html
-function BackDrops:_set_opt(window)
+---@param background_opts table background option
+function BackDrops:_set_opt(window, background_opts)
    window:set_config_overrides({
-      background = self:create_opts(),
+      background = background_opts,
       enable_tab_bar = window:effective_config().enable_tab_bar,
    })
 end
@@ -102,6 +134,8 @@ function BackDrops:_set_focus_opt(window)
    window:set_config_overrides(opts)
 end
 
+
+
 ---Convert the `files` array to a table of `InputSelector` choices
 ---see: https://wezfurlong.org/wezterm/config/lua/keyassignment/InputSelector.html
 function BackDrops:choices()
@@ -122,7 +156,7 @@ function BackDrops:random(window)
    self.current_idx = math.random(#self.files)
 
    if window ~= nil then
-      self:_set_opt(window)
+      self:_set_opt(window, self:_create_opts())
    end
 end
 
@@ -134,7 +168,7 @@ function BackDrops:cycle_forward(window)
    else
       self.current_idx = self.current_idx + 1
    end
-   self:_set_opt(window)
+   self:_set_opt(window, self:_create_opts())
 end
 
 ---Cycle the loaded `files` and select the previous background
@@ -145,7 +179,7 @@ function BackDrops:cycle_back(window)
    else
       self.current_idx = self.current_idx - 1
    end
-   self:_set_opt(window)
+   self:_set_opt(window, self:_create_opts())
 end
 
 ---Set a specific background from the `files` array
@@ -158,19 +192,23 @@ function BackDrops:set_img(window, idx)
    end
 
    self.current_idx = idx
-   self:_set_opt(window)
+   self:_set_opt(window, self:_create_opts())
 end
 
 ---Toggle the focus mode
 ---@param window any WezTerm `Window` see: https://wezfurlong.org/wezterm/config/lua/window/index.html
 function BackDrops:toggle_focus(window)
+   local background_opts
+
    if self.focus_on then
-      self:set_img(window, self.current_idx)
+      background_opts = self:_create_opts()
       self.focus_on = false
    else
-      self:_set_focus_opt(window)
+      background_opts = self:_create_focus_opts()
       self.focus_on = true
    end
+
+   self:_set_opt(window, background_opts)
 end
 
 return BackDrops:init()

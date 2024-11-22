@@ -3,14 +3,15 @@ local backdrops = require('utils.backdrops')
 local colors = require('colors.custom')
 
 return {
-   max_fps = 120,
+   max_fps = 240,
    front_end = 'WebGpu',
    webgpu_power_preference = 'HighPerformance',
    webgpu_preferred_adapter = gpu_adapters:pick_best(),
    -- webgpu_preferred_adapter = gpu_adapters:pick_manual('Dx12', 'IntegratedGpu'),
+   -- webgpu_preferred_adapter = gpu_adapters:pick_manual('Gl', 'Other'),
 
    -- cursor
-   animation_fps = 120,
+   animation_fps = 240,
    cursor_blink_ease_in = 'EaseOut',
    cursor_blink_ease_out = 'EaseOut',
    default_cursor_style = 'BlinkingBlock',
@@ -20,7 +21,7 @@ return {
    colors = colors,
 
    -- background
-   background = backdrops:create_opts(),
+   background = backdrops:initial_options(),
 
    -- scrollbar
    enable_scroll_bar = true,

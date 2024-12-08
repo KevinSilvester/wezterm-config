@@ -133,7 +133,7 @@ function Tab:set_info(pane, max_width)
    self.title = create_title(process_name, pane.title, max_width, inset)
 end
 
-function Tab:set_cells()
+function Tab:create_cells()
    self.cells
       :add_segment('scircle_left', GLYPH_SCIRCLE_LEFT)
       :add_segment('admin', ' ' .. GLYPH_ADMIN)
@@ -188,8 +188,6 @@ end
 local tab_list = {}
 
 M.setup = function()
-   local enable_tab_bar = true
-
    -- CUSTOM EVENT
    -- Event listener to manually update the tab name
    -- Tab name will remain locked until the `reset-tab-title` is triggered
@@ -224,11 +222,10 @@ M.setup = function()
    -- CUSTOM EVENT
    -- Event listener to manually update the tab name
    wezterm.on('tabs.toggle-tab-bar', function(window, _pane)
-      enable_tab_bar = not enable_tab_bar
-      local background = window:effective_config().background
+      local effective_config = window:effective_config()
       window:set_config_overrides({
-         enable_tab_bar = enable_tab_bar,
-         background = background,
+         enable_tab_bar = not effective_config.enable_tab_bar,
+         background = effective_config.background,
       })
    end)
 
@@ -237,7 +234,7 @@ M.setup = function()
       if not tab_list[tab.tab_id] then
          tab_list[tab.tab_id] = Tab:new()
          tab_list[tab.tab_id]:set_info(tab.active_pane, max_width)
-         tab_list[tab.tab_id]:set_cells()
+         tab_list[tab.tab_id]:create_cells()
          return tab_list[tab.tab_id]:render()
       end
 

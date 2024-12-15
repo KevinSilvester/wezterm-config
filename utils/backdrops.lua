@@ -13,7 +13,8 @@ local GLOB_PATTERN = '*.{jpg,jpeg,png,gif,bmp,ico,tiff,pnm,dds,tga}'
 
 ---@class BackDrops
 ---@field current_idx number index of current image
----@field files string[] background images
+---@field images string[] background images
+---@field images_dir string directory of background images. Default is `wezterm.config_dir .. '/backdrops/'`
 ---@field focus_color string background color when in focus mode. Default is `colors.custom.background`
 ---@field focus_on boolean focus mode on or off
 local BackDrops = {}
@@ -24,7 +25,8 @@ BackDrops.__index = BackDrops
 function BackDrops:init()
    local inital = {
       current_idx = 1,
-      files = {},
+      images = {},
+      images_dir = wezterm.config_dir .. '/backdrops/',
       focus_color = colors.background,
       focus_on = false,
    }
@@ -32,16 +34,31 @@ function BackDrops:init()
    return backdrops
 end
 
+---Override the default `images_dir`
+---Default `images_dir` is `wezterm.config_dir .. '/backdrops/'`
+---
+--- INFO:
+---  This function must be invoked before `set_images()`
+---
+---@param path string directory of background images
+function BackDrops:set_images_dir(path)
+   self.images_dir = path
+   if not path:match('/$') then
+      self.images_dir = path .. '/'
+   end
+   return self
+end
+
 ---MUST BE RUN BEFORE ALL OTHER `BackDrops` functions
----Sets the `files` after instantiating `BackDrops`.
+---Sets the `images` after instantiating `BackDrops`.
 ---
 --- INFO:
 ---   During the initial load of the config, this function can only invoked in `wezterm.lua`.
 ---   WezTerm's fs utility `glob` (used in this function) works by running on a spawned child process.
 ---   This throws a coroutine error if the function is invoked in outside of `wezterm.lua` in the -
 ---   initial load of the Terminal config.
-function BackDrops:set_files()
-   self.files = wezterm.glob(wezterm.config_dir .. '/backdrops/' .. GLOB_PATTERN)
+function BackDrops:set_images()
+   self.images = wezterm.glob(self.images_dir .. GLOB_PATTERN)
    return self
 end
 
@@ -59,7 +76,7 @@ end
 function BackDrops:_create_opts()
    return {
       {
-         source = { File = self.files[self.current_idx] },
+         source = { File = self.images[self.current_idx] },
          horizontal_align = 'Center',
       },
       {
@@ -140,7 +157,7 @@ end
 ---see: https://wezfurlong.org/wezterm/config/lua/keyassignment/InputSelector.html
 function BackDrops:choices()
    local choices = {}
-   for idx, file in ipairs(self.files) do
+   for idx, file in ipairs(self.images) do
       table.insert(choices, {
          id = tostring(idx),
          label = file:match('([^/]+)$'),
@@ -153,7 +170,7 @@ end
 ---Pass in `Window` object to override the current window options
 ---@param window any? WezTerm `Window` see: https://wezfurlong.org/wezterm/config/lua/window/index.html
 function BackDrops:random(window)
-   self.current_idx = math.random(#self.files)
+   self.current_idx = math.random(#self.images)
 
    if window ~= nil then
       self:_set_opt(window, self:_create_opts())
@@ -163,7 +180,7 @@ end
 ---Cycle the loaded `files` and select the next background
 ---@param window any WezTerm `Window` see: https://wezfurlong.org/wezterm/config/lua/window/index.html
 function BackDrops:cycle_forward(window)
-   if self.current_idx == #self.files then
+   if self.current_idx == #self.images then
       self.current_idx = 1
    else
       self.current_idx = self.current_idx + 1
@@ -175,7 +192,7 @@ end
 ---@param window any WezTerm `Window` see: https://wezfurlong.org/wezterm/config/lua/window/index.html
 function BackDrops:cycle_back(window)
    if self.current_idx == 1 then
-      self.current_idx = #self.files
+      self.current_idx = #self.images
    else
       self.current_idx = self.current_idx - 1
    end
@@ -186,7 +203,7 @@ end
 ---@param window any WezTerm `Window` see: https://wezfurlong.org/wezterm/config/lua/window/index.html
 ---@param idx number index of the `files` array
 function BackDrops:set_img(window, idx)
-   if idx > #self.files or idx < 0 then
+   if idx > #self.images or idx < 0 then
       wezterm.log_error('Index out of range')
       return
    end

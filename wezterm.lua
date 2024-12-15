@@ -1,8 +1,9 @@
 local Config = require('config')
 
 require('utils.backdrops')
-   :set_files()
    -- :set_focus('#000000')
+   -- :set_images_dir(require('wezterm').home_dir .. '/Pictures/Wallpapers/')
+   :set_images()
    :random()
 
 require('events.right-status').setup()

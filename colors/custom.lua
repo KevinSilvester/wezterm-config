@@ -80,7 +80,7 @@ local colorscheme = {
          italic = true,
       },
    },
-   visual_bell = mocha.surface0,
+   visual_bell = mocha.red,
    indexed = {
       [16] = mocha.peach,
       [17] = mocha.rosewater,

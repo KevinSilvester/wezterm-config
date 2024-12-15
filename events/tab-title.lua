@@ -89,6 +89,19 @@ local function create_title(process_name, base_title, max_width, inset)
    return title
 end
 
+---@param panes any[] WezTerm https://wezfurlong.org/wezterm/config/lua/pane/index.html
+local function check_unseen_output(panes)
+   local unseen_output = false
+   for i = 1, #panes, 1 do
+      if panes[i].has_unseen_output then
+         unseen_output = true
+         break
+      end
+   end
+
+   return unseen_output
+end
+
 ---@class Tab
 ---@field title string
 ---@field cells Cells
@@ -114,12 +127,16 @@ function Tab:new()
    return setmetatable(tab, self)
 end
 
----@param pane any WezTerm https://wezfurlong.org/wezterm/config/lua/pane/index.html
-function Tab:set_info(pane, max_width)
-   local process_name = clean_process_name(pane.foreground_process_name)
+---@param active_pane any WezTerm https://wezfurlong.org/wezterm/config/lua/pane/index.html
+---@param panes any[] WezTerm https://wezfurlong.org/wezterm/config/lua/pane/index.html
+function Tab:set_info(active_pane, panes, max_width)
+   local process_name = clean_process_name(active_pane.foreground_process_name)
+
    self.is_wsl = process_name:match('^wsl') ~= nil
-   self.is_admin = (pane.title:match('^Administrator: ') or pane.title:match('(Admin)')) ~= nil
-   self.unseen_output = pane.has_unseen_output
+   self.is_admin = (
+      active_pane.title:match('^Administrator: ') or active_pane.title:match('(Admin)')
+   ) ~= nil
+   self.unseen_output = check_unseen_output(panes)
 
    local inset = (self.is_admin or self.is_wsl) and TITLE_INSET.ICON or TITLE_INSET.DEFAULT
    if self.unseen_output then
@@ -130,7 +147,7 @@ function Tab:set_info(pane, max_width)
       self.title = create_title('', self.locked_title, max_width, inset)
       return
    end
-   self.title = create_title(process_name, pane.title, max_width, inset)
+   self.title = create_title(process_name, active_pane.title, max_width, inset)
 end
 
 function Tab:create_cells()
@@ -233,12 +250,12 @@ M.setup = function()
    wezterm.on('format-tab-title', function(tab, _tabs, _panes, _config, hover, max_width)
       if not tab_list[tab.tab_id] then
          tab_list[tab.tab_id] = Tab:new()
-         tab_list[tab.tab_id]:set_info(tab.active_pane, max_width)
+         tab_list[tab.tab_id]:set_info(tab.active_pane, tab.panes, max_width)
          tab_list[tab.tab_id]:create_cells()
          return tab_list[tab.tab_id]:render()
       end
 
-      tab_list[tab.tab_id]:set_info(tab.active_pane, max_width)
+      tab_list[tab.tab_id]:set_info(tab.active_pane, tab.panes, max_width)
       tab_list[tab.tab_id]:update_cells(tab.is_active, hover)
       return tab_list[tab.tab_id]:render()
    end)

@@ -129,14 +129,19 @@ end
 
 ---@param active_pane any WezTerm https://wezfurlong.org/wezterm/config/lua/pane/index.html
 ---@param panes any[] WezTerm https://wezfurlong.org/wezterm/config/lua/pane/index.html
-function Tab:set_info(active_pane, panes, max_width)
+---@param is_active boolean
+---@param max_width number
+function Tab:set_info(active_pane, panes, is_active, max_width)
    local process_name = clean_process_name(active_pane.foreground_process_name)
 
    self.is_wsl = process_name:match('^wsl') ~= nil
    self.is_admin = (
       active_pane.title:match('^Administrator: ') or active_pane.title:match('(Admin)')
    ) ~= nil
-   self.unseen_output = check_unseen_output(panes)
+   self.unseen_output = false
+   if not is_active then
+      self.unseen_output = check_unseen_output(panes)
+   end
 
    local inset = (self.is_admin or self.is_wsl) and TITLE_INSET.ICON or TITLE_INSET.DEFAULT
    if self.unseen_output then
@@ -250,12 +255,12 @@ M.setup = function()
    wezterm.on('format-tab-title', function(tab, _tabs, _panes, _config, hover, max_width)
       if not tab_list[tab.tab_id] then
          tab_list[tab.tab_id] = Tab:new()
-         tab_list[tab.tab_id]:set_info(tab.active_pane, tab.panes, max_width)
+         tab_list[tab.tab_id]:set_info(tab.active_pane, tab.panes, tab.is_active, max_width)
          tab_list[tab.tab_id]:create_cells()
          return tab_list[tab.tab_id]:render()
       end
 
-      tab_list[tab.tab_id]:set_info(tab.active_pane, tab.panes, max_width)
+      tab_list[tab.tab_id]:set_info(tab.active_pane, tab.panes, tab.is_active, max_width)
       tab_list[tab.tab_id]:update_cells(tab.is_active, hover)
       return tab_list[tab.tab_id]:render()
    end)

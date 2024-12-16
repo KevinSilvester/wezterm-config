@@ -58,6 +58,7 @@ end
 local Cells = {}
 Cells.__index = Cells
 
+---Attribute generator for `wezterm.format` (ref: <https://wezfurlong.org/wezterm/config/lua/wezterm/format.html>)
 ---@class Cells.Attributes
 ---@field intensity fun(type: 'Bold'|'Half'|'Normal'): {Attribute: FormatItem.Attribute.Intensity}
 ---@field underline fun(type: 'None'|'Single'|'Double'|'Curly'): {Attribute: FormatItem.Attribute.Underline}
@@ -75,6 +76,7 @@ function Cells:new()
    }, self)
 end
 
+---Add a new segment with unique `segment_id` to the cells
 ---@param segment_id string|number the segment id
 ---@param text string the text to push
 ---@param color? Cells.SegmentColors the bg and fg colors for text
@@ -111,6 +113,7 @@ function Cells:add_segment(segment_id, text, color, attributes)
    return self
 end
 
+---Check if the segment exists
 ---@private
 ---@param segment_id string|number the segment id
 function Cells:_check_segment(segment_id)
@@ -119,6 +122,7 @@ function Cells:_check_segment(segment_id)
    end
 end
 
+---Update the text of a segment
 ---@param segment_id string|number the segment id
 ---@param text string the text to push
 function Cells:update_segment_text(segment_id, text)
@@ -128,6 +132,7 @@ function Cells:update_segment_text(segment_id, text)
    return self
 end
 
+---Update the colors of a segment
 ---@param segment_id string|number the segment id
 ---@param color Cells.SegmentColors the bg and fg colors for text
 function Cells:update_segment_colors(segment_id, color)
@@ -180,6 +185,8 @@ function Cells:update_segment_colors(segment_id, color)
    return self
 end
 
+---Convert specific segments into a format that `wezterm.format` can use
+---Segments will rendered in the order of the `ids` table
 ---@param ids table<string|number> the segment ids
 ---@return FormatItem[]
 function Cells:render(ids)
@@ -195,6 +202,9 @@ function Cells:render(ids)
    return cells
 end
 
+---Convert all segments into a format that `wezterm.format` can use
+--- WARNING: Segments may not be in the same order as they were added if the `segment_id` is a string
+---
 ---@return FormatItem[]
 function Cells:render_all()
    local cells = {}
@@ -206,6 +216,7 @@ function Cells:render_all()
    return cells
 end
 
+---Reset all segments
 function Cells:reset()
    self.segments = {}
 end

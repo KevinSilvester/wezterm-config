@@ -6,9 +6,9 @@ require('utils.backdrops')
    :set_images()
    :random()
 
-require('events.right-status').setup()
 require('events.left-status').setup()
-require('events.tab-title').setup()
+require('events.right-status').setup({ date_format = '%a %H:%M:%S' })
+require('events.tab-title').setup({ hide_active_tab_unseen = true, numbered_unseen_glyphs = true })
 require('events.new-tab-button').setup()
 
 return Config:init()

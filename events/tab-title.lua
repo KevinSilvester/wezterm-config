@@ -17,6 +17,19 @@ local GLYPH_DEBUG = nf.fa_bug --[[  ]]
 -- local GLYPH_SEARCH = nf.fa_search --[[  ]]
 local GLYPH_SEARCH = '🔭'
 
+local GLYPH_UNSEEN_OUTPUT = {
+   [1] = nf.md_numeric_1_box_multiple, --[[ 󰼏 ]]
+   [2] = nf.md_numeric_2_box_multiple, --[[ 󰼐 ]]
+   [3] = nf.md_numeric_3_box_multiple, --[[ 󰼑 ]]
+   [4] = nf.md_numeric_4_box_multiple, --[[ 󰼒 ]]
+   [5] = nf.md_numeric_5_box_multiple, --[[ 󰼓 ]]
+   [6] = nf.md_numeric_6_box_multiple, --[[ 󰼔 ]]
+   [7] = nf.md_numeric_7_box_multiple, --[[ 󰼕 ]]
+   [8] = nf.md_numeric_8_box_multiple, --[[ 󰼖 ]]
+   [9] = nf.md_numeric_9_box_multiple, --[[ 󰼗 ]]
+   [10] = nf.md_numeric_9_plus_box_multiple, --[[ 󰼘 ]]
+}
+
 local TITLE_INSET = {
    DEFAULT = 6,
    ICON = 8,
@@ -31,6 +44,11 @@ local RENDER_VARIANTS = {
    { 'scircle_left', 'admin', 'title', 'unseen_output', 'padding', 'scircle_right' },
    { 'scircle_left', 'wsl', 'title', 'padding', 'scircle_right' },
    { 'scircle_left', 'wsl', 'title', 'unseen_output', 'padding', 'scircle_right' },
+}
+
+local SETUP_OPTS = {
+   numbered_unseen_glyphs = true,
+   hide_active_tab_unseen = true,
 }
 
 ---@type table<string, Cells.SegmentColors>
@@ -92,14 +110,20 @@ end
 ---@param panes any[] WezTerm https://wezfurlong.org/wezterm/config/lua/pane/index.html
 local function check_unseen_output(panes)
    local unseen_output = false
+   local unseen_output_count = 0
+
    for i = 1, #panes, 1 do
       if panes[i].has_unseen_output then
          unseen_output = true
-         break
+         if unseen_output_count >= 10 then
+            unseen_output_count = 10
+            break
+         end
+         unseen_output_count = unseen_output_count + 1
       end
    end
 
-   return unseen_output
+   return unseen_output, unseen_output_count
 end
 
 ---@class Tab
@@ -110,6 +134,7 @@ end
 ---@field is_wsl boolean
 ---@field is_admin boolean
 ---@field unseen_output boolean
+---@field unseen_output_count number
 ---@field is_active boolean
 local Tab = {}
 Tab.__index = Tab
@@ -123,6 +148,7 @@ function Tab:new()
       is_wsl = false,
       is_admin = false,
       unseen_output = false,
+      unseen_output_count = 0,
    }
    return setmetatable(tab, self)
 end
@@ -139,8 +165,10 @@ function Tab:set_info(active_pane, panes, is_active, max_width)
       active_pane.title:match('^Administrator: ') or active_pane.title:match('(Admin)')
    ) ~= nil
    self.unseen_output = false
-   if not is_active then
-      self.unseen_output = check_unseen_output(panes)
+   self.unseen_output_count = 0
+
+   if not SETUP_OPTS.hide_active_tab_unseen or not is_active then
+      self.unseen_output, self.unseen_output_count = check_unseen_output(panes)
    end
 
    local inset = (self.is_admin or self.is_wsl) and TITLE_INSET.ICON or TITLE_INSET.DEFAULT
@@ -183,6 +211,14 @@ function Tab:update_cells(is_active, hover)
    end
 
    self.cells:update_segment_text('title', ' ' .. self.title)
+
+   if SETUP_OPTS.numbered_unseen_glyphs and self.unseen_output then
+      self.cells:update_segment_text(
+         'unseen_output',
+         ' ' .. GLYPH_UNSEEN_OUTPUT[self.unseen_output_count]
+      )
+   end
+
    self.cells
       :update_segment_colors('scircle_left', colors['scircle_' .. tab_state])
       :update_segment_colors('admin', colors['text_' .. tab_state])
@@ -209,7 +245,26 @@ end
 ---@type Tab[]
 local tab_list = {}
 
-M.setup = function()
+---@param opts? {numbered_unseen_glyphs?: boolean, hide_active_tab_unseen?: boolean} Default: {numbered_unseen_glyphs = true, hide_active_tab_unseen = true}
+M.setup = function(opts)
+   if opts then
+      if opts.numbered_unseen_glyphs ~= nil then
+         assert(
+            type(opts.numbered_unseen_glyphs) == 'boolean',
+            'numbered_unseen_glyphs must be a boolean'
+         )
+         SETUP_OPTS.numbered_unseen_glyphs = opts.numbered_unseen_glyphs
+      end
+
+      if opts.hide_active_tab_unseen ~= nil then
+         assert(
+            type(opts.hide_active_tab_unseen) == 'boolean',
+            'hide_active_tab_unseen must be a boolean'
+         )
+         SETUP_OPTS.hide_active_tab_unseen = opts.hide_active_tab_unseen
+      end
+   end
+
    -- CUSTOM EVENT
    -- Event listener to manually update the tab name
    -- Tab name will remain locked until the `reset-tab-title` is triggered

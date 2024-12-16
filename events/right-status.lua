@@ -10,6 +10,10 @@ local M = {}
 local ICON_SEPARATOR = nf.oct_dash
 local ICON_DATE = nf.fa_calendar
 
+local SETUP_OPTS = {
+   date_format = '%a %H:%M:%S',
+}
+
 ---@type string[]
 local discharging_icons = {
    nf.md_battery_10,
@@ -37,7 +41,7 @@ local charging_icons = {
    nf.md_battery_charging,
 }
 
-   ---@type table<string, Cells.SegmentColors>
+---@type table<string, Cells.SegmentColors>
 -- stylua: ignore
 local colors = {
    date      = { fg = '#fab387', bg = 'rgba(0, 0, 0, 0.4)' },
@@ -75,12 +79,20 @@ local function battery_info()
    return charge, icon .. ' '
 end
 
-M.setup = function()
+---@param opts? {date_format?: string} Default: {date_format = '%a %H:%M:%S'}
+M.setup = function(opts)
+   if opts then
+      if opts.date_format then
+         assert(type(opts.date_format) == 'string', 'date_format must be a string')
+         SETUP_OPTS.date_format = opts.date_format
+      end
+   end
+
    wezterm.on('update-right-status', function(window, _pane)
       local battery_text, battery_icon = battery_info()
 
       cells
-         :update_segment_text('date_text', wezterm.strftime('%a %H:%M:%S'))
+         :update_segment_text('date_text', wezterm.strftime(SETUP_OPTS.date_format))
          :update_segment_text('battery_icon', battery_icon)
          :update_segment_text('battery_text', battery_text)
 

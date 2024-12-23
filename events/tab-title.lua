@@ -4,9 +4,43 @@
 
 local wezterm = require('wezterm')
 local Cells = require('utils.cells')
+local EventOpts = require('utils.event_opts')
+
+---
+-- =======================================
+-- Defining event setup options and schema
+-- =======================================
+
+---@alias Event.TabTitleOptions { unseen_icon: 'circle' | 'numbered_circle' | 'numbered_box', hide_active_tab_unseen: boolean }
+
+-- ---Setup options for the tab title
+
+local EVENT_OPTS = {}
+
+---@type OptsSchema
+EVENT_OPTS.schema = {
+   {
+      name = 'unseen_icon',
+      type = 'string',
+      enum = { 'circle', 'numbered_circle', 'numbered_box' },
+      default = 'circle',
+   },
+   {
+      name = 'hide_active_tab_unseen',
+      type = 'boolean',
+      default = true,
+   },
+}
+EVENT_OPTS.validator = EventOpts:new(EVENT_OPTS.schema)
+
+---
+-- ===================
+-- Constants and icons
+-- ===================
 
 local nf = wezterm.nerdfonts
-local attr = Cells.attr
+
+local M = {}
 
 local GLYPH_SCIRCLE_LEFT = nf.ple_left_half_circle_thick --[[  ]]
 local GLYPH_SCIRCLE_RIGHT = nf.ple_right_half_circle_thick --[[  ]]
@@ -17,7 +51,7 @@ local GLYPH_DEBUG = nf.fa_bug --[[  ]]
 -- local GLYPH_SEARCH = nf.fa_search --[[  ]]
 local GLYPH_SEARCH = '🔭'
 
-local GLYPH_UNSEEN_OUTPUT = {
+local GLYPH_UNSEEN_NUMBERED_BOX = {
    [1] = nf.md_numeric_1_box_multiple, --[[ 󰼏 ]]
    [2] = nf.md_numeric_2_box_multiple, --[[ 󰼐 ]]
    [3] = nf.md_numeric_3_box_multiple, --[[ 󰼑 ]]
@@ -30,12 +64,23 @@ local GLYPH_UNSEEN_OUTPUT = {
    [10] = nf.md_numeric_9_plus_box_multiple, --[[ 󰼘 ]]
 }
 
+local GLYPH_UNSEEN_NUMBERED_CIRCLE = {
+   [1] = nf.md_numeric_1_circle, --[[ 󰲠 ]]
+   [2] = nf.md_numeric_2_circle, --[[ 󰲢 ]]
+   [3] = nf.md_numeric_3_circle, --[[ 󰲤 ]]
+   [4] = nf.md_numeric_4_circle, --[[ 󰲦 ]]
+   [5] = nf.md_numeric_5_circle, --[[ 󰲨 ]]
+   [6] = nf.md_numeric_6_circle, --[[ 󰲪 ]]
+   [7] = nf.md_numeric_7_circle, --[[ 󰲬 ]]
+   [8] = nf.md_numeric_8_circle, --[[ 󰲮 ]]
+   [9] = nf.md_numeric_9_circle, --[[ 󰲰 ]]
+   [10] = nf.md_numeric_9_plus_circle, --[[ 󰲲 ]]
+}
+
 local TITLE_INSET = {
    DEFAULT = 6,
    ICON = 8,
 }
-
-local M = {}
 
 local RENDER_VARIANTS = {
    { 'scircle_left', 'title', 'padding', 'scircle_right' },
@@ -46,26 +91,27 @@ local RENDER_VARIANTS = {
    { 'scircle_left', 'wsl', 'title', 'unseen_output', 'padding', 'scircle_right' },
 }
 
-local SETUP_OPTS = {
-   numbered_unseen_glyphs = true,
-   hide_active_tab_unseen = true,
-}
 
 ---@type table<string, Cells.SegmentColors>
 -- stylua: ignore
 local colors = {
    text_default          = { bg = '#45475A', fg = '#1C1B19' },
-   text_hover            = { bg = '#587D8C', fg = '#1C1B19' },
-   text_active           = { bg = '#7FB4CA', fg = '#11111B' },
+   text_hover            = { bg = '#5D87A3', fg = '#1C1B19' },
+   text_active           = { bg = '#74c7ec', fg = '#11111B' },
 
    unseen_output_default = { bg = '#45475A', fg = '#FFA066' },
-   unseen_output_hover   = { bg = '#587D8C', fg = '#FFA066' },
-   unseen_output_active  = { bg = '#7FB4CA', fg = '#FFA066' },
+   unseen_output_hover   = { bg = '#5D87A3', fg = '#FFA066' },
+   unseen_output_active  = { bg = '#74c7ec', fg = '#FFA066' },
 
    scircle_default       = { bg = 'rgba(0, 0, 0, 0.4)', fg = '#45475A' },
-   scircle_hover         = { bg = 'rgba(0, 0, 0, 0.4)', fg = '#587D8C' },
-   scircle_active        = { bg = 'rgba(0, 0, 0, 0.4)', fg = '#7FB4CA' },
+   scircle_hover         = { bg = 'rgba(0, 0, 0, 0.4)', fg = '#5D87A3' },
+   scircle_active        = { bg = 'rgba(0, 0, 0, 0.4)', fg = '#74C7EC' },
 }
+
+---
+-- ================
+-- Helper functions
+-- ================
 
 ---@param proc string
 local function clean_process_name(proc)
@@ -126,6 +172,11 @@ local function check_unseen_output(panes)
    return unseen_output, unseen_output_count
 end
 
+---
+-- =================
+-- Tab class and API
+-- =================
+
 ---@class Tab
 ---@field title string
 ---@field cells Cells
@@ -153,22 +204,21 @@ function Tab:new()
    return setmetatable(tab, self)
 end
 
----@param active_pane any WezTerm https://wezfurlong.org/wezterm/config/lua/pane/index.html
----@param panes any[] WezTerm https://wezfurlong.org/wezterm/config/lua/pane/index.html
----@param is_active boolean
+---@param event_opts Event.TabTitleOptions
+---@param tab any WezTerm https://wezfurlong.org/wezterm/config/lua/MuxTab/index.html
 ---@param max_width number
-function Tab:set_info(active_pane, panes, is_active, max_width)
-   local process_name = clean_process_name(active_pane.foreground_process_name)
+function Tab:set_info(event_opts, tab, max_width)
+   local process_name = clean_process_name(tab.active_pane.foreground_process_name)
 
    self.is_wsl = process_name:match('^wsl') ~= nil
    self.is_admin = (
-      active_pane.title:match('^Administrator: ') or active_pane.title:match('(Admin)')
+      tab.active_pane.title:match('^Administrator: ') or tab.active_pane.title:match('(Admin)')
    ) ~= nil
    self.unseen_output = false
    self.unseen_output_count = 0
 
-   if not SETUP_OPTS.hide_active_tab_unseen or not is_active then
-      self.unseen_output, self.unseen_output_count = check_unseen_output(panes)
+   if not event_opts.hide_active_tab_unseen or not tab.is_active then
+      self.unseen_output, self.unseen_output_count = check_unseen_output(tab.panes)
    end
 
    local inset = (self.is_admin or self.is_wsl) and TITLE_INSET.ICON or TITLE_INSET.DEFAULT
@@ -180,10 +230,11 @@ function Tab:set_info(active_pane, panes, is_active, max_width)
       self.title = create_title('', self.locked_title, max_width, inset)
       return
    end
-   self.title = create_title(process_name, active_pane.title, max_width, inset)
+   self.title = create_title(process_name, tab.active_pane.title, max_width, inset)
 end
 
 function Tab:create_cells()
+   local attr = self.cells.attr
    self.cells
       :add_segment('scircle_left', GLYPH_SCIRCLE_LEFT)
       :add_segment('admin', ' ' .. GLYPH_ADMIN)
@@ -200,9 +251,10 @@ function Tab:update_and_lock_title(title)
    self.title_locked = true
 end
 
+---@param event_opts Event.TabTitleOptions
 ---@param is_active boolean
 ---@param hover boolean
-function Tab:update_cells(is_active, hover)
+function Tab:update_cells(event_opts, is_active, hover)
    local tab_state = 'default'
    if is_active then
       tab_state = 'active'
@@ -212,10 +264,16 @@ function Tab:update_cells(is_active, hover)
 
    self.cells:update_segment_text('title', ' ' .. self.title)
 
-   if SETUP_OPTS.numbered_unseen_glyphs and self.unseen_output then
+   if event_opts.unseen_icon == 'numbered_box' and self.unseen_output then
       self.cells:update_segment_text(
          'unseen_output',
-         ' ' .. GLYPH_UNSEEN_OUTPUT[self.unseen_output_count]
+         ' ' .. GLYPH_UNSEEN_NUMBERED_BOX[self.unseen_output_count]
+      )
+   end
+   if event_opts.unseen_icon == 'numbered_circle' and self.unseen_output then
+      self.cells:update_segment_text(
+         'unseen_output',
+         ' ' .. GLYPH_UNSEEN_NUMBERED_CIRCLE[self.unseen_output_count]
       )
    end
 
@@ -245,24 +303,12 @@ end
 ---@type Tab[]
 local tab_list = {}
 
----@param opts? {numbered_unseen_glyphs?: boolean, hide_active_tab_unseen?: boolean} Default: {numbered_unseen_glyphs = true, hide_active_tab_unseen = true}
+---@param opts? Event.TabTitleOptions Default: {unseen_icon = 'circle', hide_active_tab_unseen = true}
 M.setup = function(opts)
-   if opts then
-      if opts.numbered_unseen_glyphs ~= nil then
-         assert(
-            type(opts.numbered_unseen_glyphs) == 'boolean',
-            'numbered_unseen_glyphs must be a boolean'
-         )
-         SETUP_OPTS.numbered_unseen_glyphs = opts.numbered_unseen_glyphs
-      end
+   local valid_opts, err = EVENT_OPTS.validator:validate(opts or {})
 
-      if opts.hide_active_tab_unseen ~= nil then
-         assert(
-            type(opts.hide_active_tab_unseen) == 'boolean',
-            'hide_active_tab_unseen must be a boolean'
-         )
-         SETUP_OPTS.hide_active_tab_unseen = opts.hide_active_tab_unseen
-      end
+   if err then
+      wezterm.log_error(err)
    end
 
    -- CUSTOM EVENT
@@ -310,13 +356,13 @@ M.setup = function(opts)
    wezterm.on('format-tab-title', function(tab, _tabs, _panes, _config, hover, max_width)
       if not tab_list[tab.tab_id] then
          tab_list[tab.tab_id] = Tab:new()
-         tab_list[tab.tab_id]:set_info(tab.active_pane, tab.panes, tab.is_active, max_width)
+         tab_list[tab.tab_id]:set_info(valid_opts, tab, max_width)
          tab_list[tab.tab_id]:create_cells()
          return tab_list[tab.tab_id]:render()
       end
 
-      tab_list[tab.tab_id]:set_info(tab.active_pane, tab.panes, tab.is_active, max_width)
-      tab_list[tab.tab_id]:update_cells(tab.is_active, hover)
+      tab_list[tab.tab_id]:set_info(valid_opts, tab, max_width)
+      tab_list[tab.tab_id]:update_cells(valid_opts, tab.is_active, hover)
       return tab_list[tab.tab_id]:render()
    end)
 end

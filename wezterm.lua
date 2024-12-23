@@ -8,7 +8,7 @@ require('utils.backdrops')
 
 require('events.left-status').setup()
 require('events.right-status').setup({ date_format = '%a %H:%M:%S' })
-require('events.tab-title').setup({ hide_active_tab_unseen = true, numbered_unseen_glyphs = true })
+require('events.tab-title').setup({ hide_active_tab_unseen = true, unseen_icon = 'numbered_circle' })
 require('events.new-tab-button').setup()
 
 return Config:init()

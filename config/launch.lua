@@ -12,6 +12,7 @@ if platform.is_win then
       { label = 'PowerShell Desktop', args = { 'powershell' } },
       { label = 'Command Prompt', args = { 'cmd' } },
       { label = 'Nushell', args = { 'nu' } },
+      { label = 'Msys2', args = { 'ucrt64.cmd' } },
       {
          label = 'Git Bash',
          args = { 'C:\\Users\\kevin\\scoop\\apps\\git\\current\\bin\\bash.exe' },

@@ -2,7 +2,7 @@ return {
    -- ref: https://wezfurlong.org/wezterm/config/lua/SshDomain.html
    -- ssh_domains = {},
    ssh_domains = {
-      -- yazi's image on Windows will only work if launched in WSL
+      -- yazi's image preview on Windows will only work if launched via ssh from WSL
       {
          name = 'wsl.ssh',
          remote_address = 'localhost',

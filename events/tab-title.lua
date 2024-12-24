@@ -13,8 +13,7 @@ local EventOpts = require('utils.event_opts')
 
 ---@alias Event.TabTitleOptions { unseen_icon: 'circle' | 'numbered_circle' | 'numbered_box', hide_active_tab_unseen: boolean }
 
--- ---Setup options for the tab title
-
+---Setup options for the tab title
 local EVENT_OPTS = {}
 
 ---@type OptsSchema

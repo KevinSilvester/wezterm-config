@@ -1,7 +1,7 @@
 local wezterm = require('wezterm')
 local umath = require('utils.math')
 local Cells = require('utils.cells')
-local EventOpts = require('utils.event_opts')
+local OptsValidator = require('utils.opts-validator')
 
 ---@alias Event.RightStatusOptions { date_format?: string }
 
@@ -16,7 +16,7 @@ EVENT_OPTS.schema = {
       default = '%a %H:%M:%S',
    },
 }
-EVENT_OPTS.validator = EventOpts:new(EVENT_OPTS.schema)
+EVENT_OPTS.validator = OptsValidator:new(EVENT_OPTS.schema)
 
 local nf = wezterm.nerdfonts
 local attr = Cells.attr

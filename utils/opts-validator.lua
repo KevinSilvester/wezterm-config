@@ -83,28 +83,17 @@ local function validate_opts_schema(schema)
 end
 
 ---Event options validation class
----@class EventOpts
+---@class OptsValidator
 ---@field schema OptsSchema
-local EventOpts = {}
-EventOpts.__index = EventOpts
+local OptsValidator = {}
+OptsValidator.__index = OptsValidator
 
----Create a new instance of EventOpts
+---Create a new instance of OptsValidator
 ---@param schema OptsSchema
-function EventOpts:new(schema)
+function OptsValidator:new(schema)
    validate_opts_schema(schema)
    local event_opts = { schema = schema }
    return setmetatable(event_opts, self)
-end
-
----Get the default values for the event options based on the schema
----@generic T
----@return T
-function EventOpts:get_defaults()
-   local defaults = {}
-   for _, opt in ipairs(self.schema) do
-      defaults[opt.name] = opt.default
-   end
-   return defaults
 end
 
 ---Validate the event options against the schema
@@ -114,7 +103,7 @@ end
 ---@param opts T
 ---@return T
 ---@return string|nil
-function EventOpts:validate(opts)
+function OptsValidator:validate(opts)
    local errors = {}
    local valid_opts = {}
 
@@ -185,4 +174,4 @@ function EventOpts:validate(opts)
    return valid_opts, nil
 end
 
-return EventOpts
+return OptsValidator

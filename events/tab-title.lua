@@ -4,7 +4,7 @@
 
 local wezterm = require('wezterm')
 local Cells = require('utils.cells')
-local EventOpts = require('utils.event_opts')
+local OptsValidator = require('utils.opts-validator')
 
 ---
 -- =======================================
@@ -30,7 +30,7 @@ EVENT_OPTS.schema = {
       default = true,
    },
 }
-EVENT_OPTS.validator = EventOpts:new(EVENT_OPTS.schema)
+EVENT_OPTS.validator = OptsValidator:new(EVENT_OPTS.schema)
 
 ---
 -- ===================

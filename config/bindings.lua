@@ -16,10 +16,10 @@ end
 -- stylua: ignore
 local keys = {
    -- misc/useful --
-   { key = 'F1', mods = 'NONE', action = 'ActivateCopyMode' },
-   { key = 'F2', mods = 'NONE', action = act.ActivateCommandPalette },
-   { key = 'F3', mods = 'NONE', action = act.ShowLauncher },
-   { key = 'F4', mods = 'NONE', action = act.ShowLauncherArgs({ flags = 'FUZZY|TABS' }) },
+   { key = 'F1', mods = 'NONE',   action = 'ActivateCopyMode' },
+   { key = 'F2', mods = 'NONE',   action = act.ActivateCommandPalette },
+   { key = 'T',  mods = 'LEADER', action = act.ShowLauncher },
+   { key = 'F4', mods = 'NONE',   action = act.ShowLauncherArgs({ flags = 'FUZZY|TABS' }) },
    {
       key = 'F5',
       mods = 'NONE',
@@ -59,26 +59,33 @@ local keys = {
 
    -- tabs --
    -- tabs: spawn+close
-   { key = 't',          mods = 'LEADER',     action = act.SpawnTab('DefaultDomain') },
+   { key = 't',          mods = 'LEADER',      action = act.SpawnTab 'CurrentPaneDomain' },
    { key = 't',          mods = mod.SUPER_REV, action = act.SpawnTab({ DomainName = 'WSL:Ubuntu' }) },
-   { key = 'w',          mods = 'LEADER', action = act.CloseCurrentTab({ confirm = false }) },
+   { key = 'w',          mods = 'LEADER',      action = act.CloseCurrentTab({ confirm = false }) },
 
    -- tabs: navigation
-   { key = '[',          mods = 'LEADER',     action = act.ActivateTabRelative(-1) },
-   { key = ']',          mods = 'LEADER',     action = act.ActivateTabRelative(1) },
+   { key = '[',          mods = 'LEADER',      action = act.ActivateTabRelative(-1) },
+   { key = ']',          mods = 'LEADER',      action = act.ActivateTabRelative(1) },
    { key = '[',          mods = mod.SUPER_REV, action = act.MoveTabRelative(-1) },
    { key = ']',          mods = mod.SUPER_REV, action = act.MoveTabRelative(1) },
 
    -- tab: title
-   { key = '0',          mods = mod.SUPER,     action = act.EmitEvent('tabs.manual-update-tab-title') },
-   { key = '0',          mods = mod.SUPER_REV, action = act.EmitEvent('tabs.reset-tab-title') },
+   { key = '1',          mods = 'LEADER',      action = act.ActivateTab(0) },
+   { key = '2',          mods = 'LEADER',      action = act.ActivateTab(1) },
+   { key = '3',          mods = 'LEADER',      action = act.ActivateTab(2) },
+   { key = '4',          mods = 'LEADER',      action = act.ActivateTab(3) },
+   { key = '5',          mods = 'LEADER',      action = act.ActivateTab(4) },
+   { key = '6',          mods = 'LEADER',      action = act.ActivateTab(5) },
+   { key = '7',          mods = 'LEADER',      action = act.ActivateTab(6) },
+   { key = '8',          mods = 'LEADER',      action = act.ActivateTab(7) },
+   { key = '9',          mods = 'LEADER',      action = act.ActivateTab(8) },
 
    -- tab: hide tab-bar
    { key = '9',          mods = mod.SUPER,     action = act.EmitEvent('tabs.toggle-tab-bar'), },
 
    -- window --
    -- spawn windows
-   { key = 'n',          mods = 'LEADER',     action = act.SpawnWindow },
+   { key = 'n',          mods = 'LEADER',      action = act.SpawnWindow },
 
    -- window: zoom window
    {
@@ -169,14 +176,14 @@ local keys = {
    },
 
    -- panes: zoom+close pane
-   { key = 'Enter', mods = mod.SUPER,     action = act.TogglePaneZoomState },
-   { key = 'd',     mods = 'LEADER',     action = act.CloseCurrentPane({ confirm = false }) },
+   { key = 'Enter',      mods = mod.SUPER, action = act.TogglePaneZoomState },
+   { key = 'd',          mods = 'LEADER',  action = act.CloseCurrentPane({ confirm = false }) },
 
    -- panes: navigation
-   { key = 'UpArrow',     mods = 'LEADER', action = act.ActivatePaneDirection('Up') },
-   { key = 'DownArrow',     mods = 'LEADER', action = act.ActivatePaneDirection('Down') },
-   { key = 'LeftArrow',     mods = 'LEADER', action = act.ActivatePaneDirection('Left') },
-   { key = 'RightArrow',     mods = 'LEADER', action = act.ActivatePaneDirection('Right') },
+   { key = 'UpArrow',    mods = 'LEADER',  action = act.ActivatePaneDirection('Up') },
+   { key = 'DownArrow',  mods = 'LEADER',  action = act.ActivatePaneDirection('Down') },
+   { key = 'LeftArrow',  mods = 'LEADER',  action = act.ActivatePaneDirection('Left') },
+   { key = 'RightArrow', mods = 'LEADER',  action = act.ActivatePaneDirection('Right') },
    {
       key = 'p',
       mods = mod.SUPER_REV,
@@ -238,6 +245,20 @@ local mouse_bindings = {
       mods = 'CTRL',
       action = act.OpenLinkAtMouseCursor,
    },
+   -- Copy Paste on rightclick
+   {
+      event = { Down = { streak = 1, button = "Right" } },
+      mods = "NONE",
+      action = wezterm.action_callback(function(window, pane)
+         local has_selection = window:get_selection_text_for_pane(pane) ~= ""
+         if has_selection then
+            window:perform_action(act.CopyTo("ClipboardAndPrimarySelection"), pane)
+            window:perform_action(act.ClearSelection, pane)
+         else
+            window:perform_action(act({ PasteFrom = "Clipboard" }), pane)
+         end
+      end),
+   }
 }
 
 return {

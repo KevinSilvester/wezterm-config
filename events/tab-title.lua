@@ -13,6 +13,7 @@ local GLYPH_SCIRCLE_RIGHT = nf.ple_right_half_circle_thick --[[  ]]
 local GLYPH_CIRCLE = nf.fa_circle --[[  ]]
 local GLYPH_ADMIN = nf.md_shield_half_full --[[ 󰞀 ]]
 local GLYPH_LINUX = nf.cod_terminal_linux --[[  ]]
+local GLYPH_WINDOWS = nf.fa_windows --[[  ]]
 local GLYPH_DEBUG = nf.fa_bug --[[  ]]
 -- local GLYPH_SEARCH = nf.fa_search --[[  ]]
 local GLYPH_SEARCH = '🔭'
@@ -25,12 +26,14 @@ local TITLE_INSET = {
 local M = {}
 
 local RENDER_VARIANTS = {
-   { 'scircle_left', 'title', 'padding', 'scircle_right' },
-   { 'scircle_left', 'title', 'unseen_output', 'padding', 'scircle_right' },
-   { 'scircle_left', 'admin', 'title', 'padding', 'scircle_right' },
-   { 'scircle_left', 'admin', 'title', 'unseen_output', 'padding', 'scircle_right' },
-   { 'scircle_left', 'wsl', 'title', 'padding', 'scircle_right' },
-   { 'scircle_left', 'wsl', 'title', 'unseen_output', 'padding', 'scircle_right' },
+   { 'scircle_left', 'title', 'padding',       'scircle_right' },
+   { 'scircle_left', 'title', 'unseen_output', 'padding',       'scircle_right' },
+   { 'scircle_left', 'admin', 'title',         'padding',       'scircle_right' },
+   { 'scircle_left', 'admin', 'title',         'unseen_output', 'padding',      'scircle_right' },
+   { 'scircle_left', 'wsl',   'title',         'padding',       'scircle_right' },
+   { 'scircle_left', 'wsl',   'title',         'unseen_output', 'padding',      'scircle_right' },
+   { 'scircle_left', 'win',   'title',         'padding',       'scircle_right' },
+   { 'scircle_left', 'win',   'title',         'unseen_output', 'padding',      'scircle_right' },
 }
 
 ---@type table<string, Cells.SegmentColors>
@@ -95,6 +98,7 @@ end
 ---@field title_locked boolean
 ---@field locked_title string
 ---@field is_wsl boolean
+---@field is_win boolean
 ---@field is_admin boolean
 ---@field unseen_output boolean
 ---@field is_active boolean
@@ -108,40 +112,50 @@ function Tab:new()
       title_locked = false,
       locked_title = '',
       is_wsl = false,
+      is_win = false,
       is_admin = false,
       unseen_output = false,
    }
    return setmetatable(tab, self)
 end
 
+local function get_dir(pane)
+   local path = pane.current_working_dir.file_path
+   path = path:gsub("/$", "") -- Remove trailing slash if any
+   local last_part = path:match("([^/]+)$")
+   return last_part
+end
+
 ---@param pane any WezTerm https://wezfurlong.org/wezterm/config/lua/pane/index.html
 function Tab:set_info(pane, max_width)
    local process_name = clean_process_name(pane.foreground_process_name)
    self.is_wsl = process_name:match('^wsl') ~= nil
+   self.is_win = process_name:match('^powershell') ~= nil
    self.is_admin = (pane.title:match('^Administrator: ') or pane.title:match('(Admin)')) ~= nil
    self.unseen_output = pane.has_unseen_output
 
-   local inset = (self.is_admin or self.is_wsl) and TITLE_INSET.ICON or TITLE_INSET.DEFAULT
+   local inset = (self.is_admin or self.is_wsl or self.is_win) and TITLE_INSET.ICON or TITLE_INSET.DEFAULT
    if self.unseen_output then
       inset = inset + 2
    end
 
    if self.title_locked then
-      self.title = create_title('', self.locked_title, max_width, inset)
+      self.title = create_title('', get_dir(pane), max_width, inset)
       return
    end
-   self.title = create_title(process_name, pane.title, max_width, inset)
+   self.title = create_title('', get_dir(pane), max_width, inset)
 end
 
 function Tab:create_cells()
    self.cells
-      :add_segment('scircle_left', GLYPH_SCIRCLE_LEFT)
-      :add_segment('admin', ' ' .. GLYPH_ADMIN)
-      :add_segment('wsl', ' ' .. GLYPH_LINUX)
-      :add_segment('title', ' ', nil, attr(attr.intensity('Bold')))
-      :add_segment('unseen_output', ' ' .. GLYPH_CIRCLE)
-      :add_segment('padding', ' ')
-      :add_segment('scircle_right', GLYPH_SCIRCLE_RIGHT)
+       :add_segment('scircle_left', GLYPH_SCIRCLE_LEFT)
+       :add_segment('admin', ' ' .. GLYPH_ADMIN)
+       :add_segment('wsl', ' ' .. GLYPH_LINUX)
+       :add_segment('win', ' ' .. GLYPH_WINDOWS)
+       :add_segment('title', ' ', nil, attr(attr.intensity('Bold')))
+       :add_segment('unseen_output', ' ' .. GLYPH_CIRCLE)
+       :add_segment('padding', ' ')
+       :add_segment('scircle_right', GLYPH_SCIRCLE_RIGHT)
 end
 
 ---@param title string
@@ -162,20 +176,29 @@ function Tab:update_cells(is_active, hover)
 
    self.cells:update_segment_text('title', ' ' .. self.title)
    self.cells
-      :update_segment_colors('scircle_left', colors['scircle_' .. tab_state])
-      :update_segment_colors('admin', colors['text_' .. tab_state])
-      :update_segment_colors('wsl', colors['text_' .. tab_state])
-      :update_segment_colors('title', colors['text_' .. tab_state])
-      :update_segment_colors('unseen_output', colors['unseen_output_' .. tab_state])
-      :update_segment_colors('padding', colors['text_' .. tab_state])
-      :update_segment_colors('scircle_right', colors['scircle_' .. tab_state])
+       :update_segment_colors('scircle_left', colors['scircle_' .. tab_state])
+       :update_segment_colors('admin', colors['text_' .. tab_state])
+       :update_segment_colors('wsl', colors['text_' .. tab_state])
+       :update_segment_colors('win', colors['text_' .. tab_state])
+       :update_segment_colors('title', colors['text_' .. tab_state])
+       :update_segment_colors('unseen_output', colors['unseen_output_' .. tab_state])
+       :update_segment_colors('padding', colors['text_' .. tab_state])
+       :update_segment_colors('scircle_right', colors['scircle_' .. tab_state])
 end
 
 ---@return FormatItem[] (ref: https://wezfurlong.org/wezterm/config/lua/wezterm/format.html)
 function Tab:render()
-   local variant_idx = self.is_admin and 3 or 1
+   local variant_idx = 1
    if self.is_wsl then
       variant_idx = 5
+   end
+
+   if self.is_win then
+      variant_idx = 7
+   end
+
+   if self.is_admin then
+      variant_idx = 3
    end
 
    if self.unseen_output then

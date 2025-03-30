@@ -61,7 +61,8 @@ local keys = {
    -- tabs: spawn+close
    { key = 't',          mods = 'LEADER',      action = act.SpawnTab 'CurrentPaneDomain' },
    { key = 't',          mods = mod.SUPER_REV, action = act.SpawnTab({ DomainName = 'WSL:Ubuntu' }) },
-   { key = 'w',          mods = 'LEADER',      action = act.CloseCurrentTab({ confirm = false }) },
+   { key = 'w',          mods = 'LEADER',      action = act.CloseCurrentPane({ confirm = false }) },
+   { key = 'q',          mods = 'LEADER',      action = act.CloseCurrentTab({ confirm = false }) },
 
    -- tabs: navigation
    { key = '[',          mods = 'LEADER',      action = act.ActivateTabRelative(-1) },
@@ -177,7 +178,7 @@ local keys = {
 
    -- panes: zoom+close pane
    { key = 'Enter',      mods = mod.SUPER, action = act.TogglePaneZoomState },
-   { key = 'd',          mods = 'LEADER',  action = act.CloseCurrentPane({ confirm = false }) },
+   -- { key = 'd',          mods = 'LEADER',  action = act.CloseCurrentPane({ confirm = false }) },
 
    -- panes: navigation
    { key = 'UpArrow',    mods = 'LEADER',  action = act.ActivatePaneDirection('Up') },

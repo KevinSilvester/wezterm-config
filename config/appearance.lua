@@ -25,7 +25,7 @@ return {
    background = backdrops:initial_options(false), -- set to true if you want wezterm to start on focus mode
 
    -- scrollbar
-   enable_scroll_bar = true,
+   enable_scroll_bar = false,
 
    -- tab bar
    enable_tab_bar = true,

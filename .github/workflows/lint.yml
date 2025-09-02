@@ -17,7 +17,7 @@ jobs:
         uses: JohnnyMorganz/stylua-action@v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          version: 0.19.1
+          version: 2.1.0
           args: -g '!/config/init.lua' --check wezterm.lua colors/ config/ events/ utils/
 
       - name: Lint

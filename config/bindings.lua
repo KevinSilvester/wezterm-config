@@ -107,6 +107,13 @@ local keys = {
          window:set_inner_size(new_width, new_height)
       end)
    },
+   {
+      key = 'Enter',
+      mods = mod.SUPER_REV,
+      action = wezterm.action_callback(function(window, _pane)
+         window:maximize()
+      end)
+   },
 
    -- background controls --
    {
@@ -197,7 +204,7 @@ local keys = {
       action = act.ActivateKeyTable({
          name = 'resize_font',
          one_shot = false,
-         timemout_miliseconds = 1000,
+         timemout_milliseconds = 1000,
       }),
    },
    -- resize panes
@@ -207,7 +214,7 @@ local keys = {
       action = act.ActivateKeyTable({
          name = 'resize_pane',
          one_shot = false,
-         timemout_miliseconds = 1000,
+         timemout_milliseconds = 1000,
       }),
    },
 }

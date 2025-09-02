@@ -54,9 +54,9 @@ local function validate_opts_schema(schema)
       )
       assert(
          opt.type == 'boolean'
-         or opt.type == 'number'
-         or opt.type == 'string'
-         or opt.type == 'table',
+            or opt.type == 'number'
+            or opt.type == 'string'
+            or opt.type == 'table',
          'type must be one of boolean, number, string, table'
       )
       assert(type(opt.type) == 'string', 'type must be a string')
@@ -129,9 +129,9 @@ function OptsValidator:validate(opts)
       end
 
       if
-          (opt.type == 'string' or opt.type == 'number')
-          and opt.enum ~= nil
-          and not tbl_contains(opt.enum, value)
+         (opt.type == 'string' or opt.type == 'number')
+         and opt.enum ~= nil
+         and not tbl_contains(opt.enum, value)
       then
          table.insert(
             errors,

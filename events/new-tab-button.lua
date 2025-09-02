@@ -20,7 +20,7 @@ local colors = {
 }
 
 local cells = Cells:new()
-   :add_segment('icon_default', ' ' .. nf.md_domain .. ' ', colors.icon_default)
+   :add_segment('icon_default', ' ' .. nf.oct_terminal .. ' ', colors.icon_default)
    :add_segment('icon_wsl', ' ' .. nf.cod_terminal_linux .. ' ', colors.icon_wsl)
    :add_segment('icon_ssh', ' ' .. nf.md_ssh .. ' ', colors.icon_ssh)
    :add_segment('icon_unix', ' ' .. nf.dev_gnu .. ' ', colors.icon_unix)

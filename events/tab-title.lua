@@ -178,7 +178,7 @@ end
 
 ---@class Tab
 ---@field title string
----@field cells Cells
+---@field cells FormatCells
 ---@field title_locked boolean
 ---@field locked_title string
 ---@field is_wsl boolean

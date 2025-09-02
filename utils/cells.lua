@@ -47,14 +47,14 @@ end
 
 ---@alias Cells.SegmentColors {bg?: string|'UNSET', fg?: string|'UNSET'}
 
----@class Cells.Segment
+---@class FormatCells.Segment
 ---@field items FormatItem[]
 ---@field has_bg boolean
 ---@field has_fg boolean
 
 ---Format item generator for `wezterm.format` (ref: <https://wezfurlong.org/wezterm/config/lua/wezterm/format.html>)
----@class Cells
----@field segments table<string|number, Cells.Segment>
+---@class FormatCells
+---@field segments table<string|number, FormatCells.Segment>
 local Cells = {}
 Cells.__index = Cells
 
@@ -70,6 +70,7 @@ Cells.attr = setmetatable(attr, {
    end,
 })
 
+---@return FormatCells
 function Cells:new()
    return setmetatable({
       segments = {},
@@ -103,7 +104,7 @@ function Cells:add_segment(segment_id, text, color, attributes)
    table.insert(items, { Text = text })
    table.insert(items, 'ResetAttributes')
 
-   ---@type Cells.Segment
+   ---@type FormatCells.Segment
    self.segments[segment_id] = {
       items = items,
       has_bg = color.bg ~= nil,

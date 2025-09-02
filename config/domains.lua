@@ -13,7 +13,6 @@ local options = {
 
 if platform.is_win then
    options.ssh_domains = {
-      -- yazi's image preview on Windows will only work if launched via ssh from WSL
       {
          name = 'ssh:wsl',
          remote_address = 'localhost',

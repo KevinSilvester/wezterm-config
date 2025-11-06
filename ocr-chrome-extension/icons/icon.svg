@@ -1,0 +1,26 @@
+<svg width="128" height="128" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background circle -->
+  <circle cx="64" cy="64" r="60" fill="#667eea"/>
+
+  <!-- OCR/Text recognition icon -->
+  <g transform="translate(32, 32)">
+    <!-- Document/Paper -->
+    <rect x="8" y="4" width="48" height="56" rx="4" fill="white" opacity="0.9"/>
+
+    <!-- Text lines representing scanned text -->
+    <line x1="16" y1="16" x2="48" y2="16" stroke="#667eea" stroke-width="3" stroke-linecap="round"/>
+    <line x1="16" y1="24" x2="52" y2="24" stroke="#667eea" stroke-width="3" stroke-linecap="round"/>
+    <line x1="16" y1="32" x2="44" y2="32" stroke="#667eea" stroke-width="3" stroke-linecap="round"/>
+
+    <!-- Japanese character representation -->
+    <text x="18" y="52" font-family="sans-serif" font-size="16" fill="#764ba2" font-weight="bold">文</text>
+
+    <!-- English character representation -->
+    <text x="38" y="52" font-family="sans-serif" font-size="14" fill="#764ba2" font-weight="bold">A</text>
+  </g>
+
+  <!-- Camera/Scan icon in corner -->
+  <circle cx="96" cy="32" r="18" fill="#764ba2"/>
+  <circle cx="96" cy="32" r="10" fill="white" opacity="0.8"/>
+  <circle cx="96" cy="32" r="6" fill="#764ba2"/>
+</svg>

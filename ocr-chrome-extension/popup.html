@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OCR Extension</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Japanese/English OCR</h1>
+
+    <div class="language-selector">
+      <label>
+        <input type="checkbox" id="lang-eng" checked>
+        English
+      </label>
+      <label>
+        <input type="checkbox" id="lang-jpn" checked>
+        Japanese
+      </label>
+    </div>
+
+    <div class="button-group">
+      <button id="capture-btn" class="primary-btn">
+        <span class="icon">📷</span>
+        Capture & OCR
+      </button>
+      <button id="select-btn" class="primary-btn">
+        <span class="icon">🖱️</span>
+        Select Area
+      </button>
+    </div>
+
+    <div id="status" class="status hidden"></div>
+
+    <div id="result-container" class="result-container hidden">
+      <div class="result-header">
+        <h3>Extracted Text:</h3>
+        <button id="copy-btn" class="copy-btn">
+          <span class="icon">📋</span>
+          Copy
+        </button>
+      </div>
+      <div id="result-text" class="result-text"></div>
+    </div>
+
+    <div id="progress" class="progress hidden">
+      <div class="progress-bar">
+        <div id="progress-fill" class="progress-fill"></div>
+      </div>
+      <div id="progress-text" class="progress-text">Processing...</div>
+    </div>
+  </div>
+
+  <script src="lib/tesseract.min.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>

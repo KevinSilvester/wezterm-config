@@ -1,0 +1,70 @@
+/* Content script styles */
+
+#ocr-selection-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.3);
+  z-index: 999999;
+  cursor: crosshair;
+}
+
+#ocr-selection-box {
+  position: fixed;
+  border: 2px dashed #667eea;
+  background: rgba(102, 126, 234, 0.1);
+  pointer-events: none;
+  z-index: 1000000;
+}
+
+.ocr-notification {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  padding: 15px 20px;
+  border-radius: 4px;
+  z-index: 10000000;
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  animation: ocr-slide-in 0.3s ease;
+}
+
+.ocr-notification.success {
+  background: #4caf50;
+  color: white;
+}
+
+.ocr-notification.error {
+  background: #ff5252;
+  color: white;
+}
+
+.ocr-notification.info {
+  background: #2196f3;
+  color: white;
+}
+
+@keyframes ocr-slide-in {
+  from {
+    transform: translateX(400px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes ocr-slide-out {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(400px);
+    opacity: 0;
+  }
+}

@@ -1,4 +1,4 @@
-local platform = require('utils.platform')
+﻿local platform = require('utils.platform')
 
 local options = {
    default_prog = {},
@@ -6,9 +6,9 @@ local options = {
 }
 
 if platform.is_win then
-   options.default_prog = { 'pwsh', '-NoLogo' }
+   options.default_prog = { 'powershell' }
    options.launch_menu = {
-      { label = 'PowerShell Core', args = { 'pwsh', '-NoLogo' } },
+      { label = 'PowerShell Core', args = { 'powershell' } },
       { label = 'PowerShell Desktop', args = { 'powershell' } },
       { label = 'Command Prompt', args = { 'cmd' } },
       { label = 'Nushell', args = { 'nu' } },

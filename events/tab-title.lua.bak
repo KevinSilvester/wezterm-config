@@ -1,4 +1,4 @@
-﻿------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------
 -- Inspired by https://github.com/wez/wezterm/discussions/628#discussioncomment-1874614 --
 ------------------------------------------------------------------------------------------
 
@@ -41,43 +41,41 @@ local nf = wezterm.nerdfonts
 
 local M = {}
 
-local GLYPH_SCIRCLE_LEFT = nf.ple_left_half_circle_thick --[[ 顐?]]
-local GLYPH_SCIRCLE_RIGHT = nf.ple_right_half_circle_thick --[[ 顐?]]
-local GLYPH_CIRCLE = nf.fa_circle --[[ 飫?]]
-local GLYPH_ADMIN = nf.md_shield_half_full --[[ 蟀瀫 ]]
-local GLYPH_LINUX = nf.cod_terminal_linux --[[ 畀?]]
-local GLYPH_DEBUG = nf.fa_bug --[[ 瞰?]]
--- local GLYPH_SEARCH = nf.fa_search --[[ 飥?]]
-local GLYPH_SEARCH = '馃敪'
+local GLYPH_SCIRCLE_LEFT = nf.ple_left_half_circle_thick --[[ �?]]
+local GLYPH_SCIRCLE_RIGHT = nf.ple_right_half_circle_thick --[[ �?]]
+local GLYPH_CIRCLE = nf.fa_circle --[[ �?]]
+local GLYPH_ADMIN = nf.md_shield_half_full --[[ 󰞀 ]]
+local GLYPH_LINUX = nf.cod_terminal_linux --[[ �?]]
+local GLYPH_DEBUG = nf.fa_bug --[[ �?]]
+-- local GLYPH_SEARCH = nf.fa_search --[[ �?]]
+local GLYPH_SEARCH = '🔭'
 
-local GLYPH_CLOSE = '蟸?'
-
-local GLYPH_CLOSE = '蟸?'
+local GLYPH_CLOSE = '�~?'
 
 local GLYPH_UNSEEN_NUMBERED_BOX = {
-   [1] = nf.md_numeric_1_box_multiple, --[[ 蟀紡 ]]
-   [2] = nf.md_numeric_2_box_multiple, --[[ 蟀紣 ]]
-   [3] = nf.md_numeric_3_box_multiple, --[[ 蟀紤 ]]
-   [4] = nf.md_numeric_4_box_multiple, --[[ 蟀紥 ]]
-   [5] = nf.md_numeric_5_box_multiple, --[[ 蟀紦 ]]
-   [6] = nf.md_numeric_6_box_multiple, --[[ 蟀紨 ]]
-   [7] = nf.md_numeric_7_box_multiple, --[[ 蟀紩 ]]
-   [8] = nf.md_numeric_8_box_multiple, --[[ 蟀紪 ]]
-   [9] = nf.md_numeric_9_box_multiple, --[[ 蟀紬 ]]
-   [10] = nf.md_numeric_9_plus_box_multiple, --[[ 蟀紭 ]]
+   [1] = nf.md_numeric_1_box_multiple, --[[ 󰼏 ]]
+   [2] = nf.md_numeric_2_box_multiple, --[[ 󰼐 ]]
+   [3] = nf.md_numeric_3_box_multiple, --[[ 󰼑 ]]
+   [4] = nf.md_numeric_4_box_multiple, --[[ 󰼒 ]]
+   [5] = nf.md_numeric_5_box_multiple, --[[ 󰼓 ]]
+   [6] = nf.md_numeric_6_box_multiple, --[[ 󰼔 ]]
+   [7] = nf.md_numeric_7_box_multiple, --[[ 󰼕 ]]
+   [8] = nf.md_numeric_8_box_multiple, --[[ 󰼖 ]]
+   [9] = nf.md_numeric_9_box_multiple, --[[ 󰼗 ]]
+   [10] = nf.md_numeric_9_plus_box_multiple, --[[ 󰼘 ]]
 }
 
 local GLYPH_UNSEEN_NUMBERED_CIRCLE = {
-   [1] = nf.md_numeric_1_circle, --[[ 蟀矤 ]]
-   [2] = nf.md_numeric_2_circle, --[[ 蟀并 ]]
-   [3] = nf.md_numeric_3_circle, --[[ 蟀菠 ]]
-   [4] = nf.md_numeric_4_circle, --[[ 蟀拨 ]]
-   [5] = nf.md_numeric_5_circle, --[[ 蟀波 ]]
-   [6] = nf.md_numeric_6_circle, --[[ 蟀勃 ]]
-   [7] = nf.md_numeric_7_circle, --[[ 蟀铂 ]]
-   [8] = nf.md_numeric_8_circle, --[[ 蟀伯 ]]
-   [9] = nf.md_numeric_9_circle, --[[ 蟀舶 ]]
-   [10] = nf.md_numeric_9_plus_circle, --[[ 蟀膊 ]]
+   [1] = nf.md_numeric_1_circle, --[[ 󰲠 ]]
+   [2] = nf.md_numeric_2_circle, --[[ 󰲢 ]]
+   [3] = nf.md_numeric_3_circle, --[[ 󰲤 ]]
+   [4] = nf.md_numeric_4_circle, --[[ 󰲦 ]]
+   [5] = nf.md_numeric_5_circle, --[[ 󰲨 ]]
+   [6] = nf.md_numeric_6_circle, --[[ 󰲪 ]]
+   [7] = nf.md_numeric_7_circle, --[[ 󰲬 ]]
+   [8] = nf.md_numeric_8_circle, --[[ 󰲮 ]]
+   [9] = nf.md_numeric_9_circle, --[[ 󰲰 ]]
+   [10] = nf.md_numeric_9_plus_circle, --[[ 󰲲 ]]
 }
 
 local TITLE_INSET = {
@@ -86,18 +84,18 @@ local TITLE_INSET = {
 }
 
 local RENDER_VARIANTS = {
-    { 'scircle_left', 'title', 'padding', 'scircle_right' },
-    { 'scircle_left', 'title', 'unseen_output', 'padding', 'scircle_right' },
-    { 'scircle_left', 'admin', 'title', 'padding', 'scircle_right' },
-    { 'scircle_left', 'admin', 'title', 'unseen_output', 'padding', 'scircle_right' },
-    { 'scircle_left', 'wsl', 'title', 'padding', 'scircle_right' },
-    { 'scircle_left', 'wsl', 'title', 'unseen_output', 'padding', 'scircle_right' },
+   { 'scircle_left', 'title', 'padding', 'scircle_right' },
+   { 'scircle_left', 'title', 'unseen_output', 'padding', 'scircle_right' },
+   { 'scircle_left', 'admin', 'title', 'padding', 'scircle_right' },
+   { 'scircle_left', 'admin', 'title', 'unseen_output', 'padding', 'scircle_right' },
+   { 'scircle_left', 'wsl', 'title', 'padding', 'scircle_right' },
+   { 'scircle_left', 'wsl', 'title', 'unseen_output', 'padding', 'scircle_right' },
 }
 
 
 ---@type table<string, Cells.SegmentColors>
 -- stylua: ignore
-local GLYPH_CLOSE = '蟸?'
+local GLYPH_CLOSE = '�~?'
 
 local colors = {
    text_default          = { bg = '#45475A', fg = '#1C1B19' },
@@ -111,10 +109,6 @@ local colors = {
    scircle_default       = { bg = 'rgba(0, 0, 0, 0.4)', fg = '#45475A' },
    scircle_hover         = { bg = 'rgba(0, 0, 0, 0.4)', fg = '#5D87A3' },
    scircle_active        = { bg = 'rgba(0, 0, 0, 0.4)', fg = '#74C7EC' },
-
-   close_default         = { bg = 'rgba(0, 0, 0, 0.4)', fg = '#FF6B6B' },
-   close_hover           = { bg = 'rgba(0, 0, 0, 0.4)', fg = '#FF8787' },
-   close_active          = { bg = 'rgba(0, 0, 0, 0.4)', fg = '#FFA8A8' },
 }
 
 ---
@@ -251,7 +245,6 @@ function Tab:create_cells()
       :add_segment('title', ' ', nil, attr(attr.intensity('Bold')))
       :add_segment('unseen_output', ' ' .. GLYPH_CIRCLE)
       :add_segment('padding', ' ')
-      :add_segment('close', ' ' .. GLYPH_CLOSE .. ' ')
       :add_segment('scircle_right', GLYPH_SCIRCLE_RIGHT)
 end
 

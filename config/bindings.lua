@@ -180,10 +180,20 @@ local keys = {
    { key = 'w',     mods = mod.SUPER,     action = act.CloseCurrentPane({ confirm = false }) },
 
    -- panes: navigation
-   { key = 'k',     mods = mod.SUPER_REV, action = act.ActivatePaneDirection('Up') },
-   { key = 'j',     mods = mod.SUPER_REV, action = act.ActivatePaneDirection('Down') },
-   { key = 'h',     mods = mod.SUPER_REV, action = act.ActivatePaneDirection('Left') },
-   { key = 'l',     mods = mod.SUPER_REV, action = act.ActivatePaneDirection('Right') },
+   -- { key = 'k',     mods = mod.SUPER_REV, action = act.ActivatePaneDirection('Up') },
+   -- { key = 'j',     mods = mod.SUPER_REV, action = act.ActivatePaneDirection('Down') },
+   -- { key = 'h',     mods = mod.SUPER_REV, action = act.ActivatePaneDirection('Left') },
+   -- { key = 'l',     mods = mod.SUPER_REV, action = act.ActivatePaneDirection('Right') },
+   { key = 'UpArrow',    mods = 'ALT', action = act.ActivatePaneDirection('Up') },
+   { key = 'DownArrow',  mods = 'ALT', action = act.ActivatePaneDirection('Down') },
+   { key = 'LeftArrow',  mods = 'ALT', action = act.ActivatePaneDirection('Left') },
+   { key = 'RightArrow', mods = 'ALT', action = act.ActivatePaneDirection('Right') },
+
+   -- panes: resize (ALT+SHIFT+Arrow)
+   { key = 'UpArrow',    mods = 'ALT|SHIFT', action = act.AdjustPaneSize({ 'Up', 1 }) },
+   { key = 'DownArrow',  mods = 'ALT|SHIFT', action = act.AdjustPaneSize({ 'Down', 1 }) },
+   { key = 'LeftArrow',  mods = 'ALT|SHIFT', action = act.AdjustPaneSize({ 'Left', 1 }) },
+   { key = 'RightArrow', mods = 'ALT|SHIFT', action = act.AdjustPaneSize({ 'Right', 1 }) },
    {
       key = 'p',
       mods = mod.SUPER_REV,
@@ -254,4 +264,6 @@ return {
    keys = keys,
    key_tables = key_tables,
    mouse_bindings = mouse_bindings,
+   window_decorations = "RESIZE",
+   font_size = 14.5,
 }

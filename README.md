@@ -175,8 +175,7 @@
     Install with Homebrew (Macos)
 
     ```sh
-    brew tap homebrew/cask-fonts
-    brew install font-jetbrains-mono-nerd-font
+    brew install --cask font-jetbrains-mono-nerd-font
     ```
 
     Install with Scoop (Windows)

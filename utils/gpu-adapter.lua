@@ -18,7 +18,6 @@ local platform = require('utils.platform')
 ---@class GpuAdapters
 ---@field __backends WeztermGPUBackend[]
 ---@field __preferred_backend WeztermGPUBackend
----@field __preferred_device_type WeztermGPUDeviceType
 ---@field DiscreteGpu AdapterMap
 ---@field IntegratedGpu AdapterMap
 ---@field Cpu AdapterMap

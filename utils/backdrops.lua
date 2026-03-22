@@ -151,8 +151,6 @@ function BackDrops:_set_focus_opt(window)
    window:set_config_overrides(opts)
 end
 
-
-
 ---Convert the `files` array to a table of `InputSelector` choices
 ---see: https://wezfurlong.org/wezterm/config/lua/keyassignment/InputSelector.html
 function BackDrops:choices()

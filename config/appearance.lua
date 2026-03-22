@@ -1,14 +1,15 @@
-local gpu_adapters = require('utils.gpu_adapter')
+local gpu_adapters = require('utils.gpu-adapter')
 local backdrops = require('utils.backdrops')
 local colors = require('colors.custom')
 
 return {
    max_fps = 120,
-   front_end = 'WebGpu',
+   front_end = 'WebGpu', ---@type 'WebGpu' | 'OpenGL' | 'Software'
    webgpu_power_preference = 'HighPerformance',
    webgpu_preferred_adapter = gpu_adapters:pick_best(),
    -- webgpu_preferred_adapter = gpu_adapters:pick_manual('Dx12', 'IntegratedGpu'),
    -- webgpu_preferred_adapter = gpu_adapters:pick_manual('Gl', 'Other'),
+   underline_thickness = '1.5pt',
 
    -- cursor
    animation_fps = 120,
@@ -20,8 +21,8 @@ return {
    -- color scheme
    colors = colors,
 
-   -- background
-   background = backdrops:initial_options(false), -- set to true if you want wezterm to start on focus mode
+   -- background: pass in `true` if you want wezterm to start with focus mode on (no bg images)
+   background = backdrops:initial_options(false),
 
    -- scrollbar
    enable_scroll_bar = true,
@@ -33,6 +34,12 @@ return {
    tab_max_width = 25,
    show_tab_index_in_tab_bar = false,
    switch_to_last_active_tab_when_closing_tab = true,
+
+   -- command palette
+   command_palette_fg_color = '#b4befe',
+   command_palette_bg_color = '#11111b',
+   command_palette_font_size = 12,
+   command_palette_rows = 25,
 
    -- window
    window_padding = {

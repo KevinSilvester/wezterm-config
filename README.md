@@ -267,7 +267,7 @@ Most of the key bindings revolve around a <kbd>SUPER</kbd> and <kbd>SUPER_REV</k
 | Keys                              | Action                                |
 | --------------------------------- | ------------------------------------- |
 | <kbd>SUPER</kbd>+<kbd>t</kbd>     | `SpawnTab` <sub>(DefaultDomain)</sub> |
-| <kbd>SUPER_REV</kbd>+<kbd>f</kbd> | `SpawnTab` <sub>(WSL:Ubuntu)</sub>    |
+| <kbd>SUPER_REV</kbd>+<kbd>t</kbd> | `SpawnTab` <sub>(WSL:Ubuntu)</sub>    |
 | <kbd>SUPER_REV</kbd>+<kbd>w</kbd> | `CloseCurrentTab`                     |
 
 ##### Tabs: Navigation
@@ -279,13 +279,13 @@ Most of the key bindings revolve around a <kbd>SUPER</kbd> and <kbd>SUPER_REV</k
 | <kbd>SUPER_REV</kbd>+<kbd>[</kbd> | Move Tab Left  |
 | <kbd>SUPER_REV</kbd>+<kbd>]</kbd> | Move Tab Right |
 
-##### Tabs: Title
+##### Tabs: Toggle Tab-bar
 
 | Keys                          | Action         |
 | ----------------------------- | -------------- |
 | <kbd>SUPER</kbd>+<kbd>9</kbd> | Toggle tab bar |
 
-##### Tabs: Toggle Tab-bar
+##### Tabs: Title
 
 | Keys                              | Action             |
 | --------------------------------- | ------------------ |

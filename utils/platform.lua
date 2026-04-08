@@ -1,3 +1,4 @@
+---@type Wezterm
 local wezterm = require('wezterm')
 
 local function is_found(str, pattern)

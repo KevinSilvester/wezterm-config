@@ -1,3 +1,4 @@
+---@type Wezterm
 local wezterm = require('wezterm')
 local mux = wezterm.mux
 

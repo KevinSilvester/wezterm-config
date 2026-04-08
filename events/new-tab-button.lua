@@ -1,3 +1,4 @@
+---@type Wezterm
 local wezterm = require('wezterm')
 local launch_menu = require('config.launch').launch_menu
 local domains = require('config.domains')

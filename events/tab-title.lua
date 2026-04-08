@@ -2,22 +2,34 @@
 -- Inspired by https://github.com/wez/wezterm/discussions/628#discussioncomment-1874614 --
 ------------------------------------------------------------------------------------------
 
+---@type Wezterm
 local wezterm = require('wezterm')
 local Cells = require('utils.cells')
 local OptsValidator = require('utils.opts-validator')
+local ustr = require('utils.str')
+local umath = require('utils.math')
+
+local nf = wezterm.nerdfonts
+local attr = Cells.attr
 
 ---
 -- =======================================
 -- Defining event setup options and schema
 -- =======================================
 
----@alias Event.TabTitleOptions { unseen_icon: 'circle' | 'numbered_circle' | 'numbered_box', hide_active_tab_unseen: boolean }
+---@class Event.TabTitleOptionsInput
+---@field unseen_icon? 'circle' | 'numbered_circle' | 'numbered_box'
+---@field hide_active_tab_unseen? boolean
+---@field show_progress? boolean
+
+---@class Event.TabTitleOptions
+---@field unseen_icon 'circle' | 'numbered_circle' | 'numbered_box'
+---@field hide_active_tab_unseen boolean
+---@field show_progress boolean
 
 ---Setup options for the tab title
-local EVENT_OPTS = {}
-
----@type OptsSchema
-EVENT_OPTS.schema = {
+---@type OptsValidator
+local EVENT_OPTS = OptsValidator:new({
    {
       name = 'unseen_icon',
       type = 'string',
@@ -29,65 +41,112 @@ EVENT_OPTS.schema = {
       type = 'boolean',
       default = true,
    },
-}
-EVENT_OPTS.validator = OptsValidator:new(EVENT_OPTS.schema)
+   {
+      name = 'show_progress',
+      type = 'boolean',
+      default = true,
+   },
+})
 
 ---
 -- ===================
 -- Constants and icons
 -- ===================
 
-local nf = wezterm.nerdfonts
-
 local M = {}
 
-local GLYPH_SCIRCLE_LEFT = nf.ple_left_half_circle_thick --[[  ]]
-local GLYPH_SCIRCLE_RIGHT = nf.ple_right_half_circle_thick --[[  ]]
-local GLYPH_CIRCLE = nf.fa_circle --[[  ]]
-local GLYPH_ADMIN = nf.md_shield_half_full --[[ 󰞀 ]]
-local GLYPH_LINUX = nf.cod_terminal_linux --[[  ]]
-local GLYPH_DEBUG = nf.fa_bug --[[  ]]
--- local GLYPH_SEARCH = nf.fa_search --[[  ]]
-local GLYPH_SEARCH = '🔭'
+local ICON_SCIRCLE_LEFT = nf.ple_left_half_circle_thick --[[  ]]
+local ICON_SCIRCLE_RIGHT = nf.ple_right_half_circle_thick --[[  ]]
 
-local GLYPH_UNSEEN_NUMBERED_BOX = {
-   [1] = nf.md_numeric_1_box_multiple, --[[ 󰼏 ]]
-   [2] = nf.md_numeric_2_box_multiple, --[[ 󰼐 ]]
-   [3] = nf.md_numeric_3_box_multiple, --[[ 󰼑 ]]
-   [4] = nf.md_numeric_4_box_multiple, --[[ 󰼒 ]]
-   [5] = nf.md_numeric_5_box_multiple, --[[ 󰼓 ]]
-   [6] = nf.md_numeric_6_box_multiple, --[[ 󰼔 ]]
-   [7] = nf.md_numeric_7_box_multiple, --[[ 󰼕 ]]
-   [8] = nf.md_numeric_8_box_multiple, --[[ 󰼖 ]]
-   [9] = nf.md_numeric_9_box_multiple, --[[ 󰼗 ]]
-   [10] = nf.md_numeric_9_plus_box_multiple, --[[ 󰼘 ]]
+-- stylua: ignore
+---@enum PrefixIcon
+local ICON_PREFIX = {
+   admin = nf.md_shield_half_full,  --[[ 󰞀 ]]
+   wsl = nf.cod_terminal_linux,     --[[  ]]
+   debug = nf.fa_bug,               --[[  ]]
+   select = nf.md_selection_search, --[[ 󱈅 ]]
+   --  search = '🔭',
+   launcher = nf.oct_rocket,        --[[  ]]
+   edit = nf.fa_edit,               --[[  ]]
 }
 
-local GLYPH_UNSEEN_NUMBERED_CIRCLE = {
-   [1] = nf.md_numeric_1_circle, --[[ 󰲠 ]]
-   [2] = nf.md_numeric_2_circle, --[[ 󰲢 ]]
-   [3] = nf.md_numeric_3_circle, --[[ 󰲤 ]]
-   [4] = nf.md_numeric_4_circle, --[[ 󰲦 ]]
-   [5] = nf.md_numeric_5_circle, --[[ 󰲨 ]]
-   [6] = nf.md_numeric_6_circle, --[[ 󰲪 ]]
-   [7] = nf.md_numeric_7_circle, --[[ 󰲬 ]]
-   [8] = nf.md_numeric_8_circle, --[[ 󰲮 ]]
-   [9] = nf.md_numeric_9_circle, --[[ 󰲰 ]]
-   [10] = nf.md_numeric_9_plus_circle, --[[ 󰲲 ]]
+---@enum UnseenOutputIcon
+local ICON_UNSEEN = {
+   cirlce = nf.fa_circle, --[[  ]]
+
+   numbered_box_1 = nf.md_numeric_1_box_multiple, --[[ 󰼏 ]]
+   numbered_box_2 = nf.md_numeric_2_box_multiple, --[[ 󰼐 ]]
+   numbered_box_3 = nf.md_numeric_3_box_multiple, --[[ 󰼑 ]]
+   numbered_box_4 = nf.md_numeric_4_box_multiple, --[[ 󰼒 ]]
+   numbered_box_5 = nf.md_numeric_5_box_multiple, --[[ 󰼓 ]]
+   numbered_box_6 = nf.md_numeric_6_box_multiple, --[[ 󰼔 ]]
+   numbered_box_7 = nf.md_numeric_7_box_multiple, --[[ 󰼕 ]]
+   numbered_box_8 = nf.md_numeric_8_box_multiple, --[[ 󰼖 ]]
+   numbered_box_9 = nf.md_numeric_9_box_multiple, --[[ 󰼗 ]]
+   numbered_box_10 = nf.md_numeric_9_plus_box_multiple, --[[ 󰼘 ]]
+
+   numbered_circle_1 = nf.md_numeric_1_circle, --[[ 󰲠 ]]
+   numbered_circle_2 = nf.md_numeric_2_circle, --[[ 󰲢 ]]
+   numbered_circle_3 = nf.md_numeric_3_circle, --[[ 󰲤 ]]
+   numbered_circle_4 = nf.md_numeric_4_circle, --[[ 󰲦 ]]
+   numbered_circle_5 = nf.md_numeric_5_circle, --[[ 󰲨 ]]
+   numbered_circle_6 = nf.md_numeric_6_circle, --[[ 󰲪 ]]
+   numbered_circle_7 = nf.md_numeric_7_circle, --[[ 󰲬 ]]
+   numbered_circle_8 = nf.md_numeric_8_circle, --[[ 󰲮 ]]
+   numbered_circle_9 = nf.md_numeric_9_circle, --[[ 󰲰 ]]
+   numbered_circle_10 = nf.md_numeric_9_plus_circle, --[[ 󰲲 ]]
+}
+
+local ICON_PROGRESS_PCT_FRAMES = {
+   [1] = nf.md_circle_slice_1, --[[ 󰪞 ]]
+   [2] = nf.md_circle_slice_2, --[[ 󰪟 ]]
+   [3] = nf.md_circle_slice_3, --[[ 󰪠 ]]
+   [4] = nf.md_circle_slice_4, --[[ 󰪡 ]]
+   [5] = nf.md_circle_slice_5, --[[ 󰪢 ]]
+   [6] = nf.md_circle_slice_6, --[[ 󰪣 ]]
+   [7] = nf.md_circle_slice_7, --[[ 󰪤 ]]
+   [8] = nf.md_circle_slice_8, --[[ 󰪥 ]]
+}
+
+-- stylua: ignore
+local ICON_PROGRESS_IND_FRAMES = {
+   [1] = nf.fa_hourglass_start, --[[  ]]
+   [2] = nf.fa_hourglass_end,   --[[  ]]
+   [3] = nf.fa_hourglass_half,  --[[  ]]
 }
 
 local TITLE_INSET = {
-   DEFAULT = 6,
-   ICON = 8,
+   default = 4,
+   increment = 2,
 }
 
-local RENDER_VARIANTS = {
-   { 'scircle_left', 'title', 'padding', 'scircle_right' },
-   { 'scircle_left', 'title', 'unseen_output', 'padding', 'scircle_right' },
-   { 'scircle_left', 'admin', 'title', 'padding', 'scircle_right' },
-   { 'scircle_left', 'admin', 'title', 'unseen_output', 'padding', 'scircle_right' },
-   { 'scircle_left', 'wsl', 'title', 'padding', 'scircle_right' },
-   { 'scircle_left', 'wsl', 'title', 'unseen_output', 'padding', 'scircle_right' },
+-- stylua: ignore
+---Render Segments
+local RS = {
+   scircle_left  = 1,
+   icon          = 2,
+   title         = 3,
+   progress      = 4,
+   unseen_output = 5,
+   padding       = 6,
+   scircle_right = 7,
+}
+
+-- stylua: ignore
+-- luacheck: ignore
+---Render Variants
+local RV = {
+   { RS.scircle_left, RS.padding, RS.title, RS.padding, RS.scircle_right },
+   { RS.scircle_left, RS.padding, RS.title, RS.padding, RS.unseen_output, RS.padding, RS.scircle_right },
+
+   { RS.scircle_left, RS.padding, RS.title, RS.padding, RS.progress, RS.padding, RS.scircle_right },
+   { RS.scircle_left, RS.padding, RS.title, RS.padding, RS.progress, RS.padding, RS.unseen_output, RS.padding, RS.scircle_right },
+
+   { RS.scircle_left, RS.padding, RS.icon, RS.padding, RS.title, RS.padding, RS.scircle_right },
+   { RS.scircle_left, RS.padding, RS.icon, RS.padding, RS.title, RS.padding, RS.unseen_output, RS.padding, RS.scircle_right },
+
+   { RS.scircle_left, RS.padding, RS.icon, RS.padding, RS.title, RS.padding, RS.progress, RS.padding, RS.scircle_right },
+   { RS.scircle_left, RS.padding, RS.icon, RS.padding, RS.title, RS.padding, RS.progress, RS.padding, RS.unseen_output, RS.padding, RS.scircle_right },
 }
 
 
@@ -95,16 +154,28 @@ local RENDER_VARIANTS = {
 -- stylua: ignore
 local colors = {
    text_default          = { bg = '#45475A', fg = '#1C1B19' },
-   text_hover            = { bg = '#5D87A3', fg = '#1C1B19' },
-   text_active           = { bg = '#74c7ec', fg = '#11111B' },
+   text_hover            = { bg = '#7188b0', fg = '#1C1B19' },
+   text_active           = { bg = '#89b4fa', fg = '#11111B' },
 
    unseen_output_default = { bg = '#45475A', fg = '#FFA066' },
-   unseen_output_hover   = { bg = '#5D87A3', fg = '#FFA066' },
-   unseen_output_active  = { bg = '#74c7ec', fg = '#FFA066' },
+   unseen_output_hover   = { bg = '#7188b0', fg = '#FFA066' },
+   unseen_output_active  = { bg = '#89b4fa', fg = '#FFA066' },
 
    scircle_default       = { bg = 'rgba(0, 0, 0, 0.4)', fg = '#45475A' },
-   scircle_hover         = { bg = 'rgba(0, 0, 0, 0.4)', fg = '#5D87A3' },
-   scircle_active        = { bg = 'rgba(0, 0, 0, 0.4)', fg = '#74C7EC' },
+   scircle_hover         = { bg = 'rgba(0, 0, 0, 0.4)', fg = '#7188b0' },
+   scircle_active        = { bg = 'rgba(0, 0, 0, 0.4)', fg = '#89b4fa' },
+
+   progress_percentage_default    = { bg = '#45475A', fg = '#9df296' },
+   progress_percentage_hover      = { bg = '#7188b0', fg = '#9df296' },
+   progress_percentage_active     = { bg = '#89b4fa', fg = '#9df296' },
+
+   progress_error_default         = { bg = '#45475A', fg = '#fa3970' },
+   progress_error_hover           = { bg = '#7188b0', fg = '#fa3970' },
+   progress_error_active          = { bg = '#89b4fa', fg = '#fa3970' },
+
+   progress_indeterminate_default = { bg = '#45475A', fg = '#f5e0dc' },
+   progress_indeterminate_hover   = { bg = '#7188b0', fg = '#f5e0dc' },
+   progress_indeterminate_active  = { bg = '#89b4fa', fg = '#f5e0dc' },
 }
 
 ---
@@ -112,10 +183,61 @@ local colors = {
 -- Helper functions
 -- ================
 
+---@param pct number
+local function _pct_to_frame(pct)
+   local frame = math.floor(pct * #ICON_PROGRESS_PCT_FRAMES / 100)
+   return ICON_PROGRESS_PCT_FRAMES[frame]
+end
+
+local __indeter_frame = 1
+local function _ind_to_frame()
+   local frame = __indeter_frame
+   __indeter_frame = (__indeter_frame % #ICON_PROGRESS_IND_FRAMES) + 1
+   return ICON_PROGRESS_IND_FRAMES[frame]
+end
+
 ---@param proc string
 local function clean_process_name(proc)
-   local a = string.gsub(proc, '(.*[/\\])(.*)', '%2')
+   local a = string.gsub(proc, '.*[/\\](.*)', '%1')
    return a:gsub('%.exe$', '')
+end
+
+---@generic T
+---@param pane_title string
+---@param process_name string
+---@return string, PrefixIcon?
+local function create_base_title(pane_title, process_name)
+   ---@type PrefixIcon|nil
+   local prefix_icon = nil
+   local base_title = pane_title
+
+   if ustr.starts_with(base_title, 'Administrator:') or ustr.ends_with(base_title, '(Admin)') then
+      prefix_icon = ICON_PREFIX.admin
+      base_title = base_title:gsub('Administrator: ', ''):gsub('%(Admin%)', '')
+   end
+
+   if ustr.starts_with(process_name, 'wsl') then
+      prefix_icon = ICON_PREFIX.wsl
+   end
+
+   -- if Debug-Overlay is active
+   if base_title == 'Debug' then
+      prefix_icon = ICON_PREFIX.debug
+      base_title = base_title:upper()
+   end
+
+   -- if built-in Launcher is active
+   if base_title == 'Launcher' then
+      prefix_icon = ICON_PREFIX.launcher
+      base_title = base_title:upper()
+   end
+
+   if ustr.starts_with(base_title, 'InputSelector:') then
+      prefix_icon = ICON_PREFIX.select
+      base_title = base_title:gsub('InputSelector: ', '')
+   end
+
+   return base_title, prefix_icon
 end
 
 ---@param process_name string
@@ -131,16 +253,6 @@ local function create_title(process_name, base_title, max_width, inset)
       title = base_title
    end
 
-   if base_title == 'Debug' then
-      title = GLYPH_DEBUG .. ' DEBUG'
-      inset = inset - 2
-   end
-
-   if base_title:match('^InputSelector:') ~= nil then
-      title = base_title:gsub('InputSelector:', GLYPH_SEARCH)
-      inset = inset - 2
-   end
-
    if title:len() > max_width - inset then
       local diff = title:len() - max_width + inset
       title = title:sub(1, title:len() - diff)
@@ -152,23 +264,68 @@ local function create_title(process_name, base_title, max_width, inset)
    return title
 end
 
----@param panes any[] WezTerm https://wezfurlong.org/wezterm/config/lua/pane/index.html
-local function check_unseen_output(panes)
-   local unseen_output = false
-   local unseen_output_count = 0
+---@param options Event.TabTitleOptions
+---@param progress PaneProgress
+---@return string?, 'percentage' | 'error' | 'indeterminate' | nil
+local function check_progress(options, progress)
+   if not options.show_progress then
+      return nil, nil
+   end
+
+   local icon = nil
+   local status = nil
+
+   if progress == 'Indeterminate' then
+      status = 'indeterminate'
+      icon = _ind_to_frame()
+   elseif progress.Percentage ~= nil then
+      status = 'percentage'
+      icon = _pct_to_frame(progress.Percentage)
+   elseif progress.Error ~= nil then
+      status = 'error'
+      icon = _pct_to_frame(progress.Error)
+   end
+
+   return icon, status
+end
+
+---@param options Event.TabTitleOptions
+---@param is_active boolean
+---@param panes PaneInformation[] WezTerm https://wezfurlong.org/wezterm/config/lua/pane/index.html
+---@return UnseenOutputIcon|nil
+local function check_unseen_output(options, is_active, panes)
+   if options.hide_active_tab_unseen and is_active then
+      return nil
+   end
+
+   local icon = nil
+
+   local count = 0
+   local limit = 10
+
+   if options.unseen_icon == 'circle' then
+      limit = 0
+   end
 
    for i = 1, #panes, 1 do
+      if count > limit then
+         break
+      end
+
       if panes[i].has_unseen_output then
-         unseen_output = true
-         if unseen_output_count >= 10 then
-            unseen_output_count = 10
-            break
-         end
-         unseen_output_count = unseen_output_count + 1
+         count = count + 1
       end
    end
 
-   return unseen_output, unseen_output_count
+   if count > 0 then
+      if options.unseen_icon == 'circle' then
+         icon = ICON_UNSEEN[options.unseen_icon]
+      else
+         icon = ICON_UNSEEN[options.unseen_icon .. '_' .. count]
+      end
+   end
+
+   return icon
 end
 
 ---
@@ -177,71 +334,99 @@ end
 -- =================
 
 ---@class Tab
----@field title string
 ---@field cells FormatCells
 ---@field title_locked boolean
 ---@field locked_title string
----@field is_wsl boolean
----@field is_admin boolean
----@field unseen_output boolean
----@field unseen_output_count number
----@field is_active boolean
+---@field has_icon boolean
+---@field has_unseen boolean
+---@field has_progress boolean
 local Tab = {}
 Tab.__index = Tab
 
 function Tab:new()
+   local cells = Cells:new()
+      :add_segment(RS.scircle_left, ICON_SCIRCLE_LEFT)
+      :add_segment(RS.icon, '')
+      :add_segment(RS.title, '', nil, attr(attr.intensity('Bold')))
+      :add_segment(RS.progress, '')
+      :add_segment(RS.unseen_output, '')
+      :add_segment(RS.padding, ' ')
+      :add_segment(RS.scircle_right, ICON_SCIRCLE_RIGHT)
+
+   ---@type Tab
    local tab = {
-      title = '',
-      cells = Cells:new(),
+      cells = cells,
       title_locked = false,
       locked_title = '',
-      is_wsl = false,
-      is_admin = false,
-      unseen_output = false,
-      unseen_output_count = 0,
+      has_icon = false,
+      has_unseen = false,
+      has_progress = false,
    }
+
    return setmetatable(tab, self)
 end
 
 ---@param event_opts Event.TabTitleOptions
----@param tab any WezTerm https://wezfurlong.org/wezterm/config/lua/MuxTab/index.html
+---@param tab TabInformation WezTerm https://wezfurlong.org/wezterm/config/lua/MuxTab/index.html
+---@param hover boolean
 ---@param max_width number
-function Tab:set_info(event_opts, tab, max_width)
-   local process_name = clean_process_name(tab.active_pane.foreground_process_name)
+function Tab:update_cells(event_opts, tab, hover, max_width)
+   self.has_icon = false
+   self.has_unseen = false
+   self.has_progress = false
 
-   self.is_wsl = process_name:match('^wsl') ~= nil
-   self.is_admin = (
-      tab.active_pane.title:match('^Administrator: ') or tab.active_pane.title:match('(Admin)')
-   ) ~= nil
-   self.unseen_output = false
-   self.unseen_output_count = 0
-
-   if not event_opts.hide_active_tab_unseen or not tab.is_active then
-      self.unseen_output, self.unseen_output_count = check_unseen_output(tab.panes)
+   local tab_state = 'default'
+   if tab.is_active then
+      tab_state = 'active'
+   elseif hover then
+      tab_state = 'hover'
    end
 
-   local inset = (self.is_admin or self.is_wsl) and TITLE_INSET.ICON or TITLE_INSET.DEFAULT
-   if self.unseen_output then
-      inset = inset + 2
+   local process_name = clean_process_name(tab.active_pane.foreground_process_name)
+   local base_title, prefix_icon = create_base_title(tab.active_pane.title, process_name)
+   local unseen_icon = check_unseen_output(event_opts, tab.is_active, tab.panes)
+   local progress_icon, progress_status = check_progress(event_opts, tab.active_pane.progress)
+   local inset = TITLE_INSET.default
+
+   if prefix_icon then
+      inset = inset + TITLE_INSET.increment
+      self.has_icon = true
+      self.cells:update_segment_text(RS.icon, prefix_icon)
+   end
+
+   if unseen_icon then
+      inset = inset + TITLE_INSET.increment
+      self.has_unseen = true
+      self.cells:update_segment_text(RS.unseen_output, unseen_icon)
+   end
+
+   if progress_icon and progress_status then
+      inset = inset + TITLE_INSET.increment
+      self.has_progress = true
+      self.cells:update_segment_text(RS.progress, progress_icon)
+      self.cells:update_segment_colors(
+         RS.progress,
+         colors['progress_' .. progress_status .. '_' .. tab_state]
+      )
    end
 
    if self.title_locked then
-      self.title = create_title('', self.locked_title, max_width, inset)
-      return
+      process_name = ''
+      base_title = self.locked_title
    end
-   self.title = create_title(process_name, tab.active_pane.title, max_width, inset)
-end
 
-function Tab:create_cells()
-   local attr = self.cells.attr
+   local title = create_title(process_name, base_title, max_width, inset)
+
+   self.cells:update_segment_text(RS.title, title)
+
+   -- stylua: ignore
    self.cells
-      :add_segment('scircle_left', GLYPH_SCIRCLE_LEFT)
-      :add_segment('admin', ' ' .. GLYPH_ADMIN)
-      :add_segment('wsl', ' ' .. GLYPH_LINUX)
-      :add_segment('title', ' ', nil, attr(attr.intensity('Bold')))
-      :add_segment('unseen_output', ' ' .. GLYPH_CIRCLE)
-      :add_segment('padding', ' ')
-      :add_segment('scircle_right', GLYPH_SCIRCLE_RIGHT)
+      :update_segment_colors(RS.scircle_left,   colors['scircle_' .. tab_state])
+      :update_segment_colors(RS.icon,           colors['text_' .. tab_state])
+      :update_segment_colors(RS.title,          colors['text_' .. tab_state])
+      :update_segment_colors(RS.unseen_output,  colors['unseen_output_' .. tab_state])
+      :update_segment_colors(RS.padding,        colors['text_' .. tab_state])
+      :update_segment_colors(RS.scircle_right,  colors['scircle_' .. tab_state])
 end
 
 ---@param title string
@@ -250,65 +435,30 @@ function Tab:update_and_lock_title(title)
    self.title_locked = true
 end
 
----@param event_opts Event.TabTitleOptions
----@param is_active boolean
----@param hover boolean
-function Tab:update_cells(event_opts, is_active, hover)
-   local tab_state = 'default'
-   if is_active then
-      tab_state = 'active'
-   elseif hover then
-      tab_state = 'hover'
-   end
-
-   self.cells:update_segment_text('title', ' ' .. self.title)
-
-   if event_opts.unseen_icon == 'numbered_box' and self.unseen_output then
-      self.cells:update_segment_text(
-         'unseen_output',
-         ' ' .. GLYPH_UNSEEN_NUMBERED_BOX[self.unseen_output_count]
-      )
-   end
-   if event_opts.unseen_icon == 'numbered_circle' and self.unseen_output then
-      self.cells:update_segment_text(
-         'unseen_output',
-         ' ' .. GLYPH_UNSEEN_NUMBERED_CIRCLE[self.unseen_output_count]
-      )
-   end
-
-   self.cells
-      :update_segment_colors('scircle_left', colors['scircle_' .. tab_state])
-      :update_segment_colors('admin', colors['text_' .. tab_state])
-      :update_segment_colors('wsl', colors['text_' .. tab_state])
-      :update_segment_colors('title', colors['text_' .. tab_state])
-      :update_segment_colors('unseen_output', colors['unseen_output_' .. tab_state])
-      :update_segment_colors('padding', colors['text_' .. tab_state])
-      :update_segment_colors('scircle_right', colors['scircle_' .. tab_state])
-end
-
 ---@return FormatItem[] (ref: https://wezfurlong.org/wezterm/config/lua/wezterm/format.html)
 function Tab:render()
-   local variant_idx = self.is_admin and 3 or 1
-   if self.is_wsl then
-      variant_idx = 5
-   end
-
-   if self.unseen_output then
+   local variant_idx = self.has_icon and 5 or 1
+   if self.has_unseen then
       variant_idx = variant_idx + 1
    end
-   return self.cells:render(RENDER_VARIANTS[variant_idx])
+   if self.has_progress then
+      variant_idx = variant_idx + 2
+   end
+   return self.cells:render(RV[variant_idx])
 end
 
 ---@type Tab[]
 local tab_list = {}
 
----@param opts? Event.TabTitleOptions Default: {unseen_icon = 'circle', hide_active_tab_unseen = true}
+---@param opts? Event.TabTitleOptionsInput Default: {unseen_icon = 'circle', hide_active_tab_unseen = true, show_progress = true}
 M.setup = function(opts)
-   local valid_opts, err = EVENT_OPTS.validator:validate(opts or {})
+   local valid_opts, err = EVENT_OPTS:validate(opts or {})
 
    if err then
       wezterm.log_error(err)
    end
+
+   ---@cast valid_opts Event.TabTitleOptions
 
    -- CUSTOM EVENT
    -- Event listener to manually update the tab name
@@ -316,6 +466,7 @@ M.setup = function(opts)
    wezterm.on('tabs.manual-update-tab-title', function(window, pane)
       window:perform_action(
          wezterm.action.PromptInputLine({
+            -- title = 'InputLine: Manual Tab Title',
             description = wezterm.format({
                { Foreground = { Color = '#FFFFFF' } },
                { Attribute = { Intensity = 'Bold' } },
@@ -355,13 +506,9 @@ M.setup = function(opts)
    wezterm.on('format-tab-title', function(tab, _tabs, _panes, _config, hover, max_width)
       if not tab_list[tab.tab_id] then
          tab_list[tab.tab_id] = Tab:new()
-         tab_list[tab.tab_id]:set_info(valid_opts, tab, max_width)
-         tab_list[tab.tab_id]:create_cells()
-         return tab_list[tab.tab_id]:render()
       end
 
-      tab_list[tab.tab_id]:set_info(valid_opts, tab, max_width)
-      tab_list[tab.tab_id]:update_cells(valid_opts, tab.is_active, hover)
+      tab_list[tab.tab_id]:update_cells(valid_opts, tab, hover, umath.clamp(max_width, 5, 22))
       return tab_list[tab.tab_id]:render()
    end)
 end

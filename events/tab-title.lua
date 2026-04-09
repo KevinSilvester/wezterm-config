@@ -61,13 +61,13 @@ local ICON_SCIRCLE_RIGHT = nf.ple_right_half_circle_thick --[[  ]]
 -- stylua: ignore
 ---@enum PrefixIcon
 local ICON_PREFIX = {
-   admin = nf.md_shield_half_full,  --[[ 󰞀 ]]
-   wsl = nf.cod_terminal_linux,     --[[  ]]
-   debug = nf.fa_bug,               --[[  ]]
-   select = nf.md_selection_search, --[[ 󱈅 ]]
+   admin    = nf.md_shield_half_full, --[[ 󰞀 ]]
+   wsl      = nf.cod_terminal_linux,  --[[  ]]
+   debug    = nf.fa_bug,              --[[  ]]
+   select   = nf.md_selection_search, --[[ 󱈅 ]]
    --  search = '🔭',
-   launcher = nf.oct_rocket,        --[[  ]]
-   edit = nf.fa_edit,               --[[  ]]
+   launcher = nf.oct_rocket,          --[[  ]]
+   edit     = nf.fa_edit,             --[[  ]]
 }
 
 ---@enum UnseenOutputIcon
@@ -211,30 +211,34 @@ local function create_base_title(pane_title, process_name)
    local prefix_icon = nil
    local base_title = pane_title
 
-   if ustr.starts_with(base_title, 'Administrator:') or ustr.ends_with(base_title, '(Admin)') then
-      prefix_icon = ICON_PREFIX.admin
-      base_title = base_title:gsub('Administrator: ', ''):gsub('%(Admin%)', '')
-   end
-
-   if ustr.starts_with(process_name, 'wsl') then
-      prefix_icon = ICON_PREFIX.wsl
-   end
-
    -- if Debug-Overlay is active
    if base_title == 'Debug' then
       prefix_icon = ICON_PREFIX.debug
       base_title = base_title:upper()
-   end
 
    -- if built-in Launcher is active
-   if base_title == 'Launcher' then
+   elseif base_title == 'Launcher' then
       prefix_icon = ICON_PREFIX.launcher
       base_title = base_title:upper()
-   end
 
-   if ustr.starts_with(base_title, 'InputSelector:') then
+   -- if shell is elevated to windows administrator
+   elseif
+      ustr.starts_with(base_title, 'Administrator:') or ustr.ends_with(base_title, '(Admin)')
+   then
+      prefix_icon = ICON_PREFIX.admin
+      base_title = base_title:gsub('Administrator: ', ''):gsub('%(Admin%)', '')
+
+   -- if shell is wsl instance
+   elseif ustr.starts_with(process_name, 'wsl') then
+      prefix_icon = ICON_PREFIX.wsl
+
+   -- if `PromptInputLine` or `InputSelector` overlay is active
+   elseif ustr.starts_with(base_title, 'InputSelector:') then
       prefix_icon = ICON_PREFIX.select
       base_title = base_title:gsub('InputSelector: ', '')
+   elseif ustr.starts_with(base_title, 'InputLine:') then
+      prefix_icon = ICON_PREFIX.edit
+      base_title = base_title:gsub('InputLine: ', '')
    end
 
    return base_title, prefix_icon
@@ -265,28 +269,42 @@ local function create_title(process_name, base_title, max_width, inset)
 end
 
 ---@param options Event.TabTitleOptions
----@param progress PaneProgress
----@return string?, 'percentage' | 'error' | 'indeterminate' | nil
-local function check_progress(options, progress)
+---@param panes PaneInformation[]
+---@return {icon: string?, status: 'indeterminate'|'percentage'|'error'?}[]
+local function check_progress(options, panes)
    if not options.show_progress then
-      return nil, nil
+      return {}
    end
 
-   local icon = nil
-   local status = nil
+   local progress = {}
+   local limit = 3
 
-   if progress == 'Indeterminate' then
-      status = 'indeterminate'
-      icon = _ind_to_frame()
-   elseif progress.Percentage ~= nil then
-      status = 'percentage'
-      icon = _pct_to_frame(progress.Percentage)
-   elseif progress.Error ~= nil then
-      status = 'error'
-      icon = _pct_to_frame(progress.Error)
+   for i, pane in ipairs(panes) do
+      if i > limit then
+         break
+      end
+
+      local prog = pane.progress
+      local status = nil
+      local icon = nil
+
+      if prog == 'Indeterminate' then
+         status = 'indeterminate'
+         icon = _ind_to_frame()
+      elseif prog.Percentage ~= nil then
+         status = 'percentage'
+         icon = _pct_to_frame(prog.Percentage)
+      elseif prog.Error ~= nil then
+         status = 'error'
+         icon = _pct_to_frame(prog.Error)
+      end
+
+      if icon and status then
+         table.insert(progress, { icon = icon, status = status })
+      end
    end
 
-   return icon, status
+   return progress
 end
 
 ---@param options Event.TabTitleOptions
@@ -333,6 +351,8 @@ end
 -- Tab class and API
 -- =================
 
+local progress_cells = Cells:new():add_segment(RS.progress):add_segment(RS.padding, ' ')
+
 ---@class Tab
 ---@field cells FormatCells
 ---@field title_locked boolean
@@ -346,10 +366,10 @@ Tab.__index = Tab
 function Tab:new()
    local cells = Cells:new()
       :add_segment(RS.scircle_left, ICON_SCIRCLE_LEFT)
-      :add_segment(RS.icon, '')
-      :add_segment(RS.title, '', nil, attr(attr.intensity('Bold')))
-      :add_segment(RS.progress, '')
-      :add_segment(RS.unseen_output, '')
+      :add_segment(RS.icon)
+      :add_segment(RS.title, nil, nil, attr(attr.intensity('Bold')))
+      :add_nested_segment(RS.progress)
+      :add_segment(RS.unseen_output)
       :add_segment(RS.padding, ' ')
       :add_segment(RS.scircle_right, ICON_SCIRCLE_RIGHT)
 
@@ -385,30 +405,47 @@ function Tab:update_cells(event_opts, tab, hover, max_width)
    local process_name = clean_process_name(tab.active_pane.foreground_process_name)
    local base_title, prefix_icon = create_base_title(tab.active_pane.title, process_name)
    local unseen_icon = check_unseen_output(event_opts, tab.is_active, tab.panes)
-   local progress_icon, progress_status = check_progress(event_opts, tab.active_pane.progress)
+   local progress = check_progress(event_opts, tab.panes)
    local inset = TITLE_INSET.default
 
+   -- Prefix icons
    if prefix_icon then
       inset = inset + TITLE_INSET.increment
       self.has_icon = true
       self.cells:update_segment_text(RS.icon, prefix_icon)
    end
 
+   -- Unseen output icon
    if unseen_icon then
       inset = inset + TITLE_INSET.increment
       self.has_unseen = true
       self.cells:update_segment_text(RS.unseen_output, unseen_icon)
    end
 
-   if progress_icon and progress_status then
-      inset = inset + TITLE_INSET.increment
-      self.has_progress = true
-      self.cells:update_segment_text(RS.progress, progress_icon)
-      self.cells:update_segment_colors(
-         RS.progress,
-         colors['progress_' .. progress_status .. '_' .. tab_state]
-      )
+   -- Progress icons - BEGIN
+   inset = inset + (TITLE_INSET.increment * #progress)
+   self.has_progress = #progress > 0
+
+   ---@type FormatItem[][]
+   local items = {}
+
+   if self.has_progress then
+      for i, prog in ipairs(progress) do
+         local prog_colors = 'progress_' .. prog.status .. '_' .. tab_state
+         progress_cells
+            :update_segment_text(RS.progress, prog.icon)
+            :update_segment_colors(RS.progress, colors[prog_colors])
+            :update_segment_colors(RS.padding, colors['text_' .. tab_state])
+         if i == #progress then
+            table.insert(items, progress_cells:render({ RS.progress }))
+         else
+            table.insert(items, progress_cells:render({ RS.progress, RS.padding }))
+         end
+      end
    end
+
+   self.cells:update_nested_segment(RS.progress, items)
+   -- Progress icons - END
 
    if self.title_locked then
       process_name = ''
@@ -464,9 +501,15 @@ M.setup = function(opts)
    -- Event listener to manually update the tab name
    -- Tab name will remain locked until the `reset-tab-title` is triggered
    wezterm.on('tabs.manual-update-tab-title', function(window, pane)
+      local title = nil
+
+      if ustr.endst_with(wezterm.version, 'custom-build') then
+         title = 'InputLine: Manual Tab Title'
+      end
+
       window:perform_action(
          wezterm.action.PromptInputLine({
-            -- title = 'InputLine: Manual Tab Title',
+            title = title,
             description = wezterm.format({
                { Foreground = { Color = '#FFFFFF' } },
                { Attribute = { Intensity = 'Bold' } },

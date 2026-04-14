@@ -101,7 +101,7 @@ M.setup = function(opts)
 
    ---@cast valid_opts Event.RightStatusOptions
 
-   wezterm.on('update-right-status', function(window, _pane)
+   wezterm.on('update-status', function(window, _pane)
       local battery_text, battery_icon = battery_info()
 
       cells

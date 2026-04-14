@@ -1,12 +1,13 @@
+---@type Wezterm
 local wezterm = require('wezterm')
 
----@class Config
----@field options table
+---@class ConfigBuilder
+---@field options Config
 local Config = {}
 Config.__index = Config
 
 ---Initialize Config
----@return Config
+---@return ConfigBuilder
 function Config:init()
    local config = setmetatable({ options = {} }, self)
    return config
@@ -14,7 +15,7 @@ end
 
 ---Append to `Config.options`
 ---@param new_options table new options to append
----@return Config
+---@return ConfigBuilder
 function Config:append(new_options)
    for k, v in pairs(new_options) do
       if self.options[k] ~= nil then

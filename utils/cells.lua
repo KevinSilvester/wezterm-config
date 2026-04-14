@@ -138,18 +138,17 @@ end
 ---@private
 ---@param segment_id string|number the segment id
 function Cells:_check_segment(segment_id)
-   if not self.segments[segment_id] then
-      error('Segment "' .. segment_id .. '" not found')
-   end
+   assert(self.segments[segment_id], 'Segment "' .. segment_id .. '" not found')
 end
 
 ---Check if the segment is nested
 ---@param segment_id string|number the segment id
 ---@param nested boolean whether the segment is nested or not
 function Cells:_check_nested(segment_id, nested)
-   if self.segments[segment_id].nested ~= nested then
-      error('Segment "' .. segment_id .. '" is ' .. (nested and 'not ' or '') .. 'a nested segment')
-   end
+   assert(
+      self.segments[segment_id].nested == nested,
+      'Segment "' .. segment_id .. '" is ' .. (nested and 'not ' or '') .. 'a nested segment'
+   )
 end
 
 ---check if the segment is not nested

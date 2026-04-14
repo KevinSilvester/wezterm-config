@@ -1,3 +1,4 @@
+---@type Wezterm
 local wezterm = require('wezterm')
 local colors = require('colors.custom')
 
@@ -15,23 +16,20 @@ local GLOB_PATTERN = '*.{jpg,jpeg,png,gif,bmp,ico,tiff,pnm,dds,tga}'
 ---@field current_idx number index of current image
 ---@field images string[] background images
 ---@field images_dir string directory of background images. Default is `wezterm.config_dir .. '/backdrops/'`
----@field focus_color string background color when in focus mode. Default is `colors.custom.background`
----@field focus_on boolean focus mode on or off
+---@field no_img boolean focus mode on or off
 local BackDrops = {}
 BackDrops.__index = BackDrops
 
 --- Initialise backdrop controller
 ---@private
 function BackDrops:init()
-   local inital = {
+   local backdrops = {
       current_idx = 1,
       images = {},
       images_dir = wezterm.config_dir .. '/backdrops/',
-      focus_color = colors.background,
-      focus_on = false,
+      no_bg = false,
    }
-   local backdrops = setmetatable(inital, self)
-   return backdrops
+   return setmetatable(backdrops, self)
 end
 
 ---Override the default `images_dir`
@@ -49,7 +47,7 @@ function BackDrops:set_images_dir(path)
    return self
 end
 
----MUST BE RUN BEFORE ALL OTHER `BackDrops` functions
+---**MUST BE RUN BEFORE ALL OTHER `BackDrops` methods**
 ---Sets the `images` after instantiating `BackDrops`.
 ---
 --- INFO:
@@ -57,23 +55,15 @@ end
 ---   WezTerm's fs utility `glob` (used in this function) works by running on a spawned child process.
 ---   This throws a coroutine error if the function is invoked in outside of `wezterm.lua` in the -
 ---   initial load of the Terminal config.
-function BackDrops:set_images()
+function BackDrops:scan_images_dir()
    self.images = wezterm.glob(self.images_dir .. GLOB_PATTERN)
-   return self
-end
-
----Override the default `focus_color`
----Default `focus_color` is `colors.custom.background`
----@param focus_color string background color when in focus mode
-function BackDrops:set_focus(focus_color)
-   self.focus_color = focus_color
    return self
 end
 
 ---Create the `background` options with the current image
 ---@private
 ---@return table
-function BackDrops:_create_opts()
+function BackDrops:_gen_opts()
    return {
       {
          source = { File = self.images[self.current_idx] },
@@ -93,10 +83,10 @@ end
 ---Create the `background` options for focus mode
 ---@private
 ---@return table
-function BackDrops:_create_focus_opts()
+function BackDrops:_gen_no_img_opts()
    return {
       {
-         source = { Color = self.focus_color },
+         source = { Color = colors.background },
          height = '120%',
          width = '120%',
          vertical_offset = '-10%',
@@ -107,48 +97,28 @@ function BackDrops:_create_focus_opts()
 end
 
 ---Set the initial options for `background`
----@param focus_on boolean? focus mode on or off
-function BackDrops:initial_options(focus_on)
-   focus_on = focus_on or false
-   assert(type(focus_on) == 'boolean', 'BackDrops:initial_options - Expected a boolean')
+---@param opts {no_img?: boolean} initial options for `background`
+function BackDrops:initial_options(opts)
+   opts.no_img = opts.no_img or false
+   assert(type(opts.no_img) == 'boolean', 'BackDrops:initial_options - Expected a boolean')
 
-   self.focus_on = focus_on
-   if focus_on then
-      return self:_create_focus_opts()
+   self.no_img = opts.no_img
+   if opts.no_img then
+      return self:_gen_no_img_opts()
    end
 
-   return self:_create_opts()
+   return self:_gen_opts()
 end
 
 ---Override the current window options for background
 ---@private
----@param window any WezTerm Window see: https://wezfurlong.org/wezterm/config/lua/window/index.html
+---@param window Window WezTerm Window see: https://wezfurlong.org/wezterm/config/lua/window/index.html
 ---@param background_opts table background option
 function BackDrops:_set_opt(window, background_opts)
    window:set_config_overrides({
       background = background_opts,
       enable_tab_bar = window:effective_config().enable_tab_bar,
    })
-end
-
----Override the current window options for background with focus color
----@private
----@param window any WezTerm Window see: https://wezfurlong.org/wezterm/config/lua/window/index.html
-function BackDrops:_set_focus_opt(window)
-   local opts = {
-      background = {
-         {
-            source = { Color = self.focus_color },
-            height = '120%',
-            width = '120%',
-            vertical_offset = '-10%',
-            horizontal_offset = '-10%',
-            opacity = 1,
-         },
-      },
-      enable_tab_bar = window:effective_config().enable_tab_bar,
-   }
-   window:set_config_overrides(opts)
 end
 
 ---Convert the `files` array to a table of `InputSelector` choices
@@ -166,12 +136,12 @@ end
 
 ---Select a random background from the loaded `files`
 ---Pass in `Window` object to override the current window options
----@param window any? WezTerm `Window` see: https://wezfurlong.org/wezterm/config/lua/window/index.html
+---@param window Window? WezTerm `Window` see: https://wezfurlong.org/wezterm/config/lua/window/index.html
 function BackDrops:random(window)
    self.current_idx = math.random(#self.images)
 
    if window ~= nil then
-      self:_set_opt(window, self:_create_opts())
+      self:_set_opt(window, self:_gen_opts())
    end
 end
 
@@ -183,7 +153,7 @@ function BackDrops:cycle_forward(window)
    else
       self.current_idx = self.current_idx + 1
    end
-   self:_set_opt(window, self:_create_opts())
+   self:_set_opt(window, self:_gen_opts())
 end
 
 ---Cycle the loaded `files` and select the previous background
@@ -194,7 +164,7 @@ function BackDrops:cycle_back(window)
    else
       self.current_idx = self.current_idx - 1
    end
-   self:_set_opt(window, self:_create_opts())
+   self:_set_opt(window, self:_gen_opts())
 end
 
 ---Set a specific background from the `files` array
@@ -207,21 +177,14 @@ function BackDrops:set_img(window, idx)
    end
 
    self.current_idx = idx
-   self:_set_opt(window, self:_create_opts())
+   self:_set_opt(window, self:_gen_opts())
 end
 
 ---Toggle the focus mode
 ---@param window any WezTerm `Window` see: https://wezfurlong.org/wezterm/config/lua/window/index.html
 function BackDrops:toggle_focus(window)
-   local background_opts
-
-   if self.focus_on then
-      background_opts = self:_create_opts()
-      self.focus_on = false
-   else
-      background_opts = self:_create_focus_opts()
-      self.focus_on = true
-   end
+   local background_opts = self.no_img and self:_gen_opts() or self:_gen_no_img_opts()
+   self.no_img = not self.no_img
 
    self:_set_opt(window, background_opts)
 end

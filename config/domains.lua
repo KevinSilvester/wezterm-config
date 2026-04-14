@@ -2,12 +2,15 @@ local platform = require('utils.platform')
 
 local options = {
    -- ref: https://wezfurlong.org/wezterm/config/lua/SshDomain.html
+   ---@type SshDomain[]
    ssh_domains = {},
 
    -- ref: https://wezfurlong.org/wezterm/multiplexing.html#unix-domains
+   ---@type UnixDomain[]
    unix_domains = {},
 
    -- ref: https://wezfurlong.org/wezterm/config/lua/WslDomain.html
+   ---@type WslDomain[]
    wsl_domains = {},
 }
 
@@ -15,6 +18,7 @@ if platform.is_win then
    options.ssh_domains = {
       {
          name = 'ssh:wsl',
+         username = 'kevin',
          remote_address = 'localhost',
          multiplexing = 'None',
          default_prog = { 'fish', '-l' },

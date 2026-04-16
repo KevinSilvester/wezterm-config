@@ -274,7 +274,8 @@ end
 ---@param panes PaneInformation[]
 ---@return {icon: string?, status: 'indeterminate'|'percentage'|'error'?}[]
 local function check_progress(options, panes)
-   if not options.show_progress then
+   -- return early if progress is disabled or progress isn't a field of pane
+   if not options.show_progress or #panes == 0 or not panes[1].progress then
       return {}
    end
 

@@ -54,9 +54,7 @@ function GpuAdapters:init()
       initial.scoreboard[score] = adapter
    end
 
-   local gpu_adapters = setmetatable(initial, self)
-
-   return gpu_adapters
+   return setmetatable(initial, self)
 end
 
 ---Will pick the best adapter based on the following criteria:
@@ -76,7 +74,7 @@ end
 ---Or feel free to re-arrange `GpuAdapters.AVAILABLE_BACKENDS` to you liking
 ---@return GpuInfo|nil
 function GpuAdapters:pick_best()
-   return self.scoreboard[self.best]
+   return self.best > 0 and self.scoreboard[self.best] or nil
 end
 
 ---Manually pick the adapter based on the backend and device type.

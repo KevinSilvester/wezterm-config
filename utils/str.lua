@@ -7,7 +7,6 @@ M.starts_with = function(str, prefix)
    return str:sub(1, #prefix) == prefix
 end
 
-
 ---@param str string
 ---@param suffix string
 ---@return boolean

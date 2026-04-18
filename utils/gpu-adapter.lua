@@ -26,8 +26,6 @@ local AVAILABLE_DEVICE_TYPES = {
 ---@type GpuInfo[]
 local ENUMERATED_GPUS = wezterm.gui.enumerate_gpus()
 
----@alias AdapterMap { [GpuInfo.Backend]: GpuInfo }
-
 ---@class GpuAdapters
 ---@field scoreboard {[number]: GpuInfo}
 ---@field best number
@@ -65,13 +63,14 @@ end
 ---   - Windows: Dx12 > Vulkan > OpenGl
 ---   - Linux: Vulkan > OpenGl
 ---   - Mac: Metal
----@see GpuAdapters.AVAILABLE_BACKENDS
+---
+---@see AVAILABLE_BACKENDS
 ---
 ---If the best adapter combo is not found, it will return `nil` and lets Wezterm decide the best adapter.
 ---
 ---Please note these are my own personal preferences and may not be the best for your system.
 ---If you want to manually choose the adapter, use `GpuAdapters:pick_manual(backend, device_type)`
----Or feel free to re-arrange `GpuAdapters.AVAILABLE_BACKENDS` to you liking
+---Or feel free to change the point allocated to the backends in `AVAILABLE_BACKENDS` to your liking.
 ---@return GpuInfo|nil
 function GpuAdapters:pick_best()
    return self.best > 0 and self.scoreboard[self.best] or nil

@@ -2,12 +2,10 @@
 -- Inspired by https://github.com/wez/wezterm/discussions/628#discussioncomment-1874614 --
 ------------------------------------------------------------------------------------------
 
----@type Wezterm
 local wezterm = require('wezterm')
 local Cells = require('utils.cells')
 local OptsValidator = require('utils.opts-validator')
 local ustr = require('utils.str')
-local umath = require('utils.math')
 
 local nf = wezterm.nerdfonts
 local attr = Cells.attr
@@ -54,6 +52,9 @@ local EVENT_OPTS = OptsValidator:new({
 -- ===================
 
 local M = {}
+
+---Commit date part of release tag `20250209-182623-44866cc1`
+local PROGRESS_MIN_VERSION = 20250209
 
 local ICON_SCIRCLE_LEFT = nf.ple_left_half_circle_thick --[[  ]]
 local ICON_SCIRCLE_RIGHT = nf.ple_right_half_circle_thick --[[  ]]
@@ -274,8 +275,7 @@ end
 ---@param panes PaneInformation[]
 ---@return {icon: string?, status: 'indeterminate'|'percentage'|'error'?}[]
 local function check_progress(options, panes)
-   -- return early if progress is disabled or progress isn't a field of pane
-   if not options.show_progress or #panes == 0 or not panes[1].progress then
+   if not options.show_progress then
       return {}
    end
 
@@ -487,6 +487,9 @@ end
 ---@type Tab[]
 local tab_list = {}
 
+---NOTE: 
+---Progress indicator is only available for WezTerm nightly versions `20250209-182623-44866cc1` and onwards.
+---If an older version is used, the `show_progress` options will be hard-set to `false`.
 ---@param opts? Event.TabTitleOptionsInput Default: {unseen_icon = 'circle', hide_active_tab_unseen = true, show_progress = true}
 M.setup = function(opts)
    local valid_opts, err = EVENT_OPTS:validate(opts or {})
@@ -496,6 +499,10 @@ M.setup = function(opts)
    end
 
    ---@cast valid_opts Event.TabTitleOptions
+
+   if tonumber(wezterm.version:sub(1, 8)) < PROGRESS_MIN_VERSION then
+      valid_opts.show_progress = false
+   end
 
    -- CUSTOM EVENT
    -- Event listener to manually update the tab name
@@ -553,7 +560,8 @@ M.setup = function(opts)
          tab_list[tab.tab_id] = Tab:new()
       end
 
-      tab_list[tab.tab_id]:update_cells(valid_opts, tab, hover, umath.clamp(max_width, 5, 22))
+      -- `max_width` refers to the `tab_max_width` option set in `config/appearance.lua`
+      tab_list[tab.tab_id]:update_cells(valid_opts, tab, hover, max_width)
       return tab_list[tab.tab_id]:render()
    end)
 end

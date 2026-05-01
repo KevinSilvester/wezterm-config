@@ -260,11 +260,11 @@ local function create_title(process_name, base_title, max_width, inset)
       title = base_title
    end
 
-   if title:len() > max_width - inset then
-      local diff = title:len() - max_width + inset
-      title = title:sub(1, title:len() - diff)
+   if wezterm.column_width(title) > max_width - inset then
+      local diff = wezterm.column_width(title) - max_width + inset
+      title = wezterm.truncate_right(title, wezterm.column_width(title) - diff)
    else
-      local padding = max_width - title:len() - inset
+      local padding = max_width - wezterm.column_width(title) - inset
       title = title .. string.rep(' ', padding)
    end
 
@@ -487,7 +487,7 @@ end
 ---@type Tab[]
 local tab_list = {}
 
----NOTE: 
+---NOTE:
 ---Progress indicator is only available for WezTerm nightly versions `20250209-182623-44866cc1` and onwards.
 ---If an older version is used, the `show_progress` options will be hard-set to `false`.
 ---@param opts? Event.TabTitleOptionsInput Default: {unseen_icon = 'circle', hide_active_tab_unseen = true, show_progress = true}

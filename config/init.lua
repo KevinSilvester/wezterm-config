@@ -1,4 +1,3 @@
----@type Wezterm
 local wezterm = require('wezterm')
 
 ---@class ConfigBuilder

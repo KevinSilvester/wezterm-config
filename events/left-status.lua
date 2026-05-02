@@ -1,4 +1,3 @@
----@type Wezterm
 local wezterm = require('wezterm')
 local Cells = require('utils.cells')
 

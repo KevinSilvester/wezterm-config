@@ -1,4 +1,3 @@
----@type Wezterm
 local wezterm = require('wezterm')
 local launch_menu = require('config.launch').launch_menu
 local domains = require('config.domains')
@@ -109,8 +108,6 @@ M.setup = function()
                   if not id and not label then
                      return
                   end
-                  wezterm.log_info('you selected ', id, label)
-                  wezterm.log_info(choices_data[tonumber(id)])
                   window:perform_action(act.SpawnCommandInNewTab(choices_data[tonumber(id)]), pane)
                end),
             }),

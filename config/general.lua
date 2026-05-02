@@ -1,3 +1,4 @@
+---@type Config
 return {
    -- behaviours
    automatically_reload_config = true,

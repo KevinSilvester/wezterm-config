@@ -290,7 +290,7 @@ local progress_stale = (function()
    ---@param pct integer
    ---@return boolean `true` if stale
    return function(tab_id, pane_id, status, pct)
-      local entry_id = (1 << tab_id) | pane_id
+      local entry_id = (tab_id << 4) | pane_id
 
       if not entries[entry_id] then
          entries[entry_id] = {}

@@ -1,8 +1,6 @@
 local wezterm = require('wezterm')
 local platform = require('utils.platform')
 
-local L_SHIFT = 5
-
 ---Backend options available based for the platforms.
 ---Higher the score, the better the backend (I think 🤷).
 ---See `https://github.com/gfx-rs/wgpu#supported-platforms` for more info on available backends
@@ -17,10 +15,10 @@ local AVAILABLE_BACKENDS = {
 ---Higher the score, the better the device type.
 -- stylua: ignore
 local AVAILABLE_DEVICE_TYPES = {
-   DiscreteGpu   = 4 << L_SHIFT,
-   IntegratedGpu = 3 << L_SHIFT,
-   Other         = 2 << L_SHIFT,
-   Cpu           = 1 << L_SHIFT,
+   DiscreteGpu   = 4 * 100,
+   IntegratedGpu = 3 * 100,
+   Other         = 2 * 100,
+   Cpu           = 1 * 100,
 }
 
 ---@type GpuInfo[]

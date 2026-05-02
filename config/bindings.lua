@@ -14,9 +14,10 @@ elseif platform.is_win or platform.is_linux then
 end
 
 -- stylua: ignore
+---@type Key[]
 local keys = {
    -- misc/useful --
-   { key = 'F1', mods = 'NONE', action = 'ActivateCopyMode' },
+   { key = 'F1', mods = 'NONE', action = act.ActivateCopyMode },
    { key = 'F2', mods = 'NONE', action = act.ActivateCommandPalette },
    { key = 'F3', mods = 'NONE', action = act.ShowLauncher },
    { key = 'F4', mods = 'NONE', action = act.ShowLauncherArgs({ flags = 'FUZZY|TABS' }) },
@@ -49,13 +50,16 @@ local keys = {
    },
 
    -- cursor movement --
-   { key = 'LeftArrow',  mods = mod.SUPER,     action = act.SendString '\u{1b}OH' },
-   { key = 'RightArrow', mods = mod.SUPER,     action = act.SendString '\u{1b}OF' },
-   { key = 'Backspace',  mods = mod.SUPER,     action = act.SendString '\u{15}' },
+   { key = 'LeftArrow',  mods = mod.SUPER,     action = act.SendString('\u{1b}OH') },
+   { key = 'RightArrow', mods = mod.SUPER,     action = act.SendString('\u{1b}OF') },
+   { key = 'Backspace',  mods = mod.SUPER,     action = act.SendString('\u{15}') },
 
    -- copy/paste --
    { key = 'c',          mods = 'CTRL|SHIFT',  action = act.CopyTo('Clipboard') },
    { key = 'v',          mods = 'CTRL|SHIFT',  action = act.PasteFrom('Clipboard') },
+
+   { key = 'n',          mods = 'CTRL|SHIFT',  action = act.SendString('\u{2660}') },
+   { key = 's',          mods = 'CTRL|SHIFT',  action = act.SendString('\u{203D}') },
 
    -- tabs --
    -- tabs: spawn+close
@@ -86,7 +90,10 @@ local keys = {
       mods = mod.SUPER,
       action = wezterm.action_callback(function(window, _pane)
          local dimensions = window:get_dimensions()
-         if dimensions.is_full_screen then
+         -- on Windows 11 (the only OS I'm able to test this on), `is_full_screen` is always false (it's a bug).
+         -- Calling `set_inner_size` when the window is actually in fullscreen will cause the
+         -- program UI to completely freeze.
+         if platform.is_win or dimensions.is_full_screen then
             return
          end
          local new_width = dimensions.pixel_width - 50
@@ -99,7 +106,10 @@ local keys = {
       mods = mod.SUPER,
       action = wezterm.action_callback(function(window, _pane)
          local dimensions = window:get_dimensions()
-         if dimensions.is_full_screen then
+         -- on Windows 11 (the only OS I'm able to test this on), `is_full_screen` is always false (it's a bug).
+         -- Calling `set_inner_size` when the window is actually in fullscreen will cause the
+         -- program UI to completely freeze.
+         if platform.is_win or dimensions.is_full_screen then
             return
          end
          local new_width = dimensions.pixel_width + 50
@@ -220,6 +230,7 @@ local keys = {
 }
 
 -- stylua: ignore
+---@type table<string, Key[]>
 local key_tables = {
    resize_font = {
       { key = 'k',      action = act.IncreaseFontSize },
@@ -238,6 +249,7 @@ local key_tables = {
    },
 }
 
+---@type MouseBinding[]
 local mouse_bindings = {
    -- Ctrl-click will open the link under the mouse cursor
    {
@@ -247,6 +259,7 @@ local mouse_bindings = {
    },
 }
 
+---@type Config
 return {
    disable_default_key_bindings = true,
    -- disable_default_mouse_bindings = true,

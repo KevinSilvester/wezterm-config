@@ -284,13 +284,15 @@ local progress_stale = (function()
    local entries = {}
 
    ---Mark progress value as stale if the output hasn't changed in 30 seconds
-   ---@param tab_id integer
-   ---@param pane_id integer
+   ---@param tab_index integer
+   ---@param pane_index integer
    ---@param status 'indeterminate'|'error'|'percentage'
    ---@param pct integer
    ---@return boolean `true` if stale
-   return function(tab_id, pane_id, status, pct)
-      local entry_id = (tab_id << 4) | pane_id
+   return function(tab_index, pane_index, status, pct)
+      -- shifting by 5 bits, assuming no more than 31 panes will be
+      -- spawned in a single tab
+      local entry_id = (tab_index << 5) | pane_index
 
       if not entries[entry_id] then
          entries[entry_id] = {}
@@ -312,10 +314,10 @@ local progress_stale = (function()
 end)()
 
 ---@param options Event.TabTitleOptions
----@param tab_id integer
+---@param tab_index integer
 ---@param panes PaneInformation[]
 ---@return {icon: string?, status: 'indeterminate'|'percentage'|'error'?}[]
-local function check_progress(options, tab_id, panes)
+local function check_progress(options, tab_index, panes)
    if not options.show_progress then
       return {}
    end
@@ -323,8 +325,8 @@ local function check_progress(options, tab_id, panes)
    local progress = {}
    local limit = 3
 
-   for i, pane in ipairs(panes) do
-      if i > limit then
+   for _, pane in ipairs(panes) do
+      if #progress > limit then
          break
       end
 
@@ -345,7 +347,7 @@ local function check_progress(options, tab_id, panes)
       end
 
       if icon and status then
-         if not progress_stale(tab_id, pane.pane_id, status, pct) then
+         if not progress_stale(tab_index, pane.pane_index, status, pct) then
             table.insert(progress, { icon = icon, status = status })
          end
       end
@@ -372,12 +374,12 @@ local function check_unseen_output(options, is_active, panes)
       limit = 0
    end
 
-   for i = 1, #panes, 1 do
+   for _, pane in ipairs(panes) do
       if count > limit then
          break
       end
 
-      if panes[i].has_unseen_output then
+      if pane.has_unseen_output then
          count = count + 1
       end
    end
@@ -449,7 +451,7 @@ function Tab:update_cells(event_opts, tab, hover, max_width)
    local process_name = clean_process_name(tab.active_pane.foreground_process_name)
    local base_title, prefix_icon = create_base_title(tab.active_pane.title, process_name)
    local unseen_icon = check_unseen_output(event_opts, tab.is_active, tab.panes)
-   local progress = check_progress(event_opts, tab.tab_id, tab.panes)
+   local progress = check_progress(event_opts, tab.tab_index, tab.panes)
    local inset = TITLE_INSET.default
 
    -- Prefix icons

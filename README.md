@@ -12,7 +12,7 @@
   </a>
 </p>
 
-![screenshot](./.github/screenshots/wezterm.gif)
+![screenshot](./.github/screenshots/demo-2.gif)
 
 ---
 
@@ -59,7 +59,7 @@
 
 ### Getting Started
 
-- ##### Requirements:
+- #### Requirements:
 
   - <details>
       <summary><b>WezTerm</b></summary>
@@ -193,7 +193,7 @@
 
 &nbsp;
 
-- ##### Steps:
+- #### Steps:
 
   1.  ```sh
       # On Windows and Unix systems
@@ -203,6 +203,13 @@
       - [./config/launch.lua](./config/launch.lua) for preferred shells and its paths
       - [./config/domains.lua](./config/domains.lua) for custom SSH/WSL domains
   3.  And Done!!! 🎉🎉
+
+&nbsp;
+
+- #### Optional But Useful:
+
+  - [**`wezterm-types`**](https://github.com/DrKJeff16/wezterm-types): **Highly** recommend setting this up for type completion and inline 
+  documentation of every configuration option, events and actions method signatures, etc. Includes type definitions for some popular Wezterm plugins as well.
 
 ---
 

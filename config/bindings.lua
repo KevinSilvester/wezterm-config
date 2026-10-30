@@ -16,16 +16,18 @@ end
 -- stylua: ignore
 ---@type Key[]
 local keys = {
-   -- searchable keyboard reference --
+   -- searchable keyboard reference (F6 is otherwise unused) --
    {
-      key = '/',
-      mods = 'LEADER|SHIFT',
+      key = 'F6',
+      mods = 'NONE',
       action = act.InputSelector({
          title = 'WezTerm Keyboard Shortcuts  |  Type to filter  |  Esc to close',
          choices = require('config.cheatsheet').choices,
          fuzzy = true,
          fuzzy_description = 'Find a shortcut: ',
-         action = require('config.cheatsheet').action,
+         action = wezterm.action_callback(function(_window, _pane, _id, _label)
+            -- This is a reference menu; selecting an entry simply closes it.
+         end),
       }),
    },
 

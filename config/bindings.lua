@@ -16,6 +16,19 @@ end
 -- stylua: ignore
 ---@type Key[]
 local keys = {
+   -- searchable keyboard reference --
+   {
+      key = '?',
+      mods = 'LEADER',
+      action = act.InputSelector({
+         title = 'WezTerm Keyboard Shortcuts  |  Type to filter  |  Esc to close',
+         choices = require('config.cheatsheet').choices,
+         fuzzy = true,
+         fuzzy_description = 'Find a shortcut: ',
+         action = require('config.cheatsheet').action,
+      }),
+   },
+
    -- misc/useful --
    { key = 'F1', mods = 'NONE', action = act.ActivateCopyMode },
    { key = 'F2', mods = 'NONE', action = act.ActivateCommandPalette },

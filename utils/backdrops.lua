@@ -78,7 +78,7 @@ function BackDrops:_gen_opts()
       width = '120%',
       vertical_offset = '-10%',
       horizontal_offset = '-10%',
-      opacity = 0.96,
+      opacity = 0.84,
    })
 
    return bg_opts

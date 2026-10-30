@@ -31,6 +31,27 @@ local keys = {
       }),
    },
 
+   -- pane creation: Alt + Q/E/R/T --
+   { key = 'q', mods = 'ALT', action = act.SplitPane({ direction = 'Left', domain = 'CurrentPaneDomain' }) },
+   { key = 'e', mods = 'ALT', action = act.SplitPane({ direction = 'Right', domain = 'CurrentPaneDomain' }) },
+   { key = 'r', mods = 'ALT', action = act.SplitPane({ direction = 'Bottom', domain = 'CurrentPaneDomain' }) },
+   { key = 't', mods = 'ALT', action = act.SplitPane({ direction = 'Top', domain = 'CurrentPaneDomain' }) },
+
+   -- pane focus: Shift + arrow keys --
+   { key = 'LeftArrow',  mods = 'SHIFT', action = act.ActivatePaneDirection('Left') },
+   { key = 'RightArrow', mods = 'SHIFT', action = act.ActivatePaneDirection('Right') },
+   { key = 'UpArrow',    mods = 'SHIFT', action = act.ActivatePaneDirection('Up') },
+   { key = 'DownArrow',  mods = 'SHIFT', action = act.ActivatePaneDirection('Down') },
+
+   -- pane resizing: Alt + Shift + arrow keys --
+   { key = 'LeftArrow',  mods = 'ALT|SHIFT', action = act.AdjustPaneSize({ 'Left', 1 }) },
+   { key = 'RightArrow', mods = 'ALT|SHIFT', action = act.AdjustPaneSize({ 'Right', 1 }) },
+   { key = 'UpArrow',    mods = 'ALT|SHIFT', action = act.AdjustPaneSize({ 'Up', 1 }) },
+   { key = 'DownArrow',  mods = 'ALT|SHIFT', action = act.AdjustPaneSize({ 'Down', 1 }) },
+
+   -- enter WezTerm's built-in Vim-like copy mode --
+   { key = 'g', mods = 'ALT', action = act.ActivateCopyMode },
+
    -- misc/useful --
    { key = 'F1', mods = 'NONE', action = act.ActivateCopyMode },
    { key = 'F2', mods = 'NONE', action = act.ActivateCommandPalette },
@@ -78,26 +99,36 @@ local keys = {
 
    -- tabs --
    -- tabs: spawn+close
-   { key = 't',          mods = mod.SUPER,     action = act.SpawnTab('DefaultDomain') },
+
    { key = 't',          mods = mod.SUPER_REV, action = act.SpawnTab({ DomainName = 'Ubuntu' }) },
    { key = 'w',          mods = mod.SUPER_REV, action = act.CloseCurrentTab({ confirm = false }) },
 
    -- tabs: navigation
    { key = '[',          mods = mod.SUPER,     action = act.ActivateTabRelative(-1) },
    { key = ']',          mods = mod.SUPER,     action = act.ActivateTabRelative(1) },
-   { key = '[',          mods = mod.SUPER_REV, action = act.MoveTabRelative(-1) },
-   { key = ']',          mods = mod.SUPER_REV, action = act.MoveTabRelative(1) },
+
+
 
    -- tab: title
-   { key = '0',          mods = mod.SUPER,     action = act.EmitEvent('tabs.manual-update-tab-title') },
+
    { key = '0',          mods = mod.SUPER_REV, action = act.EmitEvent('tabs.reset-tab-title') },
 
    -- tab: hide tab-bar
-   { key = '9',          mods = mod.SUPER,     action = act.EmitEvent('tabs.toggle-tab-bar'), },
+
 
    -- window --
    -- window: spawn windows
    { key = 'n',          mods = mod.SUPER,     action = act.SpawnWindow },
+   { key = '0',          mods = 'ALT',         action = act.SpawnTab('DefaultDomain') },
+   { key = '1',          mods = 'ALT',         action = act.ActivateTab(0) },
+   { key = '2',          mods = 'ALT',         action = act.ActivateTab(1) },
+   { key = '3',          mods = 'ALT',         action = act.ActivateTab(2) },
+   { key = '4',          mods = 'ALT',         action = act.ActivateTab(3) },
+   { key = '5',          mods = 'ALT',         action = act.ActivateTab(4) },
+   { key = '6',          mods = 'ALT',         action = act.ActivateTab(5) },
+   { key = '7',          mods = 'ALT',         action = act.ActivateTab(6) },
+   { key = '8',          mods = 'ALT',         action = act.ActivateTab(7) },
+   { key = '9',          mods = 'ALT',         action = act.ActivateTab(8) },
 
    -- window: zoom window
    {
@@ -188,32 +219,25 @@ local keys = {
    },
 
    -- panes --
+   { key = 'w', mods = 'ALT', action = act.CloseCurrentPane({ confirm = false }) },
+   { key = 'Enter', mods = 'ALT', action = act.TogglePaneZoomState },
    -- panes: split panes
    {
-      key = [[\]],
-      mods = mod.SUPER,
-      action = act.SplitVertical({ domain = 'CurrentPaneDomain' }),
-   },
+
    {
-      key = [[\]],
-      mods = mod.SUPER_REV,
-      action = act.SplitHorizontal({ domain = 'CurrentPaneDomain' }),
-   },
+
 
    -- panes: zoom+close pane
-   { key = 'Enter', mods = mod.SUPER,     action = act.TogglePaneZoomState },
-   { key = 'w',     mods = mod.SUPER,     action = act.CloseCurrentPane({ confirm = false }) },
+
+
 
    -- panes: navigation
-   { key = 'k',     mods = mod.SUPER_REV, action = act.ActivatePaneDirection('Up') },
-   { key = 'j',     mods = mod.SUPER_REV, action = act.ActivatePaneDirection('Down') },
-   { key = 'h',     mods = mod.SUPER_REV, action = act.ActivatePaneDirection('Left') },
-   { key = 'l',     mods = mod.SUPER_REV, action = act.ActivatePaneDirection('Right') },
+
+
+
+
    {
-      key = 'p',
-      mods = mod.SUPER_REV,
-      action = act.PaneSelect({ alphabet = '1234567890', mode = 'SwapWithActiveKeepFocus' }),
-   },
+
 
    -- panes: scroll pane
    { key = 'u',        mods = mod.SUPER, action = act.ScrollByLine(-5) },

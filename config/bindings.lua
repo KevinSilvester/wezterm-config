@@ -30,10 +30,10 @@ local keys = {
    },
 
    -- pane creation: Alt + Q/E/R/T
-   { key = 'q', mods = 'ALT', action = act.SplitPane({ direction = 'Left', domain = 'CurrentPaneDomain' }) },
-   { key = 'e', mods = 'ALT', action = act.SplitPane({ direction = 'Right', domain = 'CurrentPaneDomain' }) },
-   { key = 'r', mods = 'ALT', action = act.SplitPane({ direction = 'Bottom', domain = 'CurrentPaneDomain' }) },
-   { key = 't', mods = 'ALT', action = act.SplitPane({ direction = 'Top', domain = 'CurrentPaneDomain' }) },
+   { key = 'q', mods = 'ALT', action = act.SplitPane({ direction = 'Left' }) },
+   { key = 'e', mods = 'ALT', action = act.SplitPane({ direction = 'Right' }) },
+   { key = 'r', mods = 'ALT', action = act.SplitPane({ direction = 'Bottom' }) },
+   { key = 't', mods = 'ALT', action = act.SplitPane({ direction = 'Top' }) },
 
    -- pane focus: Shift + arrow keys
    { key = 'LeftArrow',  mods = 'SHIFT', action = act.ActivatePaneDirection('Left') },

@@ -18,8 +18,8 @@ end
 local keys = {
    -- searchable keyboard reference --
    {
-      key = '?',
-      mods = 'LEADER',
+      key = '/',
+      mods = 'LEADER|SHIFT',
       action = act.InputSelector({
          title = 'WezTerm Keyboard Shortcuts  |  Type to filter  |  Esc to close',
          choices = require('config.cheatsheet').choices,

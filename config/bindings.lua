@@ -71,7 +71,22 @@ local keys = {
    { key = ']', mods = 'ALT', action = act.ActivateTabRelative(1) },
    { key = 'n', mods = 'ALT', action = act.SpawnWindow },
 
+   -- quick access and navigation
+   { key = 'p', mods = 'CTRL|ALT', action = act.PaneSelect },
+   { key = '\\', mods = 'ALT', action = act.ActivateLastTab },
+   { key = '[', mods = 'ALT|SHIFT', action = act.MoveTabRelative(-1) },
+   { key = ']', mods = 'ALT|SHIFT', action = act.MoveTabRelative(1) },
+
+   -- font controls
+   { key = '=', mods = 'CTRL', action = act.IncreaseFontSize },
+   { key = '-', mods = 'CTRL', action = act.DecreaseFontSize },
+   { key = '0', mods = 'CTRL', action = act.ResetFontSize },
+
    -- general utilities
+   { key = 'r', mods = 'CTRL|SHIFT', action = act.ReloadConfiguration },
+   { key = 'k', mods = 'CTRL|SHIFT', action = act.ClearScrollback('ScrollbackOnly') },
+   { key = 'f', mods = 'CTRL|SHIFT', action = act.Search({ CaseInSensitiveString = '' }) },
+   { key = ' ', mods = 'CTRL|SHIFT', action = act.QuickSelect },
    { key = 'F1', mods = 'NONE', action = act.ActivateCopyMode },
    { key = 'F2', mods = 'NONE', action = act.ActivateCommandPalette },
    { key = 'F3', mods = 'NONE', action = act.ShowLauncher },

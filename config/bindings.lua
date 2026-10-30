@@ -74,8 +74,8 @@ local keys = {
    -- quick access and navigation
    { key = 'p', mods = 'CTRL|ALT', action = act.PaneSelect },
    { key = '\\', mods = 'ALT', action = act.ActivateLastTab },
-   { key = '[', mods = 'ALT|SHIFT', action = act.MoveTabRelative(-1) },
-   { key = ']', mods = 'ALT|SHIFT', action = act.MoveTabRelative(1) },
+   { key = '{', mods = 'ALT|SHIFT', action = act.MoveTabRelative(-1) },
+   { key = '}', mods = 'ALT|SHIFT', action = act.MoveTabRelative(1) },
 
    -- font controls
    { key = '=', mods = 'CTRL', action = act.IncreaseFontSize },
